@@ -1,0 +1,25 @@
+{
+  "name": "hess",
+  "version": "1.0.0",
+  "description": "https://developer.android.com/sdk/index.html#top",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ImGregHenry/HESS.git"
+  },
+  "author": "Greg Henry",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ImGregHenry/HESS/issues"
+  },
+  "homepage": "https://github.com/ImGregHenry/HESS#readme",
+  "dependencies": {
+    "express": "4.13.3",
+    "gulp": "3.9.0",
+    "gulp-nodemon": "^2.0.4",
+    "mongoose": "^4.1.3"
+  }
+}
