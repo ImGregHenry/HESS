@@ -44,3 +44,27 @@ Notification Bar > Touch for other USB Options > Camera (PTP)
 - From Console, run `adb devices`.  
 - Phone will bring up prompt to authorize the fingerprint for the computer > Enable USB Debugging.
 - Running `adb devices` will now list your device correctly.
+
+
+### Start MongoDB Server
+
+Open console as admin.
+
+Navigate to: `c:/Program Files/MongoDB/Server/3.0/bin` 
+
+- Folder `db` must exist
+
+```shell
+mongod --dbpath db
+```
+
+### Start Node Server
+
+Open console as admin.
+
+Navigate to server project location: `c:/dev/HESS/HessServer`
+
+```shell
+gulp
+```
+
