@@ -2,10 +2,6 @@
 
 
 $isConserveDuringMidPeak = false;
-$ = 1;
-$ = 2;
-$ = 3;
-$PISCRIPT_PATH = "";
 
 // Runs the scripts required to switch between peak states
 function applyHessPeakSchedule(int peakTypeID) {
