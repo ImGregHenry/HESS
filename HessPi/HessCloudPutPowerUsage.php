@@ -15,7 +15,7 @@ foreach($result->BatteryStatus as $item) {
 		$query = "INSERT INTO PowerUsage (RecordTime, PowerUsageInWatts) "
 			. "VALUES (:recordTime, :powerUsageInWatts)";
 		
-		$conn = new PDO("mysql:host=MYSQL_CLOUD_HOST;dbname=MYSQL_CLOUD_DATABASE", MYSQL_USER, MYSQL_PASSWORD);
+		$conn = new PDO("mysql:host=MYSQL_CLOUD_HOST;dbname=MYSQL_CLOUD_DATABASE", MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		
 		$stmt = $conn->prepare($query);

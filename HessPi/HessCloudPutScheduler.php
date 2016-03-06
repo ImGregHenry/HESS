@@ -1,5 +1,7 @@
 <?php
-    $result = json_decode(file_get_contents("HessPiScheduler.php"));
+    include 'HessGlobals.php';
+    
+    $result = json_decode(file_get_contents("php://input"));
     
     foreach($result->Schedule as $item) {
         $peakScheduleID = $item->PeakScheduleID;
@@ -17,7 +19,7 @@
             $query = "INSERT INTO PeakSchedule (PeakScheduleID, WeekTypeID, PeakTypeID, StartTime, EndTime) "
             . "VALUES (:peakScheduleID, :deviceID, :weekTypeID, :peakTypeID, :startTime, :endTime)";
             
-            $conn = new PDO("mysql:host=MYSQL_PI_HOST;dbname=MYSQL_PI_DATABASE", MYSQL_PI_USER, MYSQL_PI_PASSWORD);
+            $conn = new PDO("mysql:host=MYSQL_CLOUD_HOST;dbname=MYSQL_CLOUD_DATABASE", MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             
             $stmt = $conn->prepare($query);
@@ -26,7 +28,7 @@
             $stmt->bindParam(':peakTypeID', $peakTypeID, PDO::PARAM_INT);
             $stmt->bindParam(':startTime', date("H:i:s", $startTime), PDO::PARAM_STR);
             $stmt->bindParam(':endTime', date("H:i:s", $endTime), PDO::PARAM_STR);
-
+            
             $stmt->execute();
             
         }
@@ -38,5 +40,4 @@
         
         
     }
-
 ?>

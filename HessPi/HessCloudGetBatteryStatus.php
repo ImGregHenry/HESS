@@ -1,9 +1,5 @@
 <?php
-	$mysql_host = "mysql1.000webhost.com";
-	$mysql_database = "a4060350_HESS";
-	$mysql_user = "a4060350_HESSADM";
-	$mysql_password = "HessCloud1";
-
+	include 'HessGlobals.php';
 
 	$deviceID = 19;
 	
@@ -14,7 +10,7 @@
                         . "SORT BY RecordTime DESC "
                         . "LIMIT 1";
 		
-		$conn = new PDO("mysql:host=$mysql_host;dbname=$mysql_database", $mysql_user, $mysql_password);
+		$conn = new PDO("mysql:host=MYSQL_CLOUD_HOST;dbname=MYSQL_CLOUD_DATABASE", MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$stmt = $conn->prepare($query);
 		$stmt->bindParam(':deviceID', $deviceID, PDO::PARAM_INT);
