@@ -8,7 +8,7 @@
 	//TODO: get power usage value from python script
 	$watts = 1.552;
 	
-	$url = "http://hess.site88.net/HessPutPowerUsage.php";
+	$url = "http://hess.site88.net/HessCloudPutPowerUsage.php";
     
 	$ch = curl_init( $url );
 	
