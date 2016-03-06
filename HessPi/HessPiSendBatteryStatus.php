@@ -8,7 +8,10 @@
 	
 	//TODO: get the actual current PeakScheduleID
 
-	$timestamp = DATE(DB_DATE_FORMAT, TIME());
+    # Set time zone to get proper time
+    date_default_timezone_set('US/Eastern');
+    $DATE_FORMAT = "Y-m-d H:i:s";
+    $timestamp = DATE($DATE_FORMAT, TIME());
 	//$timestampMS = round(microtime(true) * 1000);
 	
 	# Setup request to send json via POST.
@@ -17,10 +20,8 @@
 											 array(
 												   'PeakScheduleID' => 1,
 												   'IsEnabled' => 1,
-												   'PowerLevelValue' => 3.8,
 												   'PowerLevelPercent' => $percent++,
-												   'RecordTime' => $timestamp, 
-												   //'RecordTimeMS' => $timestampMS,
+												   'RecordTime' => $timestamp,
 												   'DeviceID' => 19
 												   )
 											 )
@@ -36,7 +37,7 @@
 	curl_close($ch);
 	//echo "TIME SENT : " . $timestamp . "\n"; 
 
-	echo "<pre>JSON Package Sent: " . var_dump($payload); . "</pre>";
+	echo "JSON Package Sent <pre>$payload<pre>";
 	//sleep(3);
 	//}
 ?>
