@@ -39,5 +39,4 @@
 	echo "<pre>JSON Package Sent: " . var_dump($payload); . "</pre>";
 	//sleep(3);
 	//}
-<<<<<<< HEAD
 ?>
