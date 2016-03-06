@@ -1,9 +1,6 @@
 <?php
-	function GetCurrentPeakScheduleType() {
-		$mysql_host = "localhost";
-		$mysql_database = "a4060350_HESS";
-		$mysql_user = "a4060350_HESSADM";
-		$mysql_password = "HessCloud1";
+    include 'HessGlobals.php';
+	//function GetCurrentPeakScheduleType() {
 		
 		$WEEKTYPE_WEEKDAY = 1;
 		$WEEKTYPE_WEEKEND = 2;
@@ -21,12 +18,14 @@
 				. " FROM PeakSchedule"
 				. " WHERE PeakScheduleID = :peakScheduleID;";
 			
-			$conn = new PDO("mysql:host=$mysql_host;dbname=$mysql_database", $mysql_user, $mysql_password);
+			$conn = new PDO("mysql:host=MYSQL_CLOUD_HOST;dbname=MYSQL_CLOUD_DATABASE", MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
 			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$stmt = $conn->prepare($query);
 			$stmt->bindParam(':peakScheduleID', $peakScheduleID, PDO::PARAM_INT);
 			$stmt->execute();
 			
+            // Results array
+            $Schedule = array("Schedule" => array());
 			
 			if ($stmt->rowCount() > 0) {
 				
@@ -34,54 +33,62 @@
 				while ($rows = $stmt->fetch(PDO::FETCH_ASSOC)) {
 								
 					// Create array from the current row
-					$peakScheduleID = $rows['PeakScheduleID'];
-					$weekTypeID = $rows['WeekTypeID'];
-					$peakTypeID = $rows['PeakTypeID'];
-					$dbStartTime = $rows['StartTime'];
-					$dbEndTime = $rows['EndTime'];
+                    $temparray = array('PeakScheduleID' => $rows['PeakScheduleID'],
+                                       'weekTypeID' => $rows['WeekTypeID'],
+                                       'peakTypeID' => $rows['PeakTypeID'],
+                                       'dbStartTime' => $rows['StartTime'],
+                                       'dbEndTime' => $rows['EndTime']);
 								
-								
-					date_default_timezone_set('US/Eastern');
+                    // Push the current row array into the results array
+                    array_push($Schedule['Schedule'], $temparray);
+                    
+					/*date_default_timezone_set('US/Eastern');
 					$DATE_FORMAT = "G:i:s";
 					$currentDateTime = DATE($DATE_FORMAT, TIME());
 		
 		
-					echo "StartTime: " . strtotime($dbStartTime) . "\r\n";
-					echo "EndTime: " . strtotime($dbEndTime) . "\r\n";
+					echo "StartTime: " . strtotime($temparray['dbStartTime']) . "\r\n";
+					echo "EndTime: " . strtotime($temparray['dbEndTime']) . "\r\n";
 					echo "CurrTime: " . strtotime($currentDateTime) . "\r\n";
 					
 					// Between current date range
-					if (strtotime($currentDateTime) > strtotime($dbStartTime) && strtotime($currentDateTime) < strtotime($dbEndTime)) {
-						if($weekTypeID == $WEEKTYPE_WEEKDAY) {
+					if (strtotime($currentDateTime) > strtotime($temparray['dbStartTime']) && strtotime($currentDateTime) < strtotime($temparray['dbEndTime'])) {
+						if($temparray['weekTypeID'] == $WEEKTYPE_WEEKDAY) {
 							echo "WeekDay : ";
 							
-							if($peakTypeID == $PEAKTYPE_ON) {
+							if($temparray['peakTypeID'] == $PEAKTYPE_ON) {
 								echo "ON PEAK : "; 
-							} else if($peakTypeID == $PEAKTYPE_OFF) {
+							} else if($temparray['peakTypeID'] == $PEAKTYPE_OFF) {
 								echo "OFF PEAK : "; 
-							}  else if($peakTypeID == $PEAKTYPE_ON) {
+							}  else if($temparray['peakTypeID'] == $PEAKTYPE_ON) {
 								echo "MID PEAK : "; 
 							}
 							
-							return $peakTypeID;
-						} else if ($weekTypeID == $WEEKTYPE_WEEKEND) {
+							return $temparray['peakTypeID'];
+						} else if ($temparray['weekTypeID'] == $WEEKTYPE_WEEKEND) {
 							echo "Weekend : ";
 							return $PEAKTYPE_OFF;
 						}
 						
-						echo "NOPE FUCK OFF! \r\n";
-					} else {
+						//echo "NOPE FUCK OFF! \r\n";
 					}
+                    else {
+					}*/
 					
 				}
 			}
-		} catch (Exception $e) {
-			echo "SHIT \r\n";
+		}
+        catch (Exception $e) {
+			echo "ERROR: \r\n";
 			var_dump($e);
 		}
-	}
+	//}
 	
-	$peakType = GetCurrentPeakScheduleType();
+	//$peakType = GetCurrentPeakScheduleType();
 	
-	echo " THIS: " . $peakType;
+	//echo " THIS: " . $peakType;
+    
+    $payload = json_encode($Schedule);
+    
+    echo $payload;
 ?>

@@ -1,6 +1,3 @@
-<html>
-<body>
-<p></p>
 <?php
     # Set time zone to get proper time
 	date_default_timezone_set('US/Eastern');
@@ -44,5 +41,3 @@
 	//sleep(3);
 	//}
 ?>
-</body>
-</html>
