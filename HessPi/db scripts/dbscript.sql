@@ -1,11 +1,6 @@
 CREATE DATABASE  IF NOT EXISTS a4060350_HESS;
 USE a4060350_HESS;
 
-//////////////////////////////
-//////////////////////////////
-//////////////////////////////
- 
- 
 
 CREATE DATABASE  IF NOT EXISTS a4060350_HESS;
 USE a4060350_HESS;
@@ -68,16 +63,8 @@ CREATE TABLE IF NOT EXISTS BatteryStatus (
 	FOREIGN KEY (PeakScheduleID) REFERENCES PeakSchedule(PeakScheduleID)
 );
 
---INSERT INTO BatteryStatus (PeakScheduleID, DeviceID, IsEnabled, RecordTime, PowerLevelValue, PowerLevelPercent)
---VALUES (0, 19, 1, NOW(), "12.6666", "99.999"),
---(0, 19, 1, NOW(), "12.5555", "98.999");
 
 
-
-
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
 
 CREATE TABLE IF NOT EXISTS PowerCost (
 	PowerCostID INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -93,11 +80,19 @@ VALUES (16.1, 12.2, 8.0);
 CREATE TABLE IF NOT EXISTS PowerUsageData (
 	PowerUsageID INTEGER PRIMARY KEY AUTO_INCREMENT,
 --	PowerCostID INTEGER,
-	RecordTime DATETIME(3),
-	PowerUsageInWatts DOUBLE,
-	FOREIGN KEY (PowerCostID) REFERENCES PowerCost(PowerCostID)
+	RecordTime DATETIME,
+	PowerUsageInWatts DOUBLE
+-- 	FOREIGN KEY (PowerCostID) REFERENCES PowerCost(PowerCostID)
 );
 
 INSERT INTO PowerUsageData (RecordTime, PowerUsageInWatts)
 VALUES (NOW(), 1.553);
+
+
+
+
+
+--INSERT INTO BatteryStatus (PeakScheduleID, DeviceID, IsEnabled, RecordTime, PowerLevelValue, PowerLevelPercent)
+--VALUES (0, 19, 1, NOW(), "12.6666", "99.999"),
+--(0, 19, 1, NOW(), "12.5555", "98.999");
 

@@ -2,7 +2,7 @@
     
 	$percent = 0;
 	
-	$url = "http://hess.site88.net/HessPutBatteryStatus.php";
+	$url = "http://hess.site88.net/HessCloudPutBatteryStatus.php";
     
 	$ch = curl_init( $url );
 	
