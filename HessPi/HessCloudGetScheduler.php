@@ -70,6 +70,4 @@ include 'HessPiCronJobScheduler.php'
 	//echo " THIS: " . $peakType;
     
     $payload = json_encode($Schedule);
-    
-    echo $payload;
 ?>
