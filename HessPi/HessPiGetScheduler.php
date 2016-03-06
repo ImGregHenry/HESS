@@ -4,7 +4,7 @@
     $DATE_FORMAT = "Y-m-d H:i:s";
     $percent = 0;
     $MAX_MESSAGES = 10;
-    $url = "http://hess.site88.net/HessPiScheduler.php";
+    $url = "http://hess.site88.net/HessCloudGetScheduler.php";
     
     
     for($i = 0; $i < $MAX_MESSAGES;  $i++) {
