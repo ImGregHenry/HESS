@@ -1,32 +1,23 @@
-<html>
-<body>
-<p></p>
 <?php
     # Set time zone to get proper time
 	date_default_timezone_set('US/Eastern');
 	$DATE_FORMAT = "Y-m-d H:i:s";
-	
-	$percent = 0;
-	
-	$url = "http://hess.site88.net/HessPutBatteryStatus.php";
-    
-	
-	$ch = curl_init( $url );
-	
 	$timestamp = DATE($DATE_FORMAT, TIME());
-	//$timestampMS = round(microtime(true) * 1000);
+	
+
+	//TODO: get power usage value from python script
+	$watts = 1.552;
+	
+	$url = "http://hess.site88.net/HessPutPowerUsage.php";
+    
+	$ch = curl_init( $url );
 	
 	# Setup request to send json via POST.
 	$jsonme = array(
 					"BatteryStatus" => array(
 											 array(
-												   'PeakScheduleID' => 1,
-												   'IsEnabled' => 1,
-												   'PowerLevelValue' => 3.8,
-												   'PowerLevelPercent' => $percent++,
-												   'RecordTime' => $timestamp, 
-												   //'RecordTimeMS' => $timestampMS,
-												   'DeviceID' => 19
+												   'RecordTime' => $timestamp,
+												   'PowerUsageInWatts' => $watts
 												   )
 											 )
 					);
@@ -40,9 +31,13 @@
 	curl_close($ch);
 	//echo "TIME SENT : " . $timestamp . "\n"; 
 
-	echo "<pre>JSON Package Sent: " . var_dump($payload); . "</pre>";
+	echo "<pre>[HessPiSendPowerUsage] JSON Package Sent: " . var_dump($payload); . "</pre>";
 	//sleep(3);
 	//}
+
+
+
 ?>
-</body>
-</html>
+
+
+

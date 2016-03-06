@@ -90,14 +90,14 @@ INSERT INTO PowerCost (PeakCost, MidPeakCost, OffPeakCost)
 VALUES (16.1, 12.2, 8.0);
 
 
-CREATE TABLE IF NOT EXISTS UsageData (
+CREATE TABLE IF NOT EXISTS PowerUsageData (
 	MetricID INTEGER PRIMARY KEY AUTO_INCREMENT,
-	PowerCostID INTEGER,
+--	PowerCostID INTEGER,
 	RecordTime DATETIME(3),
-	VoltageLevelPercent DOUBLE,
+	PowerUsageInWatts DOUBLE,
 	FOREIGN KEY (PowerCostID) REFERENCES PowerCost(PowerCostID)
 );
 
-INSERT INTO UsageData (MetricID, PowerCostID, RecordTime, VoltageLevelPercent)
-VALUES (0, );
+INSERT INTO PowerUsageData (RecordTime, PowerUsageInWatts)
+VALUES (NOW(), 1.553);
 
