@@ -1,5 +1,5 @@
 <?php
-include 'HessGlobals.php';
+include_once 'HessGlobals.php';
 # DATE FORMAT: http://php.net/manual/en/function.date.php
 
 # ** CRON JOB USAGE ** 

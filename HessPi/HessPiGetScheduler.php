@@ -1,4 +1,7 @@
 <?php
+    include_once 'HessGlobals.php';
+    include_once 'HessPiCronJobScheduler.php';
+
     # Set time zone to get proper time
     date_default_timezone_set('US/Eastern');
     $DATE_FORMAT = "Y-m-d H:i:s";
@@ -24,7 +27,11 @@
         
     $schedule = json_decode($result);
     
-    foreach($schedule->Schedule as $item) {
+    $cronScheduler = new CronJobScheduler();
+
+
+    echo $schedule;
+/*    foreach($schedule->Schedule as $item) { 
         $peakScheduleID = $item->PeakScheduleID;
         $weekTypeID = $item->WeekTypeID;
         $peakTypeID = $item->PeakTypeID;
@@ -59,6 +66,17 @@
             return;
         }
         
-        
-    }
+
+        //TODO: new schedule?
+        $isNewSchedule = true;
+
+        if(isNewSchedule) {
+            $cronJobTimingText = $cronScheduler::createCronJobStringFromTimes();
+            $cronScheduler::deleteAllCronJobs();
+
+            $cronScheduler::createDefaultHessCronJobs();
+            $cronScheduler::createBatterySchedulingCronJob($rows['StartTime'], $rows['EndTime'], $rows['PeakTypeID']);
+        }
+        //TODO: set current peak type   
+    }*/
 ?>

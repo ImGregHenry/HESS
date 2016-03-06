@@ -1,5 +1,5 @@
 <?php
-	include 'HessGlobals.php';
+	include_once 'HessGlobals.php';
 
 	$deviceID = 19;
 	
