@@ -12,6 +12,9 @@ define('PISCRIPT_ACFROMWALL_ON', 'ACFromWallOn.py');
 define('PISCRIPT_ACFROMWALL_OFF', 'ACFromWallOff.py');
 define('PISCRIPT_BATTERYCHARGER_ON', 'BatteryChargerOn.py');
 define('PISCRIPT_BATTERYCHARGER_OFF', 'BatteryChargerOff.py');
+define('PISCRIPT_SCHEDULER_OFF_PEAK', 'ConfigureOffPeak.py');
+define('PISCRIPT_SCHEDULER_ON_PEAK', 'ConfigureOnPeak');
+define('PISCRIPT_SCHEDULER_MID_PEAK', 'ConfigureMidPeak');
 
 # PEAK TYPES
 define('PEAKTYPE_OFF', '1');
@@ -38,5 +41,8 @@ define('DB_DATE_FORMAT', 'Y-m-d H:i:s');
 # SET DEFAULT TIME ZONES
 date_default_timezone_set('US/Eastern');
 
+# 
+define('PI_PHP_EXEC_PATH', 'php');
+define('PI_HESS_SCRIPTS_PATH', '/home/pi/DEMOSCRIPTS/')
 
 ?>
