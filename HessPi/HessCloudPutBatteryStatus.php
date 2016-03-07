@@ -1,20 +1,16 @@
 <?php
 include_once 'HessGlobals.php';
 
-$result = json_decode(file_get_contents("php://input"));
-$item = $result->BatteryStatus;
 
-
-		
-	$peakScheduleID = $item->PeakScheduleID;
-	$isEnabled = $item->IsEnabled;
-	$recordTime =  strtotime($item->RecordTime);
-	$powerLevelPercent = $item->PowerLevelPercent;
+	$peakScheduleID = $_POST['PeakScheduleID'];
+	$isEnabled = $_POST['IsEnabled'];
+	$recordTime =  $_POST['RecordTime'];
+	$powerLevelPercent = $_POST['PowerLevelPercent'];
 	
 	$cloudRecordTime = DATE(DB_DATE_FORMAT, TIME());
 	//$cloudRecordTimeMS = substr((string)microtime(), 2, 3);
-	
-	//echo "RECORD: " . $cloudRecordTime . " " . $cloudRecordTimeMS . "\r\n";
+
+	//	echo "\n\nCLOUD(2): " . $peakScheduleID . ", " . $isEnabled . ", " . $recordTime . "\n\n"; 
 
 	try {
 		
@@ -33,7 +29,7 @@ $item = $result->BatteryStatus;
 		$stmt->bindParam(':cloudRecordTime', $cloudRecordTime, PDO::PARAM_STR);
 		//$stmt->bindParam(':cloudRecordTimeMS', $cloudRecordTimeMS, PDO::PARAM_INT);
 		//$stmt->bindParam(':powerLevelValue', floatval($powerLevelValue), PDO::PARAM_STR);
-		$stmt->bindParam(':powerLevelPercent', floatval($powerLevelPercent), PDO::PARAM_STR);
+		$stmt->bindParam(':powerLevelPercent', $powerLevelPercent, PDO::PARAM_STR);
 	
 		$stmt->execute();
 		
@@ -42,6 +38,6 @@ $item = $result->BatteryStatus;
 	{
 		echo "ERROR: $e";
         return;
-
-
+    }
 ?>
+	
