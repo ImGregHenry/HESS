@@ -34,7 +34,7 @@ class CronJobScheduler {
 	}
 
 	public static function createDefaultHessCronJobs() {
-		//CronJobScheduler::createSingleCronJob('*/2 * * * *', 'HessPiSendBatteryStatus.php');
+		CronJobScheduler::createSingleCronJob('*/2 * * * *', 'HessPiSendBatteryStatus.php');
 		CronJobScheduler::createSingleCronJob('*/1 * * * *', 'HessPiGetScheduler.php');
 		//CronJobScheduler::createSingleCronJob('*/1 * * * *', 'HessPiSendPowerUsage.php');
 		//CronJobScheduler::createSingleCronJob('*/1 * * * * sleep 30;', 'HessPiSendPowerUsage.php');

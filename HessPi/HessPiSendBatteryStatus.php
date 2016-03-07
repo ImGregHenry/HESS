@@ -23,7 +23,7 @@
     # Setup request to send json via POST.
     $temparray = array('PeakScheduleID' => 1,
                        'IsEnabled' => 1,
-                       'PowerLevelPercent' => 80,
+                       'PowerLevelPercent' => $percent,
                        'RecordTime' => $timestamp);
     
     array_push($BatteryStatus['BatteryStatus'], $temparray);
