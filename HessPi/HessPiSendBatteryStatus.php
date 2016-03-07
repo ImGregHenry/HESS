@@ -2,6 +2,10 @@
     
     $percent = 0;
     
+    $command = escapeshellcmd('/usr/custom/test.py');
+    $percent = shell_exec($command);
+    
+
     $BatteryStatus = array("BatteryStatus" => array());
     
     $url = "http://hess.site88.net/HessCloudPutBatteryStatus.php";
