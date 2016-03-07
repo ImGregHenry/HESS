@@ -1,10 +1,9 @@
 <?php
     
-    $percent = 0;
+    $percent = 10;
     
-    $command = escapeshellcmd('/usr/custom/test.py');
-    $percent = shell_exec($command);
-    
+    //$command = escapeshellcmd('/usr/custom/test.py');
+    //$percent = shell_exec($command);
 
     $BatteryStatus = array("BatteryStatus" => array());
     
@@ -23,24 +22,25 @@
     # Setup request to send json via POST.
     $temparray = array('PeakScheduleID' => 1,
                        'IsEnabled' => 1,
-                       'PowerLevelPercent' => $percent,
+                       'PowerLevelPercent' => 10,
                        'RecordTime' => $timestamp);
     
     array_push($BatteryStatus['BatteryStatus'], $temparray);
     
     $payload = json_encode( $BatteryStatus );
-    curl_setopt( $ch, CURLOPT_POST, true );
+    curl_setopt( $ch, CURLOPT_POST, 1 );
+    curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, "POST" );
     curl_setopt( $ch, CURLOPT_POSTFIELDS, $payload );
-    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+    //curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+    curl_setopt($ch, CURLOPT_HEADER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                                               'Content-Type: application/json',
+                                               'Content-Length: ' . strlen($payload)
+                                               ));
     
     # Send request.
     $result = curl_exec($ch);
-    echo $result;
     curl_close($ch);
-    //echo "TIME SENT : " . $timestamp . "\n";
     
     echo "<pre>$payload<pre>";
-    //sleep(3);
-    //}
 ?>
