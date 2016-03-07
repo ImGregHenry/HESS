@@ -10,7 +10,7 @@ include_once 'HessGlobals.php';
 	$cloudRecordTime = DATE(DB_DATE_FORMAT, TIME());
 	//$cloudRecordTimeMS = substr((string)microtime(), 2, 3);
 
-	//	echo "\n\nCLOUD(2): " . $peakScheduleID . ", " . $isEnabled . ", " . $recordTime . "\n\n"; 
+	echo "\n\nCLOUD:  PEAKID:" . $peakScheduleID . ", IsEnabled:" . $isEnabled . ", RecordTime:" . strtotime($recordTime) . "\n\n"; 
 
 	try {
 		
@@ -24,7 +24,7 @@ include_once 'HessGlobals.php';
 		$stmt->bindParam(':peakScheduleID', $peakScheduleID, PDO::PARAM_STR, 20);
 		//$stmt->bindParam(':deviceID', $deviceID, PDO::PARAM_INT);
 		$stmt->bindParam(':isEnabled', $isEnabled, PDO::PARAM_INT);
-		$stmt->bindParam(':recordTime', date(DB_DATE_FORMAT, $recordTime), PDO::PARAM_STR);
+		$stmt->bindParam(':recordTime', $recordTime, PDO::PARAM_STR);
 		//$stmt->bindParam(':recordTimeMS', $recordTimeMS, PDO::PARAM_INT);
 		$stmt->bindParam(':cloudRecordTime', $cloudRecordTime, PDO::PARAM_STR);
 		//$stmt->bindParam(':cloudRecordTimeMS', $cloudRecordTimeMS, PDO::PARAM_INT);
