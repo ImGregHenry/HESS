@@ -1,9 +1,28 @@
 <?php
-    # Set time zone to get proper time
-	date_default_timezone_set('US/Eastern');
-	$DATE_FORMAT = "Y-m-d H:i:s";
-	$timestamp = DATE($DATE_FORMAT, TIME());
-	
+    include_once 'HessGlobals.php';
+
+//TODO: make cURL GET/POST class
+function post_to_url($url, $data) {
+    $fields = '';
+    foreach ($data as $key => $value) {
+        $fields .= $key . '=' . $value . '&';
+    }
+    rtrim($fields, '&');
+
+    $post = curl_init();
+
+    curl_setopt($post, CURLOPT_URL, $url);
+    curl_setopt($post, CURLOPT_POST, count($data));
+    curl_setopt($post, CURLOPT_POSTFIELDS, $fields);
+    curl_setopt($post, CURLOPT_RETURNTRANSFER, 1);
+
+    $result = curl_exec($post);
+
+    curl_close($post);
+    return $result;
+}
+
+    $timestamp = DATE(DB_DATE_FORMAT, TIME());
 
 	//TODO: get power usage value from python script
 	$watts = 1.552;
@@ -13,25 +32,16 @@
 	$ch = curl_init( $url );
 	
 	# Setup request to send json via POST.
-	$jsonme = array(
-					"BatteryStatus" => array(
-											 array(
-												   'RecordTime' => $timestamp,
-												   'PowerUsageInWatts' => $watts
-												   )
-											 )
-					);
-	$payload = json_encode( $jsonme );
-	curl_setopt( $ch, CURLOPT_POSTFIELDS, $payload );
-	curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-	
-	# Send request.
-	$result = curl_exec($ch);
-	curl_close($ch);
-	//echo "TIME SENT : " . $timestamp . "\n"; 
+	$jsonme = 	 array(
+					   'RecordTime' => $timestamp,
+					   'PowerUsageInWatts' => $watts,
+					   'DeviceID' => PI_DEVICE_ID);
+			
+	echo post_to_url($url, $data);
 
-	echo "<pre>[HessPiSendPowerUsage] JSON Package Sent: " . var_dump($payload); . "</pre>";
+
+	
+	//echo "<pre>[HessPiSendPowerUsage] JSON Package Sent: " . var_dump($payload); . "</pre>";
 	//sleep(3);
 	//}
 
