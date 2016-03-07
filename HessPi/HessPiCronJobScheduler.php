@@ -16,40 +16,45 @@ include_once 'HessGlobals.php';
 
 class CronJobScheduler {
 
-	public static function createCronJobStringFromTimes($startTime, $command) {
-		$MIN =  INTVAL(DATE('i', $startTime()));
-		$HOUR = DATE('G', TIME());;
+	public static function createCronJobStringFromTimes($time) {
+		$MIN =  INTVAL(DATE('i', strtotime($time)));
+		$HOUR = DATE('G', strtotime($time));
+		$DAY = "*";
 		$MON = "*";
 		$DOW = "*";
 		
-		return $MIN . " " . $HOUR . " " . $MON . " " . $DOW;
+		return $MIN . " " . $HOUR . " " . $DAY . " " . $MON . " " . $DOW;
 	}
 
 	public static function createSingleCronJob($cronTimingText, $scriptName) {
 		$output = shell_exec('crontab -l');
-		file_put_contents('/tmp/crontab.txt', $output . ' ' . $cronTimingText . ' ' . PI_PHP_EXEC_PATH . ' ' . PI_HESS_SCRIPTS_PATH . PHP_EOL);
+		file_put_contents('/tmp/crontab.txt', $output . ' ' . $cronTimingText . ' ' . PI_PHP_EXEC_PATH . ' ' . PI_HESS_SCRIPTS_PATH . $scriptName . PHP_EOL);
 		echo exec('crontab /tmp/crontab.txt');
+		//echo 'CREATING JOB :' . $output . ' ' . $cronTimingText . ' ' . PI_PHP_EXEC_PATH . ' ' . PI_HESS_SCRIPTS_PATH . $scriptName . PHP_EOL;
 	}
 
 	public static function createDefaultHessCronJobs() {
-		CronJobScheduler::createSingleCronJob('*/2 * * * *', 'HessPiSendBatteryStatus.php');
+		//CronJobScheduler::createSingleCronJob('*/2 * * * *', 'HessPiSendBatteryStatus.php');
 		CronJobScheduler::createSingleCronJob('*/1 * * * *', 'HessPiGetScheduler.php');
-		CronJobScheduler::createSingleCronJob('*/1 * * * *', 'HessPiSendPowerUsage.php');
-		CronJobScheduler::createSingleCronJob('*/1 * * * * sleep 30;', 'HessPiSendPowerUsage.php');
+		//CronJobScheduler::createSingleCronJob('*/1 * * * *', 'HessPiSendPowerUsage.php');
+		//CronJobScheduler::createSingleCronJob('*/1 * * * * sleep 30;', 'HessPiSendPowerUsage.php');
 	}
 
 	public static function createBatterySchedulingCronJob($startTime, $endTime, $peakType) {
-		$cronStartTimingString = createCronJobStringFromTimes($startTime);
-		$cronStartTimingString = createCronJobStringFromTimes($endTime);
+		$cronStartTimingString = CronJobScheduler::createCronJobStringFromTimes($startTime);
+		$cronEndTimingString = CronJobScheduler::createCronJobStringFromTimes($endTime);
 		
+
+		echo "\nCRON START: " . $cronStartTimingString. "\n\n";
+		echo "\nCRON: END:  " . $cronEndTimingString . "\n\n";
 		if($peakType == PEAKTYPE_ON) {
-			CronJobScheduler::createSingleCronJob($cronTimingString, PISCRIPT_SCHEDULER_ON_PEAK);
-			CronJobScheduler::createSingleCronJob($cronTimingString, PISCRIPT_SCHEDULER_OFF_PEAK);
+			CronJobScheduler::createSingleCronJob($cronStartTimingString, PISCRIPT_SCHEDULER_ON_PEAK);
+			CronJobScheduler::createSingleCronJob($cronEndTimingString, PISCRIPT_SCHEDULER_OFF_PEAK);
 		} else if($peakType == PEAKTYPE_MID) {
-			CronJobScheduler::createSingleCronJob($cronTimingString, PISCRIPT_SCHEDULER_MID_PEAK);
-			CronJobScheduler::createSingleCronJob($cronTimingString, PISCRIPT_SCHEDULER_OFF_PEAK);
+			CronJobScheduler::createSingleCronJob($cronStartTimingString, PISCRIPT_SCHEDULER_MID_PEAK);
+			CronJobScheduler::createSingleCronJob($cronEndTimingString, PISCRIPT_SCHEDULER_OFF_PEAK);
 		} else {
-			CronJobScheduler::createSingleCronJob($cronTimingString, PISCRIPT_SCHEDULER_OFF_PEAK);
+			CronJobScheduler::createSingleCronJob($cronStartTimingString, PISCRIPT_SCHEDULER_OFF_PEAK);
 		}
 	}
 
