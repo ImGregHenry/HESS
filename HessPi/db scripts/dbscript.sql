@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS BatteryStatus (
 	CloudRecordTime DATETIME,
 --	CloudRecordTimeMS INTEGER,
 --	PowerLevelValue DECIMAL,
-	PowerLevelPercent DECIMAL,
+	PowerLevelPercent DECIMAL
 --	FOREIGN KEY (PeakScheduleID) REFERENCES PeakSchedule(PeakScheduleID)
 );
 
