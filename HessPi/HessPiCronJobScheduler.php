@@ -34,8 +34,8 @@ class CronJobScheduler {
 	}
 
 	public static function createDefaultHessCronJobs() {
-		CronJobScheduler::createSingleCronJob('*/2 * * * *', 'HessPiSendBatteryStatus.php');
-		CronJobScheduler::createSingleCronJob('*/1 * * * *', 'HessPiGetScheduler.php');
+		CronJobScheduler::createSingleCronJob('*/1 * * * *', 'HessPiSendBatteryStatus.php');
+		//CronJobScheduler::createSingleCronJob('*/1 * * * *', 'HessPiGetScheduler.php');
 		//CronJobScheduler::createSingleCronJob('*/1 * * * *', 'HessPiSendPowerUsage.php');
 		//CronJobScheduler::createSingleCronJob('*/1 * * * * sleep 30;', 'HessPiSendPowerUsage.php');
 	}
@@ -48,13 +48,13 @@ class CronJobScheduler {
 		echo "\nCRON START: " . $cronStartTimingString. "\n\n";
 		echo "\nCRON: END:  " . $cronEndTimingString . "\n\n";
 		if($peakType == PEAKTYPE_ON) {
-			CronJobScheduler::createSingleCronJob($cronStartTimingString, PISCRIPT_SCHEDULER_ON_PEAK);
-			CronJobScheduler::createSingleCronJob($cronEndTimingString, PISCRIPT_SCHEDULER_OFF_PEAK);
+			// CronJobScheduler::createSingleCronJob($cronStartTimingString, PISCRIPT_SCHEDULER_ON_PEAK);
+			// CronJobScheduler::createSingleCronJob($cronEndTimingString, PISCRIPT_SCHEDULER_OFF_PEAK);
 		} else if($peakType == PEAKTYPE_MID) {
-			CronJobScheduler::createSingleCronJob($cronStartTimingString, PISCRIPT_SCHEDULER_MID_PEAK);
-			CronJobScheduler::createSingleCronJob($cronEndTimingString, PISCRIPT_SCHEDULER_OFF_PEAK);
+			// CronJobScheduler::createSingleCronJob($cronStartTimingString, PISCRIPT_SCHEDULER_MID_PEAK);
+			// CronJobScheduler::createSingleCronJob($cronEndTimingString, PISCRIPT_SCHEDULER_OFF_PEAK);
 		} else {
-			CronJobScheduler::createSingleCronJob($cronStartTimingString, PISCRIPT_SCHEDULER_OFF_PEAK);
+			// CronJobScheduler::createSingleCronJob($cronStartTimingString, PISCRIPT_SCHEDULER_OFF_PEAK);
 		}
 	}
 
