@@ -24,10 +24,10 @@ try {
 						
 			// Create array from the current row
             $temparray = array('PeakScheduleID' => $rows['PeakScheduleID'],
-                               'weekTypeID' => $rows['WeekTypeID'],
-                               'peakTypeID' => $rows['PeakTypeID'],
-                               'dbStartTime' => $rows['StartTime'],
-                               'dbEndTime' => $rows['EndTime']);
+                               'WeekTypeID' => $rows['WeekTypeID'],
+                               'PeakTypeID' => $rows['PeakTypeID'],
+                               'StartTime' => $rows['StartTime'],
+                               'EndTime' => $rows['EndTime']);
 						
             // Push the current row array into the results array
             array_push($Schedule['Schedule'], $temparray);

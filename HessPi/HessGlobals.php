@@ -21,7 +21,7 @@ define('PEAKTYPE_OFF', '1');
 define('PEAKTYPE_ON', '2');
 define('PEAKTYPE_MID', '3');
 
-define('PI_DEVICE_ID', '19');
+define('PI_DEVICE_ID', 19);
 
 # CLOUD MY SQL CREDENTIALS
 define('MYSQL_CLOUD_HOST', 'mysql1.000webhost.com');
