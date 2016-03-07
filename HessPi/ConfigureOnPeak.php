@@ -1,9 +1,14 @@
 <?php
     
-    exec('sudo python /pythonscripts/BatteryChargerOff.py');
+    echo "CONFIG ON PEAK.  BatteryChargerOff.\n";
+    exec('python pythonscripts/BatteryChargerOff.py');
     sleep(1);
-    exec('sudo python /pythonscripts/InverterToggle.py');
+    echo "CONFIG ON PEAK.  InterterToggle.\n";
+    exec('python pythonscripts/InverterToggle.py');
     sleep(35);
-    exec('sudo python /pythonscripts/ACFromWallOff.py');
+    echo "CONFIG ON PEAK.  ACFromWwallOff.\n";
+    exec('python pythonscripts/ACFromWallOff.py');
     sleep(1);
+    echo "CONFIG ON PEAK.  ACFromWwallOff.\n";
+  
 ?>

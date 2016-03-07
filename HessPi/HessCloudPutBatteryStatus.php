@@ -10,7 +10,7 @@ include_once 'HessGlobals.php';
 	$cloudRecordTime = DATE(DB_DATE_FORMAT, TIME());
 	//$cloudRecordTimeMS = substr((string)microtime(), 2, 3);
 
-	echo "\n\nCLOUD:  PEAKID:" . $peakScheduleID . ", IsEnabled:" . $isEnabled . ", RecordTime:" . strtotime($recordTime) . "\n\n"; 
+	echo "\n\nCLOUD:  PEAKID:" . $peakScheduleID . ", IsEnabled:" . $isEnabled . ", PowerLevelPercent: " . $powerLevelPercent . ", RecordTime:" . strtotime($recordTime) . "\n\n"; 
 
 	try {
 		
