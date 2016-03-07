@@ -1,9 +1,10 @@
 <?php
+    include_once 'HessGlobals.php';
     
-    $percent = 10;
+    $percent = 0;
     
-    //$command = escapeshellcmd('/usr/custom/test.py');
-    //$percent = shell_exec($command);
+    //$command = escapeshellcmd(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
+    //$percent = exec("sudo " . PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
 
     $BatteryStatus = array("BatteryStatus" => array());
     
@@ -43,4 +44,5 @@
     curl_close($ch);
     
     echo "<pre>$payload<pre>";
+
 ?>

@@ -6,6 +6,9 @@
 
 # PI CONTROL SCRIPTS
 define('PISCRIPT_PATH', '/usr/pi/scripts/');
+define('PYTHON_EXEC_PATH', 'python');
+define('PISCRIPT_PYTHON_PATH', 'pythonscripts/');
+define('PISCRIPT_BATTERY_PERCENT', 'GetBatteryPercentage.py');
 define('PISCRIPT_INVERTER_ON', 'InverterOn.py');
 define('PISCRIPT_INVERTER_OFF', 'InverterOff.py');
 define('PISCRIPT_ACFROMWALL_ON', 'ACFromWallOn.py');
