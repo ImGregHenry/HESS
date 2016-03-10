@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.ajanthi.hess.StatusActivity">
+
+    <TabHost
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/tabHost"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:showDividers="middle"></TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/status"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/battery_status">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Battery Status: "
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:id="@+id/batteryStatus"
+                            android:padding="20dp" />
+
+                        <Switch
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/switch1"
+                            android:layout_gravity="right"
+                            android:paddingTop="20dp"
+                            android:paddingBottom="20dp"
+                            android:paddingLeft="170dp"
+                            android:checked="true" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Estimated Power Remaining: "
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:id="@+id/remainingPower"
+                        android:padding="20dp" />
+
+                    <ProgressBar
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="350dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/remainingPowerProgress"
+                        android:layout_gravity="center_horizontal"
+                        android:clickable="false"
+                        android:indeterminate="false"
+                        android:progress="30" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/remaining_time">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Estimated Time Remaining: "
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:id="@+id/remainingTime"
+                            android:padding="20dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="30 Minutes "
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:id="@+id/rTime"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="20dp"
+                            android:paddingBottom="20dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/up_time">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Uptime:"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:id="@+id/upTime"
+                            android:padding="20dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2 Hours &amp; 24 Minutes"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:id="@+id/uTime"
+                            android:paddingLeft="90dp"
+                            android:paddingTop="20dp"
+                            android:paddingBottom="20dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/current_usage">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Current Usage:"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:id="@+id/currentUsage"
+                            android:padding="20dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2.2 kWh"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:id="@+id/cUsage"
+                            android:paddingLeft="140dp"
+                            android:paddingTop="20dp"
+                            android:paddingBottom="20dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/usage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"></LinearLayout>
+
+
+            </FrameLayout>
+
+
+        </LinearLayout>
+    </TabHost>
+</LinearLayout>
