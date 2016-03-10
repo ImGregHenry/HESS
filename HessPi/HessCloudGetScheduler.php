@@ -6,11 +6,12 @@ include_once 'HessGlobals.php';
 $Schedule = array("Schedule" => array());
 
 try {
-	$query = "SELECT  PeakScheduleID, WeekTypeID, PeakTypeID, StartTime, EndTime"
-		. " FROM PeakSchedule"
-		. " ORDER BY PeakScheduleID DESC"
-		. " LIMIT 1";
-	
+	# Only select max PeakScheduleID
+	$query = "SELECT PeakScheduleID, WeekTypeID, PeakTypeID, StartTime, EndTime "
+	. " FROM PeakSchedule "
+	. " WHERE PeakScheduleID = (SELECT MAX(PeakScheduleID) FROM PeakSchedule);";
+
+
 	$conn = new PDO("mysql:host=" . MYSQL_CLOUD_HOST . ";dbname=" . MYSQL_CLOUD_DATABASE, MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$stmt = $conn->prepare($query);

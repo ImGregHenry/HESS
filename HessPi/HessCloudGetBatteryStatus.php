@@ -1,21 +1,18 @@
 <?php
 	include_once 'HessGlobals.php';
 
-	$deviceID = 19;
-	
 	try {
 		
-		$query = "SELECT DeviceID, PeakScheduleID, IsEnabled, RecordTime, CloudRecordTime, PowerLevelValue, PowerLevelPercent FROM BatteryStatus "
-			. "WHERE DeviceID = :deviceID "
-                        . "SORT BY RecordTime DESC "
-                        . "LIMIT 1";
+		$query = "SELECT DeviceID, PeakScheduleID, IsEnabled, RecordTime, CloudRecordTime, PowerLevelPercent "
+			. " FROM BatteryStatus"
+			#. " WHERE DeviceID = :deviceID "
+            . " ORDER BY RecordTime DESC ";
 		
-		$conn = new PDO("mysql:host=MYSQL_CLOUD_HOST;dbname=MYSQL_CLOUD_DATABASE", MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
+		$conn = new PDO("mysql:host=" . MYSQL_CLOUD_HOST . ";dbname=" .MYSQL_CLOUD_DATABASE, MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$stmt = $conn->prepare($query);
-		$stmt->bindParam(':deviceID', PI_DEVICE_ID, PDO::PARAM_INT);
+		#$stmt->bindParam(':deviceID', $devID=PI_DEVICE_ID, PDO::PARAM_INT);
 		$stmt->execute();
-		
 		
 		# Results array
 		$BatteryStatus = array("BatteryStatus" => array());

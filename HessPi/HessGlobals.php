@@ -31,6 +31,7 @@ define('MYSQL_CLOUD_HOST', 'mysql1.000webhost.com');
 define('MYSQL_CLOUD_DATABASE', 'a4060350_HESS');
 define('MYSQL_CLOUD_USER', 'a4060350_HESSADM');
 define('MYSQL_CLOUD_PASSWORD', 'HessCloud1');
+define('MYSQL_CLOUD_DEBUG_HOST', '127.0.0.1');
 
 # PI MY SQL CREDENTIALS
 define('MYSQL_PI_HOST', 'localhost');

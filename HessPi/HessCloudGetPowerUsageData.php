@@ -6,10 +6,10 @@
 	try {
 		
 		$query = "SELECT PowerUsageID, RecordTime, PowerUsageInWatts FROM PowerUsageData "
-	                . "SORT BY RecordTime DESC "
+	                . "ORDER BY RecordTime DESC "
 	                . "LIMIT 100";
 		
-		$conn = new PDO("mysql:host=MYSQL_CLOUD_HOST;dbname=MYSQL_CLOUD_DATABASE", MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
+		$conn = new PDO("mysql:host=" . MYSQL_CLOUD_HOST . ";dbname=" . MYSQL_CLOUD_DATABASE, MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$stmt = $conn->prepare($query);
 		$stmt->execute();
@@ -28,7 +28,6 @@
 							'RecordTime' => $rows['RecordTime'],
 							'PowerUsageInWatts' => $rows['PowerUsageInWatts']);
 				
-
 				# Push the current row array into the results array
 				array_push($powerUsageData['PowerUsageData'], $temparray); 
 			}
