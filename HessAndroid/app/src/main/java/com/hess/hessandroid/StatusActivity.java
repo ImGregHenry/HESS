@@ -23,7 +23,7 @@ public class StatusActivity extends AppCompatActivity {
 
         VolleyRequest vr = new VolleyRequest();
         //vr.getData(this);
-        vr.postData(this, "", new JSONObject());
+        vr.postData(this, "", null);
 
         tv.setText("Testing.  Gogogo!");
     }

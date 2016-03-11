@@ -35,21 +35,10 @@ public class VolleyRequest {
     java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     java.text.SimpleDateFormat sdfMS = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
+    private static JSONObject jason;
 
-    public void postData(Context context, String url, JSONObject js) {
+    public void postData(Context context, String url, final JSONArray js) {
         String url2 = "http://hess.site88.net/HessCloudPutScheduler.php";
-
-        //js = new JSONObject();
-        JsonArray jar = new JsonArray();
-        js = new JSONObject();
-        try {
-            js = new JSONObject("{\"TEST\":\"example\"}");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-
 
         StringRequest jsonObjReq = new StringRequest(
                 Request.Method.POST, url2,
@@ -57,53 +46,37 @@ public class VolleyRequest {
                     @Override
                     public void onResponse(String response) {
                         Log.d(LOG_STRING, response.toString());
-
-
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d(LOG_STRING, "Error: " + error.getMessage());
-
                     }
         }) {
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
-                String json = "[{ \"PeakScheduleID\" : 59, \"WeekTypeID\" : 9, \"PeakTypeID\" : 9, \"StartTime\" : \"22:59:00\", \"EndTime\" : \"23:29:00\" },"
-                        + "{ \"PeakScheduleID\" : 57, \"WeekTypeID\" : 9, \"PeakTypeID\" : 9, \"StartTime\" : \"01:59:00\", \"EndTime\" : \"02:29:00\" }]"; //"IsDeleteSchedule" : 1,
-                //params.put("JSON","[{ \"TEST\" : 1919}, { \"TEST\" : 1818}]");
-                params.put("JSON", json);
+//                String json = "[{ \"PeakScheduleID\" : 59, \"WeekTypeID\" : 9, \"PeakTypeID\" : 9, \"StartTime\" : \"22:59:00\", \"EndTime\" : \"23:29:00\" },"
+//                        + "{ \"PeakScheduleID\" : 57, \"WeekTypeID\" : 9, \"PeakTypeID\" : 9, \"StartTime\" : \"01:59:00\", \"EndTime\" : \"02:29:00\" }]"; //"IsDeleteSchedule" : 1,
+//                params.put("JSON", json);
+
+                params.put("JSON", js.toString());
 
                 return params;
             }
-//            /**
-//             * Passing some request headers
-//             */
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//                HashMap<String, String> headers = new HashMap<String, String>();
-//                headers.put("Content-Type", "application/json");
-//                //headers.put("key", "Value");
-//                //headers.put("TEST","\"{\\\"type\\\":\\\"example\\\"}\"");
-//                return headers;
-//            }
         };
         Volley.newRequestQueue(context).add(jsonObjReq);
     }
 
 
-
-    //    StatusModel list;
     public void getData(Context context) {
         String url = "hess.site88.net/HessCloudGetBatteryStatus.php";
-
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        // the response is already constructed as a JSONObject!
+
                         try {
 //                            Gson gson = new Gson();
 //                            StatusModel arrayList = new StatusModel();
