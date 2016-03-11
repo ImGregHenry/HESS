@@ -1,12 +1,12 @@
 <?php
     include_once 'HessGlobals.php';
     
-    $percent = 0;
+    //$percent = 0;
     //TODO: get the actual current PeakScheduleID
     
 
-    //$command = escapeshellcmd(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
-    //$percent = exec("sudo " . PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
+    $command = escapeshellcmd(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
+    $percent = exec("sudo " . PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
 
     $BatteryStatus = array("BatteryStatus" => array());
     
@@ -39,7 +39,7 @@ $timestamp = DATE(DB_DATE_FORMAT);
 
 $data = array('PeakScheduleID' => 1,
                    'IsEnabled' => 1,
-                   'PowerLevelPercent' => 10,
+                   'PowerLevelPercent' => $percent,
                    'RecordTime' => $timestamp);
 
 echo post_to_url($url, $data);
