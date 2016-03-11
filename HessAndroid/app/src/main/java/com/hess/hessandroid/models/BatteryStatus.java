@@ -12,6 +12,6 @@ public class BatteryStatus {
     public int PowerLevelValue;
     public int PowerLevelPercent;
     public int DeviceID;
-    public int PublicScheduleID;
-
+    public int PeakScheduleID;
+    public int BatteryStatusID;
 }

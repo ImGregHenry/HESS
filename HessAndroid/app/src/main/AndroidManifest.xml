@@ -20,10 +20,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MyHomeActivity"
-            android:label="@string/title_activity_my_home" >
-        </activity>
-        <activity
             android:name=".UsageActivity"
             android:label="@string/title_activity_usage" >
         </activity>

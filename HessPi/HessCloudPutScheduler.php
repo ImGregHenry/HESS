@@ -1,43 +1,102 @@
 <?php
-    include 'HessGlobals.php';
+
+include 'HessGlobals.php';
+         
+# Get the POSTed data.  Remove bad formatting.  Parse json.
+$rawjson = STRIPSLASHES($_POST['JSON']);
+$json = json_decode(stripslashes($rawjson));
+
+$count = 1;
+
+# Insert each item into the database
+# Use the MAX PeakScheduleID value for all entries
+foreach($json as $item) {  
     
-    $result = json_decode(file_get_contents("php://input"));
+    $weekTypeID = $item->WeekTypeID;
+    $peakTypeID = $item->PeakTypeID;
+    $startTime = $item->StartTime;
+    $endTime = $item->EndTime;
+    $isDeleteSchedule = $item->IsDeleteSchedule;
+    //$peakTypeID = 2;
+    //$weekTypeID = 2;
+    //$startTime = DATE(DB_DATE_FORMAT, TIME());
+    //$endTime = DATE(DB_DATE_FORMAT, TIME());
     
-    foreach($result->Schedule as $item) {
+    # ID exists.  DELETE existing schedule.
+    if($isDeleteSchedule && $item->PeakScheduleID) {
         $peakScheduleID = $item->PeakScheduleID;
-        $weekTypeID = $item->WeekTypeID;
-        $peakTypeID = $item->PeakTypeID;
-        $startTime = $item->StartTime;
-        $endTime = $item->EndTime;
+        echo "DEL ID: (" . $count . "): " . $item->PeakScheduleID . ". ";
+
+        $query = "DELETE FROM PeakSchedule"
+            . " WHERE PeakScheduleID = :peakScheduleID;";
         
-        date_default_timezone_set('US/Eastern');
-        $DATE_FORMAT = "Y-m-d H:i:s";
-        $currentDateTime = DATE($DATE_FORMAT, TIME());
+        $conn = new PDO("mysql:host=" . MYSQL_CLOUD_HOST . ";dbname=" . MYSQL_CLOUD_DATABASE, MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
-        try {
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':peakScheduleID', $peakScheduleID, PDO::PARAM_INT);
+        
+        $stmt->execute();
+    }
+    # ID doesn't exist.  UPDATE existing schedule.# 
+    else if($item->PeakScheduleID) {
+        echo "UPD ID: (" . $count . "), ";
+        $peakScheduleID = $item->PeakScheduleID;
+
+        try {   
+            $query = "UPDATE PeakSchedule"
+            . " SET WeekTypeID = :weekTypeID,"
+            . " PeakTypeID = :peakTypeID,"
+            . " StartTime = :startTime,"
+            . " EndTime = :endTime"
+            . " WHERE PeakScheduleID = :peakScheduleID;";
             
-            $query = "INSERT INTO PeakSchedule (PeakScheduleID, WeekTypeID, PeakTypeID, StartTime, EndTime) "
-            . "VALUES (:peakScheduleID, :deviceID, :weekTypeID, :peakTypeID, :startTime, :endTime)";
-            
-            $conn = new PDO("mysql:host=MYSQL_CLOUD_HOST;dbname=MYSQL_CLOUD_DATABASE", MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
+            $conn = new PDO("mysql:host=" . MYSQL_CLOUD_HOST . ";dbname=" . MYSQL_CLOUD_DATABASE, MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             
             $stmt = $conn->prepare($query);
-            $stmt->bindParam(':peakScheduleID', $peakScheduleID, PDO::PARAM_STR, 20);
+            $stmt->bindParam(':peakScheduleID', $peakScheduleID, PDO::PARAM_INT);
             $stmt->bindParam(':weekTypeID', $weekTypeID, PDO::PARAM_INT);
             $stmt->bindParam(':peakTypeID', $peakTypeID, PDO::PARAM_INT);
-            $stmt->bindParam(':startTime', date("H:i:s", $startTime), PDO::PARAM_STR);
-            $stmt->bindParam(':endTime', date("H:i:s", $endTime), PDO::PARAM_STR);
+            $stmt->bindParam(':startTime', $startTime, PDO::PARAM_STR);
+            $stmt->bindParam(':endTime', $endTime, PDO::PARAM_STR);
             
             $stmt->execute();
             
         }
         catch(PDOException $e)
         {
-            //echo "ERROR: $e";
+            echo "ERROR: $e";
             return;
         }
-        
-        
     }
+    # ID doesn't exist.  INSERT new schedule.
+    else {
+        try {
+            echo "INS ID: (" . $count . "): " . $item->PeakScheduleID . ". ";
+
+            $query = "INSERT INTO PeakSchedule (WeekTypeID, PeakTypeID, StartTime, EndTime) "
+            . "VALUES (:weekTypeID, :peakTypeID, :startTime, :endTime)"; //:deviceID, 
+            
+            $conn = new PDO("mysql:host=" . MYSQL_CLOUD_HOST . ";dbname=" . MYSQL_CLOUD_DATABASE, MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            
+            $stmt = $conn->prepare($query);
+            $stmt->bindParam(':weekTypeID', $weekTypeID, PDO::PARAM_INT);
+            $stmt->bindParam(':peakTypeID', $peakTypeID, PDO::PARAM_INT);
+            $stmt->bindParam(':startTime', date("H:i:s", $startTime), PDO::PARAM_STR);
+            $stmt->bindParam(':endTime', date("H:i:s", $endTime), PDO::PARAM_STR);
+            
+            $stmt->execute();
+        }
+        catch(Exception $e) {
+            echo "ERROR: $e";
+        }
+    }
+
+    $count++;
+}
+
 ?>
+
+

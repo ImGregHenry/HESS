@@ -3,3 +3,8 @@ HessAndroid/.idea/copyright/profiles_settings.xml
 *.xml
 HessAndroid/.idea/misc.xml
 HessAndroid/app/app.iml
+HessAndroid/.idea/compiler.xml
+HessAndroid/.idea/gradle.xml
+HessAndroid/.idea/vcs.xml
+HessAndroid/.idea/libraries/library_aar_1_0_0.xml
+HessAndroid/gradlew
