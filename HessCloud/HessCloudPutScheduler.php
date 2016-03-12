@@ -73,7 +73,7 @@ foreach($json as $item) {
     # ID doesn't exist.  INSERT new schedule.
     else {
         try {
-            echo "INS ID: (" . $count . "): " . $item->PeakScheduleID . ". ";
+            echo "INS ID: (" . $count . ")";
 
             $query = "INSERT INTO PeakSchedule (WeekTypeID, PeakTypeID, StartTime, EndTime) "
             . "VALUES (:weekTypeID, :peakTypeID, :startTime, :endTime)"; //:deviceID, 
@@ -84,8 +84,8 @@ foreach($json as $item) {
             $stmt = $conn->prepare($query);
             $stmt->bindParam(':weekTypeID', $weekTypeID, PDO::PARAM_INT);
             $stmt->bindParam(':peakTypeID', $peakTypeID, PDO::PARAM_INT);
-            $stmt->bindParam(':startTime', date("H:i:s", $startTime), PDO::PARAM_STR);
-            $stmt->bindParam(':endTime', date("H:i:s", $endTime), PDO::PARAM_STR);
+            $stmt->bindParam(':startTime', $startTime, PDO::PARAM_STR);
+            $stmt->bindParam(':endTime', $endTime, PDO::PARAM_STR);
             
             $stmt->execute();
         }

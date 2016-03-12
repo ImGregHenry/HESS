@@ -14,6 +14,8 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
+import com.hess.hessandroid.models.BatteryStatus;
+import com.hess.hessandroid.models.HessSchedule;
 import com.hess.hessandroid.models.StatusModel;
 
 import org.json.JSONArray;
@@ -67,6 +69,37 @@ public class VolleyRequest {
         };
         Volley.newRequestQueue(context).add(jsonObjReq);
     }
+
+    public void getSchedulerData(Context context) {
+        String url = "http://hess.site88.net/HessCloudGetScheduler.php";
+
+        JsonObjectRequest jsonRequest = new JsonObjectRequest
+                (Request.Method.GET, url, new JSONObject(), new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Gson gson = new Gson();
+                            HessSchedule arrayList = new HessSchedule();
+//                            Type listType = new TypeToken<StatusModel>() { }.getType();
+                            //list = gson.fromJson(response.toString(), listType);
+                            //System.out.println("RESULT: " + list.batteryStatus.get(0).RecordTime);
+                            Log.d(LOG_STRING, "RECEIVED SUM DATAZ!");
+                        }
+                        catch(Exception e) {
+                            Log.e(LOG_STRING, "TRACE: " + e.printStackTrace());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                });
+
+        Volley.newRequestQueue(context).add(jsonRequest);
+    }
+
 
 
     public void getData(Context context) {

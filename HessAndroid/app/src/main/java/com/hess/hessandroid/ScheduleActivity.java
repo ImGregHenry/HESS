@@ -54,6 +54,10 @@ public class ScheduleActivity extends AppCompatActivity implements TimePickerDia
 
         weekSpinner = (Spinner) findViewById(R.id.spinnerWeekType);
         weekSpinner.setAdapter(new ArrayAdapter<WeekType>(this, android.R.layout.simple_list_item_1, WeekType.values()));
+
+        // Request data from cloud server
+        VolleyRequest req = new VolleyRequest();
+        req.getSchedulerData(this);
     }
 
     public void showStartTimePickerDialog(View v) {
@@ -95,9 +99,9 @@ public class ScheduleActivity extends AppCompatActivity implements TimePickerDia
         JSONObject jsonObj = schedule.toJSON();
         JSONArray json = new JSONArray();
         json.put(jsonObj);
+
         VolleyRequest req = new VolleyRequest();
         req.postData(this, "", json);
-        //req.postJSONData(this, "", null);
     }
 
     private String convertToTimeToMySQLFormat(int hour, int min) {
