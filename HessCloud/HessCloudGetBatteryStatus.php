@@ -3,10 +3,11 @@
 
 	try {
 		
-		$query = "SELECT DeviceID, PeakScheduleID, IsEnabled, RecordTime, CloudRecordTime, PowerLevelPercent "
+		$query = "SELECT PeakScheduleID, IsEnabled, RecordTime, PowerLevelPercent "
 			. " FROM BatteryStatus"
+        	. " WHERE BatteryStatusID = (SELECT MAX(BatteryStatusID) FROM BatteryStatus);";
 			#. " WHERE DeviceID = :deviceID "
-            . " ORDER BY RecordTime DESC ";
+            #. " ORDER BY RecordTime DESC ";
 		
 		$conn = new PDO("mysql:host=" . MYSQL_CLOUD_HOST . ";dbname=" .MYSQL_CLOUD_DATABASE, MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -24,11 +25,8 @@
 							
 				# Create array from the current row
 				$temparray = 	array('PeakScheduleID' => $rows['PeakScheduleID'],
-							'DeviceID' => $rows['DeviceID'],
 							'RecordTime' => $rows['RecordTime'],
 							'IsEnabled' => $rows['IsEnabled'],
-							'CloudRecordTime' => $rows['CloudRecordTime'],
-							'PowerLevelValue' => $rows['PowerLevelValue'],
 							'PowerLevelPercent' => $rows['PowerLevelPercent']);
 				
 				# Push the current row array into the results array
@@ -38,13 +36,15 @@
 	}
 	catch(PDOException $e)
 	{
-		echo "ERROR: $e";
-        return;
+		echo "ERROR: \r\n";
+        var_dump($e);
 	}
 	//var_dump($BatteryStatus);
 	//echo "\n\n";
 	//var_dump(json_encode($BatteryStatus));
 	
-	echo json_encode($BatteryStatus);
+	
+    $payload = json_encode($BatteryStatus);
+    echo $payload;
 		
 ?>

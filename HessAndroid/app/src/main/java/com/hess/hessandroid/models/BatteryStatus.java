@@ -1,17 +1,17 @@
 package com.hess.hessandroid.models;
 
+import android.util.Log;
+
 import java.util.Date;
 
-/**
- * Created by Greg on 2016-02-11.
- */
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class BatteryStatus {
-    public Date RecordTime;
-    public Date CloudRecordTime;
-    public int IsEnabled;
-    public int PowerLevelValue;
-    public int PowerLevelPercent;
-    public int DeviceID;
-    public int PeakScheduleID;
+    private final static String LOG_STRING = "HESS_ScheduleModel";
     public int BatteryStatusID;
+    public int PeakScheduleID;
+    public Date RecordTime;
+    public int IsEnabled;
+    public int PowerLevelPercent;
 }
