@@ -76,4 +76,20 @@
         android:layout_height="wrap_content"
         android:onClick="sendNewScheduleToCloud"
         android:text="SEND TO CLOUD" />
+
+
+    <TableLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+        <TableRow>
+
+        </TableRow>
+
+    </TableLayout>
+
+    <ListView
+        android:id="@+id/listViewSchedule"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+    </ListView>
 </LinearLayout>

@@ -6,11 +6,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.hess.hessandroid.adapters.ScheduleArrayAdapter;
 import com.hess.hessandroid.dialogs.TimePickerFragment;
 import com.hess.hessandroid.enums.PeakType;
 import com.hess.hessandroid.enums.WeekType;
@@ -21,28 +25,26 @@ import com.hess.hessandroid.volley.VolleyRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class ScheduleActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, VolleyRequest.VolleyRequestCallback {
     private final static String LOG_STRING = "HESS_Schedule";
     private static String PICKER_TYPE_START = "START";
     private static String PICKER_TYPE_END = "END";
 
+    private int pickerStartHour = 1;
+    private int pickerStartMin = 50;
+    private int pickerEndHour = 2;
+    private int pickerEndMin = 51;
 
-
-    int pickerStartHour = 1;
-    int pickerStartMin = 50;
-    int pickerEndHour = 2;
-    int pickerEndMin = 51;
-
-    Spinner peakSpinner;
-    Spinner weekSpinner;
-    TextView tvStartTime;
-    TextView tvEndTime;
+    private Spinner peakSpinner;
+    private Spinner weekSpinner;
+    private TextView tvStartTime;
+    private TextView tvEndTime;
+    private ListView lvSchedule;
     private String mCurrentPickerType;
+    private ScheduleArrayAdapter mArrayAdapter;
 
-    @Override
-    public void onVolleyGetScheduleReady(HessScheduleList scheduleList) {
-        // TODO: displayed schedule data
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +63,40 @@ public class ScheduleActivity extends AppCompatActivity implements TimePickerDia
         weekSpinner = (Spinner) findViewById(R.id.spinnerWeekType);
         weekSpinner.setAdapter(new ArrayAdapter<WeekType>(this, android.R.layout.simple_list_item_1, WeekType.values()));
 
-        Log.d(LOG_STRING, "TESTING*************");
+        requestHessScheduler();
+    }
 
-        // Request data from cloud server
-        VolleyRequest req = new VolleyRequest();
-        req.getSchedulerData(this);
+
+    private void initializeListView(ArrayList<HessSchedule> schedules) {
+        lvSchedule = (ListView) findViewById(R.id.listViewSchedule);
+
+//        ArrayList<HessSchedule> schedules = new ArrayList<HessSchedule>();
+//        HessSchedule schedule = new HessSchedule();
+//        schedule.EndTime = "123";
+//        schedule.StartTime = "321";
+//        schedule.WeekTypeID = 12;
+//        schedule.PeakTypeID = 19;
+//        schedules.add(schedule);
+
+        if(mArrayAdapter != null)
+            mArrayAdapter.clear();
+        mArrayAdapter = new ScheduleArrayAdapter(this, schedules);
+
+
+        lvSchedule.setAdapter(mArrayAdapter);
+        lvSchedule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int itemPosition     = position;
+
+                String  itemValue    = (String) lvSchedule.getItemAtPosition(position);
+
+                Toast.makeText(getApplicationContext(),
+                        "Position :" + itemPosition + "  ListItem : " + itemValue, Toast.LENGTH_LONG)
+                        .show();
+            }
+        });
     }
 
     public void showStartTimePickerDialog(View v) {
@@ -95,6 +126,22 @@ public class ScheduleActivity extends AppCompatActivity implements TimePickerDia
         }
     }
 
+    @Override
+    public void onVolleyGetScheduleReady(HessScheduleList scheduleList) {
+        // TODO: displayed schedule data
+        initializeListView(scheduleList.Schedule);
+    }
+    @Override
+    public void onVolleyPutScheduleReady() {
+        requestHessScheduler();
+    }
+
+    private void requestHessScheduler() {
+        // Request data from cloud server
+        VolleyRequest req = new VolleyRequest();
+        req.getSchedulerData(this);
+    }
+
     public void sendNewScheduleToCloud(View v) {
         HessSchedule schedule = new HessSchedule();
         schedule.EndTime = convertToTimeToMySQLFormat(pickerEndHour, pickerEndMin);
@@ -109,7 +156,7 @@ public class ScheduleActivity extends AppCompatActivity implements TimePickerDia
         json.put(jsonObj);
 
         VolleyRequest req = new VolleyRequest();
-        req.postData(this, "", json);
+        req.postData(this, json);
     }
 
     private String convertToTimeToMySQLFormat(int hour, int min) {

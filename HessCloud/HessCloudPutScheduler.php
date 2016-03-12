@@ -16,14 +16,14 @@ foreach($json as $item) {
     $peakTypeID = $item->PeakTypeID;
     $startTime = $item->StartTime;
     $endTime = $item->EndTime;
-    $isDeleteSchedule = $item->IsDeleteSchedule;
+    $isDeleted = $item->IsDeleted;
     //$peakTypeID = 2;
     //$weekTypeID = 2;
     //$startTime = DATE(DB_DATE_FORMAT, TIME());
     //$endTime = DATE(DB_DATE_FORMAT, TIME());
     
     # ID exists.  DELETE existing schedule.
-    if($isDeleteSchedule && $item->PeakScheduleID) {
+    if($isDeleted && $item->PeakScheduleID) {
         $peakScheduleID = $item->PeakScheduleID;
         echo "DEL ID: (" . $count . "): " . $item->PeakScheduleID . ". ";
 

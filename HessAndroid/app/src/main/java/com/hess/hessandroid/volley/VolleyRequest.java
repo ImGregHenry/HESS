@@ -24,14 +24,15 @@ import java.util.Map;
  * Created by Greg'sMonster on 10-Mar-16.
  */
 public class VolleyRequest {
-    private static String LOG_STRING = "VolleyRequest";
+    private static String LOG_STRING = "HESS_VolleyReq";
 
     public interface VolleyRequestCallback {
         public void onVolleyGetScheduleReady(HessScheduleList list);
+        public void onVolleyPutScheduleReady();
         //public void onVolleyGetBatteryStatusReady(BatteryStatusList list);
     }
 
-    public void postData(Context context, String url, final JSONArray js) {
+    public void postData(final Context context, final JSONArray js) {
         String url2 = "http://hess.site88.net/HessCloudPutScheduler.php";
 
         StringRequest jsonObjReq = new StringRequest(
@@ -40,6 +41,9 @@ public class VolleyRequest {
                     @Override
                     public void onResponse(String response) {
                         Log.d(LOG_STRING, response.toString());
+
+                        VolleyRequestCallback callback = (VolleyRequestCallback)context;
+                        callback.onVolleyPutScheduleReady();
                     }
                 }, new Response.ErrorListener() {
                     @Override
