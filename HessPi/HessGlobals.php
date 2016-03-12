@@ -36,8 +36,8 @@ define('MYSQL_CLOUD_DEBUG_HOST', '127.0.0.1');
 # PI MY SQL CREDENTIALS
 define('MYSQL_PI_HOST', 'localhost');
 define('MYSQL_PI_DATABASE', 'HESS');
-define('MYSQL_PI_USER', 'root');
-define('MYSQL_PI_PASSWORD', 'password');
+define('MYSQL_PI_USER', 'HESSADM');
+define('MYSQL_PI_PASSWORD', 'HessCloud1');
 
 # SET MYSQL DATE FORMAT
 define('DB_DATE_FORMAT', 'Y-m-d H:i:s');
