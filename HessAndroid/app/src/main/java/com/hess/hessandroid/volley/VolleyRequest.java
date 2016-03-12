@@ -12,7 +12,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hess.hessandroid.models.HessScheduleList;
-import com.hess.hessandroid.models.BatteryStatusList;
+import com.hess.hessandroid.models.BatteryStatus;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,10 +24,16 @@ import java.util.Map;
 public class VolleyRequest {
     private static String LOG_STRING = "HESS_VolleyReq";
 
-    public interface VolleyRequestCallback {
+    public interface VolleyReqCallbackGetSchedule {
         public void onVolleyGetScheduleReady(HessScheduleList list);
+    }
+
+    public interface VolleyReqCallbackPutSchedule {
         public void onVolleyPutScheduleReady();
-        public void onVolleyGetBatteryStatusReady(BatteryStatusList list);
+    }
+
+    public interface VolleyReqCallbackGetBatteryStatus {
+        public void onVolleyGetBatteryStatusReady(BatteryStatus string);
     }
 
     public void postData(final Context context, final JSONArray js) {
@@ -40,7 +46,7 @@ public class VolleyRequest {
                     public void onResponse(String response) {
                         Log.d(LOG_STRING, response.toString());
 
-                        VolleyRequestCallback callback = (VolleyRequestCallback)context;
+                        VolleyReqCallbackPutSchedule callback = (VolleyReqCallbackPutSchedule)context;
                         callback.onVolleyPutScheduleReady();
                     }
                 }, new Response.ErrorListener() {
@@ -77,7 +83,7 @@ public class VolleyRequest {
                             Type listType = new TypeToken<HessScheduleList>() { }.getType();
                             HessScheduleList arrayList = gson.fromJson(response.toString(), listType);
 
-                            VolleyRequestCallback callback = (VolleyRequestCallback)context;
+                            VolleyReqCallbackGetSchedule callback = (VolleyReqCallbackGetSchedule)context;
                             callback.onVolleyGetScheduleReady(arrayList);
                         }
                         catch(Exception e) {
@@ -108,11 +114,11 @@ public class VolleyRequest {
                         try {
                             Gson gson = new Gson();
 
-                            Type listType = new TypeToken<BatteryStatusList>() { }.getType();
-                            BatteryStatusList arrayList = gson.fromJson(response.toString(), listType);
+                            Type listType = new TypeToken<BatteryStatus>() { }.getType();
+                            BatteryStatus arrayString = gson.fromJson(response.toString(), listType);
 
-                            VolleyRequestCallback callback = (VolleyRequestCallback)context;
-                            callback.onVolleyGetBatteryStatusReady(arrayList);
+                            VolleyReqCallbackGetBatteryStatus callback = (VolleyReqCallbackGetBatteryStatus)context;
+                            callback.onVolleyGetBatteryStatusReady(arrayString);
 
                             //Log.d(LOG_STRING, list.get(0));
                         }
@@ -126,7 +132,7 @@ public class VolleyRequest {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
+                        Log.e(LOG_STRING, "ERROR: " + error.getMessage());
                     }
                 });
 

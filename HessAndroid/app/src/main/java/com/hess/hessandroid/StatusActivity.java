@@ -9,39 +9,52 @@ import android.view.MenuItem;
 
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.hess.hessandroid.models.BatteryStatus;
 import com.hess.hessandroid.volley.VolleyRequest;
-import com.hess.hessandroid.models.BatteryStatusList;
 import org.json.JSONObject;
 
-public class StatusActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class StatusActivity extends AppCompatActivity implements VolleyRequest.VolleyReqCallbackGetBatteryStatus {
     private final static String LOG_STRING = "HESS_STATUS";
-    TextView tv;
-    TextView remaining;
-    ProgressBar progressBar;
-
-    BatteryStatusList list = new BatteryStatusList();
-
+    //TextView tv;
+    private TextView powerPercentVal;
+    private ProgressBar progressBar;
+    private Integer powerPercent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_status);
 
-        //tv = (TextView) findViewById(R.id.tvTest);
         progressBar = (ProgressBar) findViewById(R.id.remainingPowerProgress);
-        remaining = (TextView) findViewById(R.id.remainingTime);
+        powerPercentVal = (TextView) findViewById(R.id.remainingPowerPercent);
 
-        Log.d(LOG_STRING, "TESTING*************");
+        requestBatteryStatus();
+    }
+
+    @Override
+    public void onVolleyGetBatteryStatusReady(BatteryStatus batteryStatus) {
+        initializeListView(batteryStatus);
+    }
+
+    private void initializeListView(BatteryStatus batteryStatuses) {
+        powerPercent = batteryStatuses.getPowerLevelPercent();
+        Log.d(LOG_STRING, powerPercent.toString() + "%");
+
+        powerPercentVal.setText(powerPercent.toString() + "%");
+        progressBar.setProgress(powerPercent);
+    }
+
+    private void requestBatteryStatus() {
+//        Log.d(LOG_STRING, "TESTING*************");
 
         VolleyRequest req = new VolleyRequest();
         req.getBatteryStatusData(this);
-        Log.d(LOG_STRING, req.toString());
-        //tv.setText("Testing.  Gogogo!");
-
-        //remaining.setText(list.BatteryStatus.toString());
-
-        progressBar.setProgress(70); //TODO: insert PowerLevelPercent from BatteryStatusList
     }
+
+
 
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {

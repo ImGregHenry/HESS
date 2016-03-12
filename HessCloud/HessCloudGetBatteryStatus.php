@@ -30,7 +30,7 @@
 							'PowerLevelPercent' => $rows['PowerLevelPercent']);
 				
 				# Push the current row array into the results array
-				array_push($BatteryStatus['BatteryStatus'], $temparray); 
+//				array_push($BatteryStatus['BatteryStatus'], $temparray); 
 			}
 		}
 	}
@@ -44,7 +44,7 @@
 	//var_dump(json_encode($BatteryStatus));
 	
 	
-    $payload = json_encode($BatteryStatus);
+    $payload = json_encode($temparray);
     echo $payload;
 		
 ?>

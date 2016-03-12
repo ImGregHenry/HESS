@@ -27,7 +27,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ScheduleActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, VolleyRequest.VolleyRequestCallback {
+public class ScheduleActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, VolleyRequest.VolleyReqCallbackGetSchedule, VolleyRequest.VolleyReqCallbackPutSchedule {
     private final static String LOG_STRING = "HESS_Schedule";
     private static String PICKER_TYPE_START = "START";
     private static String PICKER_TYPE_END = "END";
