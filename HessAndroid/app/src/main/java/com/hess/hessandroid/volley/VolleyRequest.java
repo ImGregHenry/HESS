@@ -3,30 +3,22 @@ package com.hess.hessandroid.volley;
 import android.content.Context;
 import android.util.Log;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
-import com.hess.hessandroid.models.BatteryStatus;
-import com.hess.hessandroid.models.HessSchedule;
-import com.hess.hessandroid.models.StatusModel;
+import com.hess.hessandroid.models.HessScheduleList;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Greg'sMonster on 10-Mar-16.
@@ -34,10 +26,10 @@ import java.util.concurrent.TimeUnit;
 public class VolleyRequest {
     private static String LOG_STRING = "VolleyRequest";
 
-    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    java.text.SimpleDateFormat sdfMS = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-
-    private static JSONObject jason;
+    public interface VolleyRequestCallback {
+        public void onVolleyGetScheduleReady(HessScheduleList list);
+        //public void onVolleyGetBatteryStatusReady(BatteryStatusList list);
+    }
 
     public void postData(Context context, String url, final JSONArray js) {
         String url2 = "http://hess.site88.net/HessCloudPutScheduler.php";
@@ -70,7 +62,7 @@ public class VolleyRequest {
         Volley.newRequestQueue(context).add(jsonObjReq);
     }
 
-    public void getSchedulerData(Context context) {
+    public void getSchedulerData(final Context context) {
         String url = "http://hess.site88.net/HessCloudGetScheduler.php";
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest
@@ -79,14 +71,15 @@ public class VolleyRequest {
                     public void onResponse(JSONObject response) {
                         try {
                             Gson gson = new Gson();
-                            HessSchedule arrayList = new HessSchedule();
-//                            Type listType = new TypeToken<StatusModel>() { }.getType();
-                            //list = gson.fromJson(response.toString(), listType);
-                            //System.out.println("RESULT: " + list.batteryStatus.get(0).RecordTime);
-                            Log.d(LOG_STRING, "RECEIVED SUM DATAZ!");
+
+                            Type listType = new TypeToken<HessScheduleList>() { }.getType();
+                            HessScheduleList arrayList = gson.fromJson(response.toString(), listType);
+
+                            VolleyRequestCallback callback = (VolleyRequestCallback)context;
+                            callback.onVolleyGetScheduleReady(arrayList);
                         }
                         catch(Exception e) {
-                            Log.e(LOG_STRING, "TRACE: " + e.printStackTrace());
+                            Log.e(LOG_STRING, e.getMessage());
                         }
                     }
                 }, new Response.ErrorListener() {

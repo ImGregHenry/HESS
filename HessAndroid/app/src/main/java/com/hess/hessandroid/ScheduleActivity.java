@@ -15,12 +15,13 @@ import com.hess.hessandroid.dialogs.TimePickerFragment;
 import com.hess.hessandroid.enums.PeakType;
 import com.hess.hessandroid.enums.WeekType;
 import com.hess.hessandroid.models.HessSchedule;
+import com.hess.hessandroid.models.HessScheduleList;
 import com.hess.hessandroid.volley.VolleyRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class ScheduleActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
+public class ScheduleActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, VolleyRequest.VolleyRequestCallback {
     private final static String LOG_STRING = "HESS_Schedule";
     private static String PICKER_TYPE_START = "START";
     private static String PICKER_TYPE_END = "END";
@@ -39,6 +40,11 @@ public class ScheduleActivity extends AppCompatActivity implements TimePickerDia
     private String mCurrentPickerType;
 
     @Override
+    public void onVolleyGetScheduleReady(HessScheduleList scheduleList) {
+        // TODO: displayed schedule data
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
@@ -54,6 +60,8 @@ public class ScheduleActivity extends AppCompatActivity implements TimePickerDia
 
         weekSpinner = (Spinner) findViewById(R.id.spinnerWeekType);
         weekSpinner.setAdapter(new ArrayAdapter<WeekType>(this, android.R.layout.simple_list_item_1, WeekType.values()));
+
+        Log.d(LOG_STRING, "TESTING*************");
 
         // Request data from cloud server
         VolleyRequest req = new VolleyRequest();
