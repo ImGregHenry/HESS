@@ -6,10 +6,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.hess.hessandroid.dialogs.TimePickerFragment;
+import com.hess.hessandroid.enums.PeakType;
+import com.hess.hessandroid.enums.WeekType;
 import com.hess.hessandroid.models.HessSchedule;
 import com.hess.hessandroid.volley.VolleyRequest;
 
@@ -20,13 +24,16 @@ public class ScheduleActivity extends AppCompatActivity implements TimePickerDia
     private final static String LOG_STRING = "HESS_Schedule";
     private static String PICKER_TYPE_START = "START";
     private static String PICKER_TYPE_END = "END";
-    private static String PICKER_TYPE_BUNDLE_NAME = "PICKER_TYPE";
+
+
 
     int pickerStartHour = 1;
     int pickerStartMin = 50;
     int pickerEndHour = 2;
     int pickerEndMin = 51;
 
+    Spinner peakSpinner;
+    Spinner weekSpinner;
     TextView tvStartTime;
     TextView tvEndTime;
     private String mCurrentPickerType;
@@ -36,8 +43,17 @@ public class ScheduleActivity extends AppCompatActivity implements TimePickerDia
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
 
-        tvStartTime = (TextView)findViewById(R.id.tvStartTime);
-        tvEndTime = (TextView)findViewById(R.id.tvEndTime);
+        tvStartTime = (TextView) findViewById(R.id.tvStartTime);
+        tvEndTime = (TextView) findViewById(R.id.tvEndTime);
+
+        tvStartTime.setText(convertToTimeToMySQLFormat(pickerStartHour, pickerStartMin));
+        tvEndTime.setText(convertToTimeToMySQLFormat(pickerEndHour, pickerEndMin));
+
+        peakSpinner = (Spinner) findViewById(R.id.spinnerPeakType);
+        peakSpinner.setAdapter(new ArrayAdapter<PeakType>(this, android.R.layout.simple_list_item_1, PeakType.values()));
+
+        weekSpinner = (Spinner) findViewById(R.id.spinnerWeekType);
+        weekSpinner.setAdapter(new ArrayAdapter<WeekType>(this, android.R.layout.simple_list_item_1, WeekType.values()));
     }
 
     public void showStartTimePickerDialog(View v) {
@@ -54,14 +70,14 @@ public class ScheduleActivity extends AppCompatActivity implements TimePickerDia
 
     @Override
     public void onTimeSet(TimePicker view, int hour, int minute) {
-        if(mCurrentPickerType == PICKER_TYPE_START) {
+        if (mCurrentPickerType == PICKER_TYPE_START) {
             pickerStartHour = hour;
             pickerStartMin = minute;
-            tvStartTime.setText("START: " + convertToTimeToMySQLFormat(hour, minute));
+            tvStartTime.setText(convertToTimeToMySQLFormat(hour, minute));
         } else if (mCurrentPickerType == PICKER_TYPE_END) {
             pickerEndHour = hour;
             pickerEndMin = minute;
-            tvEndTime.setText("END: " + convertToTimeToMySQLFormat(hour, minute));
+            tvEndTime.setText(convertToTimeToMySQLFormat(hour, minute));
         } else {
             Log.e(LOG_STRING, "Error: Invalid listener type for time set.");
         }
@@ -71,8 +87,10 @@ public class ScheduleActivity extends AppCompatActivity implements TimePickerDia
         HessSchedule schedule = new HessSchedule();
         schedule.EndTime = convertToTimeToMySQLFormat(pickerEndHour, pickerEndMin);
         schedule.StartTime = convertToTimeToMySQLFormat(pickerStartHour, pickerStartMin);
-        schedule.PeakTypeID = 2;
-        schedule.WeekTypeID = 2;
+        PeakType peak = (PeakType)peakSpinner.getSelectedItem();
+        WeekType week = (WeekType)weekSpinner.getSelectedItem();
+        schedule.PeakTypeID = peak.getID();
+        schedule.WeekTypeID = week.getID();
 
         JSONObject jsonObj = schedule.toJSON();
         JSONArray json = new JSONArray();
@@ -84,11 +102,11 @@ public class ScheduleActivity extends AppCompatActivity implements TimePickerDia
 
     private String convertToTimeToMySQLFormat(int hour, int min) {
         String result = "";
-        if(hour < 10)
+        if (hour < 10)
             result += "0";
         result += hour + ":";
 
-        if(min < 10)
+        if (min < 10)
             result += "0";
         result += min;
         result += ":00";

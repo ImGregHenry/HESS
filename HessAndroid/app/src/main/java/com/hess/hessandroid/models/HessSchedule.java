@@ -19,6 +19,7 @@ public class HessSchedule {
     public JSONObject toJSON() {
         try {
             JSONObject json = new JSONObject();
+            // Don't add the json ID field if it isn't populated
             if(PeakScheduleID != -1)
                 json.put("PeakScheduleID", PeakScheduleID);
             json.put("WeekTypeID", WeekTypeID);
@@ -29,7 +30,7 @@ public class HessSchedule {
         } catch (JSONException e) {
             Log.e(LOG_STRING, "JSON ERROR: Unable to parse. Message: " + e.getMessage());
         }
-        return null;
+        return new JSONObject();
     }
 
 }
