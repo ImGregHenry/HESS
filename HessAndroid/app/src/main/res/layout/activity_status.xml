@@ -35,7 +35,7 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <LinearLayout
+                    <!--<LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/battery_status">
@@ -58,7 +58,7 @@
                             android:paddingLeft="170dp"
                             android:checked="true" />
 
-                    </LinearLayout>
+                    </LinearLayout>-->
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -75,18 +75,18 @@
                         android:id="@+id/remainingPowerProgress"
                         android:layout_gravity="center_horizontal"
                         android:clickable="false"
-                        android:indeterminate="false"
-                        android:progress="30" />
+                        android:indeterminate="false" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/remaining_time">
 
+                        <!--android:text="Estimated Time Remaining: "-->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Estimated Time Remaining: "
+
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:id="@+id/remainingTime"
                             android:padding="20dp" />

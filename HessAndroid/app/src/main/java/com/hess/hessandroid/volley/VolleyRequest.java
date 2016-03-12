@@ -15,8 +15,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.hess.hessandroid.models.BatteryStatus;
+import com.hess.hessandroid.models.BatteryStatusList;
 import com.hess.hessandroid.models.HessSchedule;
-import com.hess.hessandroid.models.StatusModel;
+//import com.hess.hessandroid.models.BatteryStatusList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,11 +27,9 @@ import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by Greg'sMonster on 10-Mar-16.
- */
 public class VolleyRequest {
     private static String LOG_STRING = "VolleyRequest";
 
@@ -86,7 +85,7 @@ public class VolleyRequest {
                             Log.d(LOG_STRING, "RECEIVED SUM DATAZ!");
                         }
                         catch(Exception e) {
-                            Log.e(LOG_STRING, "TRACE: " + e.printStackTrace());
+                            Log.e(LOG_STRING, e.getMessage());
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -102,31 +101,27 @@ public class VolleyRequest {
 
 
 
-    public void getData(Context context) {
-        String url = "hess.site88.net/HessCloudGetBatteryStatus.php";
+    public void getBatteryStatusData(final Context context) {
+        String url = "http://hess.site88.net/HessCloudGetBatteryStatus.php";
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                (Request.Method.GET, url, new JSONObject(), new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
 
                         try {
-//                            Gson gson = new Gson();
-//                            StatusModel arrayList = new StatusModel();
-//                            Type listType = new TypeToken<StatusModel>() { }.getType();
-                            //list = gson.fromJson(response.toString(), listType);
-                            //System.out.println("RESULT: " + list.batteryStatus.get(0).RecordTime);
-                            Log.d(LOG_STRING, "RECEIVED SUM DATAZ!");
-                        }
-//                        catch(JSONException e) {
-////                            e.printStackTrace();
-//                            Log.d(LOG_STRING, "SKIPPED, SKIPPED");
-//
-//                        }
+                            Gson gson = new Gson();
 
+                            Type listType = new TypeToken<BatteryStatusList>() { }.getType();
+                            BatteryStatusList arrayList = gson.fromJson(response.toString(), listType);
+
+                            VolleyRequestCallback callback = (VolleyRequestCallback)context;
+                            callback.onVolleyGetBatteryStatusReady(arrayList);
+
+                            //Log.d(LOG_STRING, list.get(0));
+                        }
                         catch(Exception e) {
-//                            e.printStackTrace();
-                            Log.d(LOG_STRING, "SKIPPED, SKIPPED");
+                            Log.e(LOG_STRING, e.getMessage());
 
                         }
 
