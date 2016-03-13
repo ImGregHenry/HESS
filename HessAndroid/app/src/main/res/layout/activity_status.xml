@@ -53,7 +53,7 @@
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:id="@+id/remainingPowerPercent"
-                            android:paddingLeft="50dp"
+                            android:paddingLeft="60dp"
                             android:paddingTop="20dp"
                             android:paddingBottom="20dp" />
 
@@ -83,10 +83,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="30 Minutes "
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:id="@+id/rTime"
-                            android:paddingLeft="95dp"
+                            android:paddingLeft="100dp"
                             android:paddingTop="20dp"
                             android:paddingBottom="20dp" />
                     </LinearLayout>
@@ -99,17 +98,16 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Current Usage:"
+                            android:text="Current Power Usage:"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:id="@+id/currentUsage"
                             android:padding="20dp" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="2.2Wh"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:id="@+id/cUsage"
-                            android:paddingLeft="150dp"
+                            android:paddingLeft="100dp"
                             android:paddingTop="20dp"
                             android:paddingBottom="20dp" />
                     </LinearLayout>

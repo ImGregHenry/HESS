@@ -7,21 +7,37 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hess.hessandroid.models.BatteryStatus;
+import com.hess.hessandroid.models.HessSchedule;
+import com.hess.hessandroid.models.HessScheduleList;
+import com.hess.hessandroid.models.PowerUsage;
 import com.hess.hessandroid.volley.VolleyRequest;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class StatusActivity extends AppCompatActivity implements VolleyRequest.VolleyReqCallbackGetBatteryStatus {
+public class StatusActivity extends AppCompatActivity implements
+        VolleyRequest.VolleyReqCallbackGetBatteryStatus, VolleyRequest.VolleyReqCallbackGetPowerUsage, VolleyRequest.VolleyReqCallbackGetSchedule {
     private final static String LOG_STRING = "HESS_STATUS";
     //TextView tv;
     private TextView powerPercentVal;
     private ProgressBar progressBar;
-    private Integer powerPercent;
+    private TextView powerUsageVal;
+    private TextView remainingTimeVal;
+
+    private int powerPercent;
+    private double totalPowerUsage = 1260.0;
+    private double currentPowerUsage;
+    private double powerPercentDec;
+    private double remainingTime;
+    private int remainingTimeHour;
+    private int remainingTimeMinute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,21 +46,68 @@ public class StatusActivity extends AppCompatActivity implements VolleyRequest.V
 
         progressBar = (ProgressBar) findViewById(R.id.remainingPowerProgress);
         powerPercentVal = (TextView) findViewById(R.id.remainingPowerPercent);
+        powerUsageVal = (TextView) findViewById(R.id.cUsage);
+        remainingTimeVal = (TextView) findViewById(R.id.rTime);
 
-        requestBatteryStatus();
+        //Receive battery status every minute
+        Timer timerBatteryStatus = new Timer();
+        timerBatteryStatus.schedule(new TimerTask() {
+            public void run() {
+                requestBatteryStatus();
+            }
+        }, 0, 60*1000);
+
+        //Receive power usage every minute
+        //TODO: change minute to smaller interval
+        Timer timerPowerUsage = new Timer();
+        timerPowerUsage.schedule(new TimerTask() {
+            public void run() {
+                requestPowerUsage();
+            }
+        }, 0, 60*1000);
+
+        requestHessScheduler();
     }
 
     @Override
     public void onVolleyGetBatteryStatusReady(BatteryStatus batteryStatus) {
-        initializeListView(batteryStatus);
+        initializeBatteryStatus(batteryStatus);
     }
 
-    private void initializeListView(BatteryStatus batteryStatuses) {
+    private void initializeBatteryStatus(BatteryStatus batteryStatuses) {
         powerPercent = batteryStatuses.getPowerLevelPercent();
-        Log.d(LOG_STRING, powerPercent.toString() + "%");
+        Log.d(LOG_STRING, powerPercent + "%");
 
-        powerPercentVal.setText(powerPercent.toString() + "%");
+        powerPercentVal.setText(powerPercent + "%");
         progressBar.setProgress(powerPercent);
+    }
+
+    @Override
+    public void onVolleyGetPowerUsageReady(PowerUsage powerUsage) {
+        initializePowerUsage(powerUsage);
+    }
+
+    private void initializePowerUsage(PowerUsage powerUsages) {
+        currentPowerUsage = powerUsages.getPowerUsage();
+        Log.d(LOG_STRING, currentPowerUsage + "W");
+        powerUsageVal.setText(currentPowerUsage + "W");
+
+        //Remaining time calculation
+        powerPercentDec = powerPercent/(double)100;
+        remainingTime = (totalPowerUsage/currentPowerUsage)*powerPercentDec;
+        remainingTimeHour = (int)remainingTime;
+        remainingTimeMinute = (int)((remainingTime - remainingTimeHour)*60);
+        Log.d(LOG_STRING, remainingTimeHour + "H " + remainingTimeMinute + "M");
+        remainingTimeVal.setText(remainingTimeHour + "H " + remainingTimeMinute + "M");
+    }
+
+    public void onVolleyGetScheduleReady(HessScheduleList scheduleList) {
+        // TODO: displayed schedule data
+        initializeHessSchedule(scheduleList.Schedule);
+    }
+
+    private void initializeHessSchedule(ArrayList<HessSchedule> schedules) {
+        Log.d(LOG_STRING, "Return list of schedulesL " + (schedules.get(0)).toString());
     }
 
     private void requestBatteryStatus() {
@@ -54,7 +117,15 @@ public class StatusActivity extends AppCompatActivity implements VolleyRequest.V
         req.getBatteryStatusData(this);
     }
 
+    private void requestPowerUsage() {
+        VolleyRequest req = new VolleyRequest();
+        req.getPowerUsageData(this);
+    }
 
+    private void requestHessScheduler() {
+        VolleyRequest req = new VolleyRequest();
+        req.getSchedulerData(this);
+    }
 
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {

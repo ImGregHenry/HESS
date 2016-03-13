@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hess.hessandroid.models.HessScheduleList;
 import com.hess.hessandroid.models.BatteryStatus;
+import com.hess.hessandroid.models.PowerUsage;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,6 +35,10 @@ public class VolleyRequest {
 
     public interface VolleyReqCallbackGetBatteryStatus {
         public void onVolleyGetBatteryStatusReady(BatteryStatus string);
+    }
+
+    public interface VolleyReqCallbackGetPowerUsage {
+        public void onVolleyGetPowerUsageReady(PowerUsage string);
     }
 
     public void postData(final Context context, final JSONArray js) {
@@ -121,6 +126,40 @@ public class VolleyRequest {
                             callback.onVolleyGetBatteryStatusReady(arrayString);
 
                             //Log.d(LOG_STRING, list.get(0));
+                        }
+                        catch(Exception e) {
+                            Log.e(LOG_STRING, e.getMessage());
+
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(LOG_STRING, "ERROR: " + error.getMessage());
+                    }
+                });
+
+        Volley.newRequestQueue(context).add(jsonRequest);
+    }
+
+    public void getPowerUsageData(final Context context) {
+        String url = "http://hess.site88.net/HessCloudGetPowerUsage.php";
+
+        JsonObjectRequest jsonRequest = new JsonObjectRequest
+                (Request.Method.GET, url, new JSONObject(), new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+                            Gson gson = new Gson();
+
+                            Type listType = new TypeToken<PowerUsage>() { }.getType();
+                            PowerUsage arrayString = gson.fromJson(response.toString(), listType);
+
+                            VolleyReqCallbackGetPowerUsage callback = (VolleyReqCallbackGetPowerUsage)context;
+                            callback.onVolleyGetPowerUsageReady(arrayString);
                         }
                         catch(Exception e) {
                             Log.e(LOG_STRING, e.getMessage());

@@ -5,18 +5,20 @@
 		
 	try {
 		
-		$query = "SELECT PowerUsageID, RecordTime, PowerUsageInWatts FROM PowerUsageData "
-	                . "ORDER BY RecordTime DESC "
-	                . "LIMIT 100";
+		$query = "SELECT PowerUsageID, RecordTime, PowerUsageInWatts "
+            . " FROM PowerUsageData "
+            . " WHERE PowerUsageID = (SELECT MAX(PowerUsageID) FROM PowerUsageData);";
+        #. "ORDER BY RecordTime DESC "
+        #. "LIMIT 100";
 		
-		$conn = new PDO("mysql:host=" . MYSQL_CLOUD_HOST . ";dbname=" . MYSQL_CLOUD_DATABASE, MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
+		$conn = new PDO("mysql:host=" . MYSQL_CLOUD_HOST . ";dbname=" .MYSQL_CLOUD_DATABASE, MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$stmt = $conn->prepare($query);
 		$stmt->execute();
 		
 		
 		# Results array
-		$powerUsageData = array("PowerUsageData" => array());
+        # $powerUsageData = array("PowerUsageData" => array());
 		
 		if ($stmt->rowCount() > 0) {
 			
@@ -29,19 +31,20 @@
 							'PowerUsageInWatts' => $rows['PowerUsageInWatts']);
 				
 				# Push the current row array into the results array
-				array_push($powerUsageData['PowerUsageData'], $temparray); 
+                # array_push($powerUsageData['PowerUsageData'], $temparray);
 			}
 		}
 	}
 	catch(PDOException $e)
 	{
-		echo "ERROR: $e";
-	    return;
+		echo "ERROR: \r\n";
+	    var_dump($e);
 	}
 	//var_dump($powerUsageData);
 	//echo "\n\n";
 	//var_dump(json_encode($powerUsageData));
 
-	echo json_encode($powerUsageData);
+	$payload = json_encode($temparray);
+    echo $payload;
 		
 ?>

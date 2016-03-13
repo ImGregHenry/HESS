@@ -15,8 +15,6 @@
 		#$stmt->bindParam(':deviceID', $devID=PI_DEVICE_ID, PDO::PARAM_INT);
 		$stmt->execute();
 		
-		# Results array
-		$BatteryStatus = array("BatteryStatus" => array());
 		
 		if ($stmt->rowCount() > 0) {
 			
@@ -30,7 +28,7 @@
 							'PowerLevelPercent' => $rows['PowerLevelPercent']);
 				
 				# Push the current row array into the results array
-//				array_push($BatteryStatus['BatteryStatus'], $temparray); 
+                # array_push($BatteryStatus['BatteryStatus'], $temparray);
 			}
 		}
 	}
