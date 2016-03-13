@@ -56,7 +56,7 @@
 
 
     // Erase previous entries from database.
-    HessPiStateTracker::deleteAllSchedulesFromDB();
+    PiStateTracker::deleteAllSchedulesFromDB();
 
     $isRunOnce = false;
     foreach($schedule->Schedule as $item) { 
@@ -78,19 +78,18 @@
         
         try {
             
-            $query = "INSERT INTO PeakSchedule (PeakScheduleID, WeekTypeID, PeakTypeID, StartTime, EndTime) "
-            . "VALUES (:peakScheduleID, :weekTypeID, :peakTypeID, :startTime, :endTime)";
+            $query = "INSERT INTO PeakSchedule (WeekTypeID, PeakTypeID, StartTime, EndTime) "
+            . " VALUES (:weekTypeID, :peakTypeID, :startTime, :endTime)";
             
             $conn = new PDO("mysql:host=" . MYSQL_PI_HOST . ";dbname=" . MYSQL_PI_DATABASE, MYSQL_PI_USER, MYSQL_PI_PASSWORD);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             
             $stmt = $conn->prepare($query);
-            $stmt->bindParam(':peakScheduleID', $peakScheduleID, PDO::PARAM_STR, 20);
             $stmt->bindParam(':weekTypeID', $weekTypeID, PDO::PARAM_INT);
             $stmt->bindParam(':peakTypeID', $peakTypeID, PDO::PARAM_INT);
             //$stmt->bindParam(':deviceID', $deviceID, PDO::PARAM_INT);
-            $stmt->bindParam(':startTime', date("H:i:s", strtotime($startTime)), PDO::PARAM_STR);
-            $stmt->bindParam(':endTime', date("H:i:s", strtotime($endTime)), PDO::PARAM_STR);
+            $stmt->bindParam(':startTime', $startTime, PDO::PARAM_STR);
+            $stmt->bindParam(':endTime', $endTime, PDO::PARAM_STR);
 
             $stmt->execute();
         }

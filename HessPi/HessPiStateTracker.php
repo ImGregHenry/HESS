@@ -174,9 +174,9 @@ class PiStateTracker {
 			$row = $stmt->fetch();
 			$peakScheduleID = $row['PeakScheduleID'];
 
-			$startDate = STRTOTIME(DateTime::createFromFormat(DB_TIME_FORMAT, $row['StartTime']);
-			$endDate = STRTOTIME(DateTime::createFromFormat(DB_TIME_FORMAT, $row['EndTime']);
-			$currDate = STRTOTIME(DateTime::createFromFormat(DB_DATE_FORMAT, TIME());
+			$startDate = STRTOTIME(DateTime::createFromFormat(DB_TIME_FORMAT, $row['StartTime']));
+			$endDate = STRTOTIME(DateTime::createFromFormat(DB_TIME_FORMAT, $row['EndTime']));
+			$currDate = STRTOTIME(DateTime::createFromFormat(DB_DATE_FORMAT, TIME()));
 			if ($startDate > $endDate && $currDate < $startDate)
 			{
 			   return $row['PeakType'];
