@@ -1,8 +1,6 @@
 <?php
-include_once 'HessGlobals.php';
+	include_once 'HessGlobals.php';
 
-
-	$peakScheduleID = $_POST['PeakScheduleID'];
 	$isEnabled = $_POST['IsEnabled'];
 	$recordTime =  $_POST['RecordTime'];
 	$powerLevelPercent = $_POST['PowerLevelPercent'];
@@ -14,14 +12,14 @@ include_once 'HessGlobals.php';
 
 	try {
 		
-		$query = "INSERT INTO BatteryStatus (PeakScheduleID, IsEnabled, RecordTime, CloudRecordTime, PowerLevelPercent) " //RecordTimeMS, CloudRecordTimeMS,
-			. "VALUES (:peakScheduleID, :isEnabled, :recordTime, :cloudRecordTime, :powerLevelPercent)"; //:recordTimeMS, :cloudRecordTimeMS,
+		$query = "INSERT INTO BatteryStatus (IsEnabled, RecordTime, CloudRecordTime, PowerLevelPercent) " //RecordTimeMS, CloudRecordTimeMS,
+			. "VALUES (:isEnabled, :recordTime, :cloudRecordTime, :powerLevelPercent)"; //:recordTimeMS, :cloudRecordTimeMS,
 		
 		$conn = new PDO("mysql:host=" . MYSQL_CLOUD_HOST . ";dbname=" . MYSQL_CLOUD_DATABASE, MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		
 		$stmt = $conn->prepare($query);
-		$stmt->bindParam(':peakScheduleID', $peakScheduleID, PDO::PARAM_STR, 20);
+		//$stmt->bindParam(':peakScheduleID', $peakScheduleID, PDO::PARAM_STR, 20);
 		//$stmt->bindParam(':deviceID', $deviceID, PDO::PARAM_INT);
 		$stmt->bindParam(':isEnabled', $isEnabled, PDO::PARAM_INT);
 		$stmt->bindParam(':recordTime', $recordTime, PDO::PARAM_STR);

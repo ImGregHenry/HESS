@@ -1,17 +1,6 @@
 <?php
     include_once 'HessGlobals.php';
-    
-    //$percent = 0;
-    //TODO: get the actual current PeakScheduleID
-    
 
-    $command = escapeshellcmd(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
-    $percent = exec("sudo " . PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
-
-    $BatteryStatus = array("BatteryStatus" => array());
-    
-    $url = "http://hess.site88.net/HessCloudPutBatteryStatus.php";
-    
 
 function post_to_url($url, $data) {
     $fields = '';
@@ -34,15 +23,28 @@ function post_to_url($url, $data) {
 }
 
 
-$timestamp = DATE(DB_DATE_FORMAT);
-//array_push($BatteryStatus['BatteryStatus'], $temparray);
+    $batteryStatusLevel = exec(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
+    $isInverterOn = PiStateTracker::isInverterStateOn();
+    $isInit = false;
 
-$data = array('PeakScheduleID' => 1,
-                   'IsEnabled' => 1,
+
+    echo "CONFIGURE INITIALIZE!  Battery: " . $batteryStatusLevel 
+    . ", PeakSchID: " . $peakScheduleID . ", isInvertOn: " . $isInverterOn . ", isInit: " . $isInit;
+    PiStateTracker::setPiSystemState($peakScheduleID, $batteryStatusLevel, $isInit, $isInverterOn);
+    
+
+    $url = "http://hess.site88.net/HessCloudPutBatteryStatus.php";
+    //$BatteryStatus = array("BatteryStatus" => array());    
+
+    $timestamp = DATE(DB_DATE_FORMAT);
+    //array_push($BatteryStatus['BatteryStatus'], $temparray);
+
+    //TODO: remove PeakScheduleID'
+    $data = array('IsEnabled' => 1,
                    'PowerLevelPercent' => $percent,
                    'RecordTime' => $timestamp);
 
-echo post_to_url($url, $data);
+    echo post_to_url($url, $data);
 
 
 ?>

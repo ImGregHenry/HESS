@@ -44,18 +44,11 @@ class CronJobScheduler {
 		$cronStartTimingString = CronJobScheduler::createCronJobStringFromTimes($startTime);
 		$cronEndTimingString = CronJobScheduler::createCronJobStringFromTimes($endTime);
 		
-
 		echo "\nCRON START: " . $cronStartTimingString. "\n\n";
 		echo "\nCRON: END:  " . $cronEndTimingString . "\n\n";
-		if($peakType == PEAKTYPE_ON) {
-			CronJobScheduler::createSingleCronJob($cronStartTimingString, PISCRIPT_SCHEDULER_ON_PEAK);
-			// CronJobScheduler::createSingleCronJob($cronEndTimingString, PISCRIPT_SCHEDULER_OFF_PEAK);
-		} else if($peakType == PEAKTYPE_MID) {
-			CronJobScheduler::createSingleCronJob($cronStartTimingString, PISCRIPT_SCHEDULER_MID_PEAK);
-			// CronJobScheduler::createSingleCronJob($cronEndTimingString, PISCRIPT_SCHEDULER_OFF_PEAK);
-		} else {
-			CronJobScheduler::createSingleCronJob($cronStartTimingString, PISCRIPT_SCHEDULER_OFF_PEAK);
-		}
+		
+		CronJobScheduler::createSingleCronJob($cronStartTimingString, PISCRIPT_CONFIG_PI_STATE);
+		CronJobScheduler::createSingleCronJob($cronEndTimingString, PISCRIPT_CONFIG_PI_STATE);
 	}
 
 	public static function deleteAllCronJobs() {
