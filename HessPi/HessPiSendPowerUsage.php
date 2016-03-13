@@ -34,8 +34,8 @@ function post_to_url($url, $data) {
 	# Setup request to send json via POST.
 	$jsonme = 	 array(
 					   'RecordTime' => $timestamp,
-					   'PowerUsageInWatts' => $watts,
-					   'DeviceID' => PI_DEVICE_ID);
+					   'PowerUsageWatt' => $watts,
+                       'PeakTypeID' => PiStateTracker::getCurrentPeakType());
 			
 	echo post_to_url($url, $data);
 

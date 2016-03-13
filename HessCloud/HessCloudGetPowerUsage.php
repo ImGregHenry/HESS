@@ -5,9 +5,9 @@
 		
 	try {
 		
-		$query = "SELECT PowerUsageID, RecordTime, PowerUsageInWatts "
-            . " FROM PowerUsageData "
-            . " WHERE PowerUsageID = (SELECT MAX(PowerUsageID) FROM PowerUsageData);";
+		$query = "SELECT PowerUsageID, PeakTypeID, RecordTime, PowerUsageWatt "
+            . " FROM PowerUsage "
+            . " WHERE PowerUsageID = (SELECT MAX(PowerUsageID) FROM PowerUsage);";
         #. "ORDER BY RecordTime DESC "
         #. "LIMIT 100";
 		
@@ -27,8 +27,9 @@
 							
 				# Create array from the current row
 				$temparray = 	array('PowerUsageID' => $rows['PowerUsageID'],
+                            'PeakTypeID' => $rows['PeakTypeID'],
 							'RecordTime' => $rows['RecordTime'],
-							'PowerUsageInWatts' => $rows['PowerUsageInWatts']);
+							'PowerUsageWatt' => $rows['PowerUsageWatt']);
 				
 				# Push the current row array into the results array
                 # array_push($powerUsageData['PowerUsageData'], $temparray);

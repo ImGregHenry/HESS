@@ -6,8 +6,9 @@ import com.google.gson.annotations.SerializedName;
 public class PowerUsage {
     private final static String LOG_STRING = "HESS_PowerUsageModel";
     public int PowerUsageID;
+    public int PeakTypeID;
     public String RecordTime;
-    @SerializedName("PowerUsageInWatts")
+    @SerializedName("PowerUsageWatt")
     public double PowerUsage;
 
 
