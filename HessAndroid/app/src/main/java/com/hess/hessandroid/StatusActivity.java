@@ -22,6 +22,10 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class StatusActivity extends AppCompatActivity implements
         VolleyRequest.VolleyReqCallbackGetBatteryStatus, VolleyRequest.VolleyReqCallbackGetPowerUsage, VolleyRequest.VolleyReqCallbackGetSchedule {
     private final static String LOG_STRING = "HESS_STATUS";
@@ -30,6 +34,7 @@ public class StatusActivity extends AppCompatActivity implements
     private ProgressBar progressBar;
     private TextView powerUsageVal;
     private TextView remainingTimeVal;
+    private TextView batteryTimeText;
 
     private int powerPercent;
     private double totalPowerUsage = 1260.0;
@@ -38,6 +43,14 @@ public class StatusActivity extends AppCompatActivity implements
     private double remainingTime;
     private int remainingTimeHour;
     private int remainingTimeMinute;
+    private DateFormat dateFormat;
+    private Date currentTime;
+    private Date startTime;
+    private Date endTime;
+    private Date startChargingTime;
+    private long timeToFullMS;
+    private int timeToFullMin;
+    private int timeToFullHour;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +61,9 @@ public class StatusActivity extends AppCompatActivity implements
         powerPercentVal = (TextView) findViewById(R.id.remainingPowerPercent);
         powerUsageVal = (TextView) findViewById(R.id.cUsage);
         remainingTimeVal = (TextView) findViewById(R.id.rTime);
+        batteryTimeText = (TextView) findViewById(R.id.remainingTime);
 
-        //Receive battery status every minute
+/*        //Receive battery status every minute
         Timer timerBatteryStatus = new Timer();
         timerBatteryStatus.schedule(new TimerTask() {
             public void run() {
@@ -64,9 +78,10 @@ public class StatusActivity extends AppCompatActivity implements
             public void run() {
                 requestPowerUsage();
             }
-        }, 0, 60*1000);
+        }, 0, 60*1000);*/
 
         requestHessScheduler();
+
     }
 
     @Override
@@ -92,13 +107,6 @@ public class StatusActivity extends AppCompatActivity implements
         Log.d(LOG_STRING, currentPowerUsage + "W");
         powerUsageVal.setText(currentPowerUsage + "W");
 
-        //Remaining time calculation
-        powerPercentDec = powerPercent/(double)100;
-        remainingTime = (totalPowerUsage/currentPowerUsage)*powerPercentDec;
-        remainingTimeHour = (int)remainingTime;
-        remainingTimeMinute = (int)((remainingTime - remainingTimeHour)*60);
-        Log.d(LOG_STRING, remainingTimeHour + "H " + remainingTimeMinute + "M");
-        remainingTimeVal.setText(remainingTimeHour + "H " + remainingTimeMinute + "M");
     }
 
     public void onVolleyGetScheduleReady(HessScheduleList scheduleList) {
@@ -107,7 +115,53 @@ public class StatusActivity extends AppCompatActivity implements
     }
 
     private void initializeHessSchedule(ArrayList<HessSchedule> schedules) {
-        Log.d(LOG_STRING, "Return list of schedulesL " + (schedules.get(0)).toString());
+        for(int i = 0; i < schedules.size(); i++) {
+            //Time to full calculation
+            if(schedules.get(i).PeakTypeID == 1) {
+                try {
+                    dateFormat = new SimpleDateFormat("HH:mm");
+                    startTime = dateFormat.parse(schedules.get(i).StartTime);
+                    endTime = dateFormat.parse(schedules.get(i).EndTime);
+                    currentTime = dateFormat.parse(dateFormat.format(new Date()));
+
+                    if (startTime.before(currentTime) && endTime.after(currentTime)) {
+                        startChargingTime = dateFormat.parse(schedules.get(i).StartTime);
+                        timeToFullMS = 28800000 - (currentTime.getTime() - startChargingTime.getTime());
+                        timeToFullMin = (int) ((timeToFullMS / 60000) % 60);
+                        timeToFullHour = (int) (timeToFullMS / 3600000);
+                        Log.d(LOG_STRING, "time to full: " + timeToFullHour + ":" + timeToFullMin);
+                        batteryTimeText.setText("Time Until Full: ");
+                        remainingTimeVal.setText(timeToFullHour + ":" + timeToFullMin);
+                    }
+                }
+                catch (Exception e){
+                    Log.e(LOG_STRING, e.getMessage());
+                }
+            }
+            //Remaining time calculation
+            if(schedules.get(i).PeakTypeID == 2) {
+                try {
+                    dateFormat = new SimpleDateFormat("HH:mm");
+                    startTime = dateFormat.parse(schedules.get(i).StartTime);
+                    endTime = dateFormat.parse(schedules.get(i).EndTime);
+                    currentTime = dateFormat.parse(dateFormat.format(new Date()));
+
+                    if (startTime.before(currentTime) && endTime.after(currentTime)) {
+                        powerPercentDec = powerPercent / (double) 100;
+                        remainingTime = (totalPowerUsage / currentPowerUsage) * powerPercentDec;
+                        remainingTimeHour = (int) remainingTime;
+                        remainingTimeMinute = (int) ((remainingTime - remainingTimeHour) * 60);
+                        Log.d(LOG_STRING, remainingTimeHour + ":" + remainingTimeMinute);
+                        batteryTimeText.setText("Time Remaining at " + currentPowerUsage + "W: ");
+                        remainingTimeVal.setText(remainingTimeHour + ":" + remainingTimeMinute);
+                    }
+                }
+                catch (Exception e){
+                    Log.e(LOG_STRING, e.getMessage());
+                }
+
+            }
+        }
     }
 
     private void requestBatteryStatus() {
