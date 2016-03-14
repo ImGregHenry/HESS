@@ -39,9 +39,9 @@ CREATE TABLE IF NOT EXISTS PeakSchedule (
 	FOREIGN KEY (PeakTypeID) REFERENCES PeakType (PeakTypeID)
 );
 
-INSERT INTO PeakSchedule (WeekTypeID, PeakTypeID, StartTime, EndTime)
-VALUES (1, 2, "1:00:00", "8:00:00"),
-(1, 3, "8:00:01", "11:59:00");
+# INSERT INTO PeakSchedule (WeekTypeID, PeakTypeID, StartTime, EndTime)
+# VALUES (1, 2, "1:00:00", "8:00:00"),
+# (1, 3, "8:00:01", "11:59:00");
 
 
 
@@ -81,8 +81,8 @@ PowerUsageWatt DOUBLE,
 FOREIGN KEY (PeakTypeID) REFERENCES PeakType (PeakTypeID)
 );
 
-INSERT INTO PowerUsage (PeakTypeID, RecordTime, PowerUsageWatt)
-VALUES (2, NOW(), 1.553);
+# INSERT INTO PowerUsage (PeakTypeID, RecordTime, PowerUsageWatt)
+# VALUES (2, NOW(), 1.553);
 
 
 
