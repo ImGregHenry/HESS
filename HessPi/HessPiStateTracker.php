@@ -4,9 +4,12 @@
 
 class PiStateTracker {
 
-	private static function runPythonScript($cmd) {
-		$command = escapeshellcmd($cmd);
-		return exec($command);
+	public static function runPythonScript($cmd) {
+		if(!DEBUG_FLAG) {
+			//TODO: supress output by redirecting to /dev/null
+			$command = escapeshellcmd($cmd);
+			return exec($command);
+		}
 	}
 
 	public static function getCurrentPeakType() {
@@ -172,8 +175,7 @@ class PiStateTracker {
 			$stmt->execute();
 
 			$row = $stmt->fetch();
-			$peakScheduleID = $row['PeakScheduleID'];
-
+			
 			$startDate = STRTOTIME(DateTime::createFromFormat(DB_TIME_FORMAT, $row['StartTime']));
 			$endDate = STRTOTIME(DateTime::createFromFormat(DB_TIME_FORMAT, $row['EndTime']));
 			$currDate = STRTOTIME(DateTime::createFromFormat(DB_DATE_FORMAT, TIME()));
@@ -224,7 +226,7 @@ class PiStateTracker {
 				array_push($scriptSequence, PISCRIPT_INVERTER_OFF);
 		}
 
-		//HessPiStateTracker::changeStateWithPythonScripts($scriptSequence, $isInit);
+		HessPiStateTracker::changeStateWithPythonScripts($scriptSequence, $isInit);
 	}
 }
 

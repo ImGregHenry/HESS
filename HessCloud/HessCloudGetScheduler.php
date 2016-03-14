@@ -8,7 +8,8 @@ $Schedule = array("Schedule" => array());
 try {
 	# Only select max PeakScheduleID
 	$query = "SELECT PeakScheduleID, WeekTypeID, PeakTypeID, StartTime, EndTime "
-	. " FROM PeakSchedule ";
+	. " FROM PeakSchedule "
+	. " ORDER BY StartTime ASC";
 	//. " WHERE PeakScheduleID = (SELECT MAX(PeakScheduleID) FROM PeakSchedule);";
 
 

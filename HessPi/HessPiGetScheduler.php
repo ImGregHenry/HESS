@@ -58,6 +58,10 @@
     // Erase previous entries from database.
     PiStateTracker::deleteAllSchedulesFromDB();
 
+    $cronScheduler = new CronJobScheduler();
+    $cronScheduler::deleteAllCronJobs();
+    $cronScheduler::createDefaultHessCronJobs();
+
     $isRunOnce = false;
     foreach($schedule->Schedule as $item) { 
 
@@ -97,10 +101,8 @@
         {
             echo "ERROR: $e";
         }
-        $cronScheduler = new CronJobScheduler();
-        $cronScheduler::deleteAllCronJobs();
+        
 
-        $cronScheduler::createDefaultHessCronJobs();
         $cronScheduler::createBatterySchedulingCronJob($item->StartTime, $item->EndTime, $item->PeakTypeID);
 
         // } else {
