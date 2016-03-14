@@ -44,7 +44,7 @@ class CronJobScheduler {
 		$cronStartTimingString = CronJobScheduler::createCronJobStringFromTimes($startTime);
 		$cronEndTimingString = CronJobScheduler::createCronJobStringFromTimes($endTime);
 		
-		echo "\nCRON START: " . $cronStartTimingString. "\n\n";
+		echo "\nCRON START: " . $cronStartTimingString. "\n";
 		echo "\nCRON: END:  " . $cronEndTimingString . "\n\n";
 		
 		CronJobScheduler::createSingleCronJob($cronStartTimingString, PISCRIPT_CONFIG_PI_STATE);
