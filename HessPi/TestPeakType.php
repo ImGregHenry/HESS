@@ -2,9 +2,9 @@
 include_once 'HessGlobals.php';
 include_once 'HessPiStateTracker.php';
 
-	//$peakScheduleID = PiStateTracker::getCurrentPeakType();
-	//ECHO "peak: $peakScheduleID";
+	$peakType = PiStateTracker::getCurrentPeakType();
+	ECHO "PeakType: $peakType";
 	
-	$schedule = PiStateTracker::getPeakSchedule();
-	echo "INVERTER STATE: " . $schedule;
+	$peakID = PiStateTracker::getPeakSchedule();
+	echo "PEAK STATE: " . $peakID;
 ?>

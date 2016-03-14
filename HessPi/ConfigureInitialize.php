@@ -4,14 +4,18 @@
 
 
     $batteryStatusLevel = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
-	$peakScheduleID = PiStateTracker::getCurrentPeakType();
+	$peakType = PiStateTracker::getCurrentPeakType();
 	$isInverterOn = PiStateTracker::isInverterStateOn();
 	$isInit = true;
 
 	echo "CONFIGURE INITIALIZE!  Battery: " . $batteryStatusLevel 
-	. ", PeakSchID: " . $peakScheduleID . ", isInvertOn: " . $isInverterOn . ", isInit: " . $isInit;
-	PiStateTracker::setPiSystemState($peakScheduleID, $batteryStatusLevel, $isInit, $isInverterOn);
+	. ", PeakType: " . $peakType . ", isInvertOn: " . $isInverterOn . ", isInit: " . $isInit . PHP_EOL;
+	PiStateTracker::setPiSystemState($peakType, $batteryStatusLevel, $isInit, $isInverterOn);
 
+
+    $cronScheduler = new CronJobScheduler();
+    $cronScheduler::deleteAllCronJobs();
+    $cronScheduler::createDefaultHessCronJobs();
 
 	// $isInitialize = 1;
 	// $isInverterOn = 1;

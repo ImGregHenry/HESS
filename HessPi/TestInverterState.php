@@ -6,5 +6,5 @@ include_once 'HessPiStateTracker.php';
 	//ECHO "peak: $peakScheduleID";
 	
 	$isInvOn = PiStateTracker::isInverterStateOn();
-	echo "INVERTER STATE: " . $$isInvOn;
+	echo "INVERTER STATE: " . $isInvOn;
 ?>

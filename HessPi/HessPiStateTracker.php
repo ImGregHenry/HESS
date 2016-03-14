@@ -71,23 +71,23 @@ class PiStateTracker {
 		foreach ($scriptSequence as $script) {
 			echo "Script($count): " . $script;
 			if ($script == PISCRIPT_INVERTER_ON) {
-			    runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
-			    sleep(30);
+			    PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
+			    sleep(1);
 			    $isInverterOn = true;
 			} else if ($script == PISCRIPT_INVERTER_OFF) {
-				runPythonScript(PYTHON_EXEC_PATH . ' ' . PISCRIPT_PYTHON_PATH . PISCRIPT_INVERTER_TOGGLE);
+				PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . ' ' . PISCRIPT_PYTHON_PATH . PISCRIPT_INVERTER_TOGGLE);
 			    sleep(1);
 			    $isInverterOff = true;
 			} else if ($script == PISCRIPT_BATTERYCHARGER_ON) {
-				runPythonScript(PYTHON_EXEC_PATH . ' ' . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERYCHARGER_ON);
+				PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . ' ' . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERYCHARGER_ON);
 			    sleep(1);
 			    $isChargerOn = true;
 			} else if($script == PISCRIPT_BATTERYCHARGER_OFF) {
-				runPythonScript(PYTHON_EXEC_PATH . ' ' . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERYCHARGER_OFF);
+				PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . ' ' . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERYCHARGER_OFF);
 			    sleep(1);
 			    $isChargerOff = true;
 			} else if($script == PISCRIPT_ACFROMWALL_ON) {
-				runPythonScript(PYTHON_EXEC_PATH . ' ' . PISCRIPT_PYTHON_PATH . PISCRIPT_ACFROMWALL_ON);
+				PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . ' ' . PISCRIPT_PYTHON_PATH . PISCRIPT_ACFROMWALL_ON);
 			    sleep(1);
 			    $isACWallOn = true;
 			}
@@ -114,7 +114,7 @@ class PiStateTracker {
 		    $query = "INSERT INTO ScriptState (Initialize, RecordTime, InverterOn, InverterOff, ChargerOn, ChargerOff, ACWallOn, ACWallOff) " //RecordTimeMS, CloudRecordTimeMS,
 					. " VALUES (:initialize, :recordTime, :inverterOn, :inverterOff, :chargerOn, :chargerOff, :acWallOn, :acWallOff);";
 			
-			$conn = new PDO("mysql:host=" . MYSQL_PI_HOST . ";dbname=" . MYSQL_CLOUD_DATABASE, MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
+			$conn = new PDO("mysql:host=" . MYSQL_PI_HOST . ";dbname=" . MYSQL_PI_DATABASE, MYSQL_PI_USER, MYSQL_PI_PASSWORD);
 			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 			$stmt = $conn->prepare($query);
@@ -144,49 +144,57 @@ class PiStateTracker {
 				. " ORDER BY ScriptStateID DESC"
 				. " LIMIT 1";
 			
-			$conn = new PDO("mysql:host=" . MYSQL_PI_HOST . ";dbname=" . MYSQL_CLOUD_DATABASE, MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
+			$conn = new PDO("mysql:host=" . MYSQL_PI_HOST . ";dbname=" . MYSQL_PI_DATABASE, MYSQL_PI_USER, MYSQL_PI_PASSWORD);
 			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 			$stmt = $conn->prepare($query);
 		
 			$stmt->execute();
 
-			$row = $stmt->fetch();
-			$isInverterOn = $row['InverterOn'];
-
-			return $isInverterOn;
+			if ($stmt->rowCount() > 0) {
+				$row = $stmt->fetch();
+				echo "RESULT";
+				$isInverterOn = $row['InverterOn'];
+				return $isInverterOn;
+			}
 		}
 		catch(PDOException $e) {
 			echo $e;
 		}
+		return 0;
 	}
 
 	public static function getPeakSchedule() {
 		$date = DATE(DB_DATE_FORMAT, TIME());
 
 		try {
-		    $query = "SELECT PeakScheduleID, PeakType, StartTime, EndTime FROM PeakSchedule";
+		    $query = "SELECT PeakScheduleID, PeakTypeID, StartTime, EndTime FROM PeakSchedule";
 			
-			$conn = new PDO("mysql:host=" . MYSQL_PI_HOST . ";dbname=" . MYSQL_CLOUD_DATABASE, MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
+			$conn = new PDO("mysql:host=" . MYSQL_PI_HOST . ";dbname=" . MYSQL_PI_DATABASE, MYSQL_PI_USER, MYSQL_PI_PASSWORD);
 			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 			$stmt = $conn->prepare($query);
 		
 			$stmt->execute();
 
-			$row = $stmt->fetch();
 			
-			$startDate = STRTOTIME(DateTime::createFromFormat(DB_TIME_FORMAT, $row['StartTime']));
-			$endDate = STRTOTIME(DateTime::createFromFormat(DB_TIME_FORMAT, $row['EndTime']));
-			$currDate = STRTOTIME(DateTime::createFromFormat(DB_DATE_FORMAT, TIME()));
-			if ($startDate > $endDate && $currDate < $startDate)
-			{
-			   return $row['PeakType'];
+			if ($stmt->rowCount() > 0) {
+				$row = $stmt->fetch();
+			
+				$startDate = STRTOTIME(DateTime::createFromFormat(DB_TIME_FORMAT, $row['StartTime']));
+				$endDate = STRTOTIME(DateTime::createFromFormat(DB_TIME_FORMAT, $row['EndTime']));
+				$currDate = STRTOTIME(DateTime::createFromFormat(DB_DATE_FORMAT, TIME()));
+				if ($startDate > $endDate && $currDate < $startDate)
+				{
+				   return $row['PeakType'];
+				}
 			}
 		}
 		catch(PDOException $e) {
 			echo $e;
 		}
+
+		return PEAKTYPE_OFF;
 	}
 
 	//TODO: check for previous inverter status
@@ -226,7 +234,7 @@ class PiStateTracker {
 				array_push($scriptSequence, PISCRIPT_INVERTER_OFF);
 		}
 
-		HessPiStateTracker::changeStateWithPythonScripts($scriptSequence, $isInit);
+		PiStateTracker::changeStateWithPythonScripts($scriptSequence, $isInit);
 	}
 }
 
