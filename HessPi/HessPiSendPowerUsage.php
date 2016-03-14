@@ -24,8 +24,7 @@ function post_to_url($url, $data) {
 
     $timestamp = DATE(DB_DATE_FORMAT, TIME());
 
-	//TODO: get power usage value from python script
-	$watts = 1.552;
+    $watts = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_POWER_USAGE);
 	
 	$url = "http://hess.site88.net/HessCloudPutPowerUsage.php";
     
