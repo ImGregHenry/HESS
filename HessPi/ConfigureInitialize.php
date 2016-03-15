@@ -1,9 +1,12 @@
 <?php
     include_once 'HessGlobals.php';
-   	include 'HessPiStateTracker.php';
+   	include_once 'HessPiStateTracker.php';
+   	include_once 'HessPiCronJobScheduler.php';
 
 
-    $batteryStatusLevel = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
+	PiStateTracker::getCloudScheduleForPi();
+    //$batteryStatusLevel = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
+    $batteryStatusLevel = 0.5;
 	$peakType = PiStateTracker::getCurrentPeakType();
 	$isInverterOn = PiStateTracker::isInverterStateOn();
 	$isInit = true;
@@ -13,9 +16,11 @@
 	PiStateTracker::setPiSystemState($peakType, $batteryStatusLevel, $isInit, $isInverterOn);
 
 
-    $cronScheduler = new CronJobScheduler();
-    $cronScheduler::deleteAllCronJobs();
-    $cronScheduler::createDefaultHessCronJobs();
+		
+    // $cronScheduler = new CronJobScheduler();
+    // $cronScheduler::deleteAllCronJobs();
+    // $cronScheduler::createDefaultHessCronJobs();
+
 
 	// $isInitialize = 1;
 	// $isInverterOn = 1;

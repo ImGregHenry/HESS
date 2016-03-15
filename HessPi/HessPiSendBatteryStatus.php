@@ -23,13 +23,13 @@ function post_to_url($url, $data) {
     return $result;
 }
 
+    // $batteryStatusLevel = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
+    // $peakType = PiStateTracker::getCurrentPeakType();
+    // $isInverterOn = PiStateTracker::isInverterStateOn();
+    // $isInit = false;
 
-    $batteryStatusLevel = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
-    $isInverterOn = PiStateTracker::isInverterStateOn();
-    $isInit = false;
 
-
-    //echo "CONFIGURE INITIALIZE!  Battery: " . $batteryStatusLevel 
+    //echo "CONFIGURE BATTERY STATE:!  Battery: " . $batteryStatusLevel 
     //. ", PeakSchID: " . $peakScheduleID . ", isInvertOn: " . $isInverterOn . ", isInit: " . $isInit;
     //PiStateTracker::setPiSystemState($peakScheduleID, $batteryStatusLevel, $isInit, $isInverterOn);
     

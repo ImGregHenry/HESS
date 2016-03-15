@@ -54,6 +54,6 @@ date_default_timezone_set('US/Eastern');
 define('PI_PHP_EXEC_PATH', 'php');
 define('PI_HESS_SCRIPTS_PATH', '/home/pi/PREDEMO/');
 
-define('DEBUG_FLAG', true);
+define('DEBUG_FLAG', false);
 
 ?>
