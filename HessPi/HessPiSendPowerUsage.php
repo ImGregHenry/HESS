@@ -1,5 +1,6 @@
 <?php
     include_once 'HessGlobals.php';
+    include_once 'HessPiStateTracker.php';
 
 //TODO: make cURL GET/POST class
 function post_to_url($url, $data) {
