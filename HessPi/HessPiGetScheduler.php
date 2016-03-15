@@ -26,8 +26,13 @@
     
 //     return false;
 // }
-
-    PiStateTracker::getCloudScheduleForPi();
-
+	$sysStatus = PiStateTracker::isSystemOnline();
+    
+    if($sysStatus == SYSTEM_ONLINE_VAL) {
+ 	   PiStateTracker::getCloudScheduleForPi();
+	}
+	else {
+        PiStateTracker::setSystemOffline();
+    }
 
 ?>

@@ -5,10 +5,12 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by Greg'sMonster on 11-Mar-16.
  */
-public class HessSchedule {
+public class HessSchedule implements Serializable {
     private final static String LOG_STRING = "HESS_ScheduleModel";
     public int PeakScheduleID = -1;
     public int WeekTypeID;

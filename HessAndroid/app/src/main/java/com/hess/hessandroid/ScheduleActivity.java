@@ -2,6 +2,7 @@ package com.hess.hessandroid;
 
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -65,6 +66,13 @@ public class ScheduleActivity extends AppCompatActivity implements TimePickerDia
 
         requestHessScheduler();
     }
+
+    private void setNewScheduleActivity() {
+        Intent intent = new Intent(this, SetScheduleActivity.class);
+        intent.putExtra("IsNew", true);
+
+    }
+
 
 
     private void initializeListView(ArrayList<HessSchedule> schedules) {
