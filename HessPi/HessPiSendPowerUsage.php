@@ -23,31 +23,33 @@ function post_to_url($url, $data) {
     return $result;
 }
 
-    $timestamp = DATE(DB_DATE_FORMAT, TIME());
 
-    $watts = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_POWER_USAGE);
-	
-	$url = "http://hess.site88.net/HessCloudPutPowerUsage.php";
+   $sysStatus = PiStateTracker::isSystemOnline();
     
-	$ch = curl_init( $url );
-	
-	# Setup request to send json via POST.
-	$jsonme = 	 array(
-					   'RecordTime' => $timestamp,
-					   'PowerUsageWatt' => $watts,
-                       'PeakTypeID' => PiStateTracker::getCurrentPeakType());
-			
-	echo post_to_url($url, $data);
+    if($sysStatus == SYSTEM_ONLINE_VAL) {
+  
+        $timestamp = DATE(DB_DATE_FORMAT, TIME());
 
-
+        $watts = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_POWER_USAGE);
+    	
+    	$url = "http://hess.site88.net/HessCloudPutPowerUsage.php";
+        
+    	$ch = curl_init( $url );
+    	
+    	# Setup request to send json via POST.
+    	$jsonme = 	 array(
+    					   'RecordTime' => $timestamp,
+    					   'PowerUsageWatt' => $watts,
+                           'PeakTypeID' => PiStateTracker::getCurrentPeakType());
+    			
+    	echo post_to_url($url, $data);
+    } else {
+        PiStateTracker::setSystemOffline();
+    }
 	
 	//echo "<pre>[HessPiSendPowerUsage] JSON Package Sent: " . var_dump($payload); . "</pre>";
 	//sleep(3);
 	//}
 
-
-
 ?>
-
-
 

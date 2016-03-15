@@ -2,16 +2,24 @@
     include_once 'HessGlobals.php';
     include_once 'HessPiStateTracker.php';    
 
-    //$batteryStatusLevel = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
-    $batteryStatusLevel = 0.5;
+    $sysStatus = PiStateTracker::isSystemOnline();
+    
+    if($sysStatus == SYSTEM_ONLINE_VAL) {
+    
+        //$batteryStatusLevel = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
+        $batteryStatusLevel = 0.5;
 
-    $peakType = PiStateTracker::getCurrentPeakType();
-    $isInverterOn = PiStateTracker::isInverterStateOn();
-    $isInit = false;
+        $peakType = PiStateTracker::getCurrentPeakType();
+        $isInverterOn = PiStateTracker::isInverterStateOn();
+        $isInit = false;
 
-    echo "CONFIGURE SCHEDULE!  Battery: " . $batteryStatusLevel 
-    . ", PeakType: " . $peakType . ", isInvertOn: " . $isInverterOn . ", isInit: " . $isInit;
+        echo "CONFIGURE SCHEDULE!  Battery: " . $batteryStatusLevel 
+        . ", PeakType: " . $peakType . ", isInvertOn: " . $isInverterOn . ", isInit: " . $isInit;
 
-    PiStateTracker::setPiSystemState($peakType, $batteryStatusLevel, $isInit, $isInverterOn);
+        PiStateTracker::setPiSystemState($peakType, $batteryStatusLevel, $isInit, $isInverterOn);
+    } else {
+        PiStateTracker::setSystemOffline();
+    }
+
 
 ?>

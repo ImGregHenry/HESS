@@ -23,29 +23,36 @@ function post_to_url($url, $data) {
     return $result;
 }
 
-    // $batteryStatusLevel = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
-    // $peakType = PiStateTracker::getCurrentPeakType();
-    // $isInverterOn = PiStateTracker::isInverterStateOn();
-    // $isInit = false;
 
+    $sysStatus = PiStateTracker::isSystemOnline();
+    
+    if($sysStatus == SYSTEM_ONLINE_VAL) {
+        $batteryStatusLevel = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
+        $peakType = PiStateTracker::getCurrentPeakType();
+        $isInverterOn = PiStateTracker::isInverterStateOn();
+        $isInit = false;
 
-    //echo "CONFIGURE BATTERY STATE:!  Battery: " . $batteryStatusLevel 
-    //. ", PeakSchID: " . $peakScheduleID . ", isInvertOn: " . $isInverterOn . ", isInit: " . $isInit;
-    //PiStateTracker::setPiSystemState($peakScheduleID, $batteryStatusLevel, $isInit, $isInverterOn);
+        if($batteryStatusLevel < BATTERY_MIN_LEVEL || $batteryStatusLevel > BATTERY_MAX_LEVEL) {
+            //echo "CONFIGURE BATTERY STATE:!  Battery: " . $batteryStatusLevel . ", PeakSchID: " . $peakScheduleID 
+              //  . ", isInvertOn: " . $isInverterOn . ", isInit: " . $isInit;
+            
+            PiStateTracker::setPiSystemState($peakScheduleID, $batteryStatusLevel, $isInit, $isInverterOn);
+        }
+    
+        $url = "http://hess.site88.net/HessCloudPutBatteryStatus.php";    
+        $timestamp = DATE(DB_DATE_FORMAT);
+            
+        $data = array('IsEnabled' => 1,
+                       'PowerLevelPercent' => $batteryStatusLevel,
+                       'RecordTime' => $timestamp);
+
+        echo post_to_url($url, $data);
+    } else {
+        PiStateTracker::setSystemOffline();
+    }
+
     
 
-    $url = "http://hess.site88.net/HessCloudPutBatteryStatus.php";
-    //$BatteryStatus = array("BatteryStatus" => array());    
-
-    $timestamp = DATE(DB_DATE_FORMAT);
-    //array_push($BatteryStatus['BatteryStatus'], $temparray);
-
-    //TODO: remove PeakScheduleID'
-    $data = array('IsEnabled' => 1,
-                   'PowerLevelPercent' => $batteryStatusLevel,
-                   'RecordTime' => $timestamp);
-
-    echo post_to_url($url, $data);
-
+    
 
 ?>

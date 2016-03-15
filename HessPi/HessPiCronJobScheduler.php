@@ -40,6 +40,10 @@ class CronJobScheduler {
 		//CronJobScheduler::createSingleCronJob('*/1 * * * * sleep 30;', 'HessPiSendPowerUsage.php');
 	}
 
+	public static function createOfflineHessCronJob() {
+		CronJobScheduler::createSingleCronJob('*/1 * * * *', 'ConfigureInitialize.php');
+	}
+
 	public static function createBatterySchedulingCronJob($startTime, $endTime, $peakType) {
 		$cronStartTimingString = CronJobScheduler::createCronJobStringFromTimes($startTime);
 		$cronEndTimingString = CronJobScheduler::createCronJobStringFromTimes($endTime);

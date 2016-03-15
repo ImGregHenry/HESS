@@ -17,10 +17,12 @@ define('PISCRIPT_ACFROMWALL_ON', 'ACFromWallOn.py');
 define('PISCRIPT_ACFROMWALL_OFF', 'ACFromWallOff.py');
 define('PISCRIPT_BATTERYCHARGER_ON', 'BatteryChargerOn.py');
 define('PISCRIPT_BATTERYCHARGER_OFF', 'BatteryChargerOff.py');
+define('PISCRIPT_CHECK_SYSTEM_STATUS', 'CheckSystemStatus.py');
 define('PISCRIPT_SCHEDULER_OFF_PEAK', 'ConfigureOffPeak.php');
 define('PISCRIPT_SCHEDULER_ON_PEAK', 'ConfigureOnPeak.php');
 define('PISCRIPT_SCHEDULER_MID_PEAK', 'ConfigureMidPeak.php');
 define('PISCRIPT_CONFIG_PI_STATE', 'ConfigurePiSchedule.php');
+
 
 # PEAK TYPES
 define('PEAKTYPE_OFF', '1');
@@ -53,6 +55,12 @@ date_default_timezone_set('US/Eastern');
 # Folder paths
 define('PI_PHP_EXEC_PATH', 'php');
 define('PI_HESS_SCRIPTS_PATH', '/home/pi/PREDEMO/');
+
+# Minimum battery levels
+define('BATTERY_MIN_LEVEL', 0.20);
+define('BATTERY_MAX_LEVEL', 0.90);
+define('SYSTEM_OFFLINE_VAL', '0');
+define('SYSTEM_ONLINE_VAL', '1');
 
 define('DEBUG_FLAG', false);
 

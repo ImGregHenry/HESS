@@ -32,7 +32,7 @@ VALUES ("WEEKDAY"),
 # WEEKEND = 2
 
 CREATE TABLE IF NOT EXISTS PeakSchedule (
-	PeakScheduleID INTEGER,
+	PeakScheduleID INTEGER PRIMARY KEY AUTO_INCREMENT,
 	WeekTypeID INTEGER,
 	PeakTypeID INTEGER,
 	StartTime TIME,
@@ -76,11 +76,12 @@ VALUES (16.1, 12.2, 8.0);
 
 
 CREATE TABLE IF NOT EXISTS PowerUsage
-(	PowerUsageID INTEGER PRIMARY KEY AUTO_INCREMENT,
-PeakTypeID INTEGER,
-RecordTime DATETIME,
-PowerUsageWatt DOUBLE,
-FOREIGN KEY (PeakTypeID) REFERENCES PeakType (PeakTypeID)
+(	
+	PowerUsageID INTEGER PRIMARY KEY AUTO_INCREMENT,
+	PeakTypeID INTEGER,
+	RecordTime DATETIME,
+	PowerUsageWatt DOUBLE,
+	FOREIGN KEY (PeakTypeID) REFERENCES PeakType (PeakTypeID)
 );
 
 # INSERT INTO PowerUsage (PeakTypeID, RecordTime, PowerUsageWatt)
@@ -106,6 +107,7 @@ CREATE TABLE IF NOT EXISTS ScriptState
 	ChargerOn TINYINT(1), 
 	ChargerOff TINYINT(1), 
 	ACWallOn TINYINT(1),
-	ACWallOff TINYINT(1)
+	ACWallOff TINYINT(1),
+	SetOffline TINYINT(1)
 )
 

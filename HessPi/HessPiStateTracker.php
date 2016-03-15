@@ -1,6 +1,6 @@
 <?php
 	include_once "HessGlobals.php";
-
+	include_once "CronJobScheduler.php";
 
 class PiStateTracker {
 
@@ -12,6 +12,47 @@ class PiStateTracker {
 			echo "PYTHON: " . $result;
 			return $result;
 		}
+	}
+
+	public static function isSystemOnline() {
+		//TODO: uncomment.
+		//$result = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_CHECK_SYSTEM_STATUS);
+		//return $result;
+		return 0;
+	}
+
+	public static function setCronJobForOfflineMode() {
+		CronJobScheduler::deleteAllCronJobs();
+		CronJobScheduler::createOfflineHessCronJob();
+	}
+
+	public static function setSystemOffline() {
+		$isAlreadyOffline = PiStateTracker::isSystemAlreadySetOffline();
+		if($isAlreadyOffline == 1) {
+			echo "SetOffline: System already offline. ($isAlreadyOffline)";
+		} else {
+			echo "SetOffline: Setting OFFLINE MODE!";
+			PiStateTracker::insertStateTrackingEntry(0, 0, 0, 0, 0, 0, 0, 1);
+			PiStatetracker::setCronJobForOfflineMode();
+		}
+	}
+
+	public static function isSystemAlreadySetOffline() {
+		 $query = "SELECT SetOffline FROM ScriptState"
+				. " ORDER BY ScriptStateID DESC"
+				. " LIMIT 1";
+		
+		$conn = new PDO("mysql:host=" . MYSQL_PI_HOST . ";dbname=" . MYSQL_PI_DATABASE, MYSQL_PI_USER, MYSQL_PI_PASSWORD);
+		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+		$stmt = $conn->prepare($query);
+		$stmt->execute();
+		
+		if ($stmt->rowCount() > 0) {
+			$row = $stmt->fetch();
+		    return $row['SetOffline'];
+		}
+		return 0;
 	}
 
 	public static function getCurrentPeakType() {
@@ -66,7 +107,7 @@ class PiStateTracker {
 
 	public static function changeStateWithPythonScripts($scriptSequence, $isInitialize) {
 		
-		$isInverterOn = $isInverterOff = $isChargerOn = $isChargerOff = $isACWallOn = $isACWallOff = 0;
+		$isInverterOn = $isInverterOff = $isChargerOn = $isChargerOff = $isACWallOn = $isACWallOff = $setOffline = 0;
 		echo "Running Scripts: ";
 		$count = 0;
 		foreach ($scriptSequence as $script) {
@@ -102,18 +143,18 @@ class PiStateTracker {
 		}
 
 		PiStateTracker::insertStateTrackingEntry($isInitialize, $isInverterOn, $isInverterOff, 
-			$isChargerOn, $isChargerOff, $isACWallOn, $isACWallOff);
+			$isChargerOn, $isChargerOff, $isACWallOn, $isACWallOff, $setOffline);
 	}
 
 
 	public static function insertStateTrackingEntry($isInitialize, $isInverterOn, $isInverterOff, 
-			$isChargerOn, $isChargerOff, $isACWallOn, $isACWallOff) {
+			$isChargerOn, $isChargerOff, $isACWallOn, $isACWallOff, $setOffline) {
 		
 		$date = DATE(DB_DATE_FORMAT, TIME());
 
 		try {
-		    $query = "INSERT INTO ScriptState (Initialize, RecordTime, InverterOn, InverterOff, ChargerOn, ChargerOff, ACWallOn, ACWallOff) " //RecordTimeMS, CloudRecordTimeMS,
-					. " VALUES (:initialize, :recordTime, :inverterOn, :inverterOff, :chargerOn, :chargerOff, :acWallOn, :acWallOff);";
+		    $query = "INSERT INTO ScriptState (Initialize, RecordTime, InverterOn, InverterOff, ChargerOn, ChargerOff, ACWallOn, ACWallOff, SetOffline) "
+					. " VALUES (:initialize, :recordTime, :inverterOn, :inverterOff, :chargerOn, :chargerOff, :acWallOn, :acWallOff, :setOffline);";
 			
 			$conn = new PDO("mysql:host=" . MYSQL_PI_HOST . ";dbname=" . MYSQL_PI_DATABASE, MYSQL_PI_USER, MYSQL_PI_PASSWORD);
 			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -127,6 +168,7 @@ class PiStateTracker {
 			$stmt->bindParam(':chargerOff', $isChargerOff, PDO::PARAM_INT);
 			$stmt->bindParam(':acWallOn', $isACWallOn, PDO::PARAM_INT);
 			$stmt->bindParam(':acWallOff', $isACWallOff, PDO::PARAM_INT);
+			$stmt->bindParam(':setOffline', $setOffline, PDO::PARAM_INT);
 		
 			$stmt->execute();
 		}
@@ -262,9 +304,8 @@ class PiStateTracker {
 	    // Erase previous entries from database.
 	    PiStateTracker::deleteAllSchedulesFromDB();
 
-	    $cronScheduler = new CronJobScheduler();
-	    $cronScheduler::deleteAllCronJobs();
-	    $cronScheduler::createDefaultHessCronJobs();
+	    CronJobScheduler::deleteAllCronJobs();
+	    CronJobScheduler::createDefaultHessCronJobs();
 
 	    $isRunOnce = false;
 	    foreach($schedule->Schedule as $item) { 
