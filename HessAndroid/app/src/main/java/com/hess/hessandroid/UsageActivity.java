@@ -9,11 +9,13 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import java.lang.Math;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 
 import android.widget.TextView;
 
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Calendar;
 
 public class UsageActivity extends AppCompatActivity implements VolleyRequest.VolleyReqCallbackGetPowerUsage {
     private final static String LOG_STRING = "HESS_USAGE";
@@ -60,6 +63,7 @@ public class UsageActivity extends AppCompatActivity implements VolleyRequest.Vo
     private Date currentDate;
 
     private LineGraphSeries<DataPoint> series;
+    private Viewport viewport;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +84,8 @@ public class UsageActivity extends AppCompatActivity implements VolleyRequest.Vo
         series = new LineGraphSeries<DataPoint>();
         graph.addSeries(series);
 
-        Viewport viewport = graph.getViewport();
-        //viewport.setMinY(0);
+        viewport = graph.getViewport();
+        viewport.setMinY(0);
         viewport.setScrollable(true);
 
         requestPowerUsage();
@@ -95,12 +99,17 @@ public class UsageActivity extends AppCompatActivity implements VolleyRequest.Vo
 
     private void initializePowerUsage(ArrayList<PowerUsage> powerUsages) {
         for (int i = 0; i < powerUsages.size(); i++) {
-            series.appendData(new DataPoint(i,powerUsages.get(i).PowerUsageWatt), false, powerUsages.size());
-
             try {
                 dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 recordDate = dateFormat.parse(powerUsages.get(i).RecordTime);
                 currentDate = dateFormat.parse(dateFormat.format(new Date()));
+
+                series.appendData(new DataPoint(i, powerUsages.get(i).PowerUsageWatt), false, powerUsages.size());
+
+                // set manual x bounds to have nice steps
+//                viewport.setMinX(dateFormat.parse(powerUsages.get(0).RecordTime).getTime());
+//                viewport.setMaxX(dateFormat.parse(powerUsages.get(powerUsages.size() - 1).RecordTime).getTime());
+//                viewport.setXAxisBoundsManual(true);
 
                 if (recordDate.equals(currentDate)) {
                     if (powerUsages.get(i).PeakTypeID == 2) {
@@ -138,7 +147,7 @@ public class UsageActivity extends AppCompatActivity implements VolleyRequest.Vo
         Log.d(LOG_STRING, "Daily Saving: $" + dailySavingsTotalDollar);
         dailySaving.setText("$" + dailySavingsTotalDollar);
 
-        totalPowerUsage = totalPowerUsageOn + totalPowerUsageMid; //kW
+        totalPowerUsage = Math.round((totalPowerUsageOn + totalPowerUsageMid) * 100.0) / 100.0; //kW
         Log.d(LOG_STRING, "Total Power Usage: " + totalPowerUsage + "kW");
         totalPower.setText(totalPowerUsage + "kW");
 
@@ -146,6 +155,10 @@ public class UsageActivity extends AppCompatActivity implements VolleyRequest.Vo
         totalSavingsTotalDollar = totalSavingsTotal / 100d; //dollar
         Log.d(LOG_STRING, "Total Saving: $" + totalSavingsTotalDollar);
         totalSaving.setText("$" + totalSavingsTotalDollar);
+
+        // set date label formatter
+       // graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(context));
+        //graph.getGridLabelRenderer().setNumHorizontalLabels(3); // only 4 because of the space
 
     }
 

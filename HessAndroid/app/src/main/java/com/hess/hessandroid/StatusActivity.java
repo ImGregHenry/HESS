@@ -147,7 +147,7 @@ public class StatusActivity extends AppCompatActivity implements
 
                     if (startTime.before(currentTime) && endTime.after(currentTime)) {
                         startChargingTime = dateFormat.parse(schedules.get(i).StartTime);
-                        timeToFullMS = 28800000 - (currentTime.getTime() - startChargingTime.getTime());
+                        timeToFullMS = 25500000 - (currentTime.getTime() - startChargingTime.getTime());
                         timeToFullMin = (int) ((timeToFullMS / 60000) % 60);
                         timeToFullHour = (int) (timeToFullMS / 3600000);
                         Log.d(LOG_STRING, "Time Until Full: " + timeToFullHour + ":" + timeToFullMin);
