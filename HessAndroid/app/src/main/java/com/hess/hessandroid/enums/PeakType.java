@@ -6,7 +6,8 @@ package com.hess.hessandroid.enums;
 public enum PeakType {
     OFFPEAK("OFF-PEAK", 1),
     ONPEAK("ON-PEAK", 2),
-    MIDPEAK("MID-PEAK", 3);
+    MIDPEAKENABLE("MID-PEAK-ENABLE", 3),
+    MIDPEAKDISABLE("MID-PEAK-DISABLE", 4);
 
     private String strValue;
     private int intValue;

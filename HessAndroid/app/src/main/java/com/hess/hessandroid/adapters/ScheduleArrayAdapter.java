@@ -1,8 +1,11 @@
 package com.hess.hessandroid.adapters;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,24 +13,42 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.hess.hessandroid.R;
+import com.hess.hessandroid.SetScheduleActivity;
+import com.hess.hessandroid.dialogs.TimePickerFragment;
 import com.hess.hessandroid.models.HessSchedule;
 import com.hess.hessandroid.models.HessScheduleList;
 import com.hess.hessandroid.volley.VolleyRequest;
 
 import java.util.ArrayList;
+import android.support.v7.app.AppCompatActivity;
 
-/**
- * Created by Greg'sMonster on 12-Mar-16.
- */
+
+
 public class ScheduleArrayAdapter extends ArrayAdapter<HessSchedule> {
     private ArrayList<HessSchedule> mScheduleList;
     private Context mContext;
-    public ScheduleArrayAdapter(Context context, ArrayList<HessSchedule> schedules) {
+    private Button btnEditScheduleRow;
+    private Activity mActivity;
+
+    private TextView tvStartTime;
+    private TextView tvEndTime;
+    private TextView tvPeak;
+    private TextView tvWeek;
+    private Button btnDelete;
+
+    public interface UpdateScheduleRowCallback {
+        public void onUpdateScheduleRow(HessSchedule schedule);
+    }
+
+    public ScheduleArrayAdapter(Context context, ArrayList<HessSchedule> schedules, Activity activity) {
         super(context, 0, schedules);
         mScheduleList = schedules;
         mContext = context;
+        mActivity = activity;
     }
+
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
@@ -40,11 +61,11 @@ public class ScheduleArrayAdapter extends ArrayAdapter<HessSchedule> {
         }
 
         // Lookup view for data population
-        TextView tvStartTime = (TextView) convertView.findViewById(R.id.tvStartTime);
-        TextView tvEndTime = (TextView) convertView.findViewById(R.id.tvEndTime);
-        TextView tvPeak = (TextView) convertView.findViewById(R.id.tvPeakType);
-        TextView tvWeek = (TextView) convertView.findViewById(R.id.tvWeekType);
-        Button btnDelete = (Button) convertView.findViewById(R.id.btnDeleteScheduleRow);
+        tvStartTime = (TextView) convertView.findViewById(R.id.tvStartTime);
+        tvEndTime = (TextView) convertView.findViewById(R.id.tvEndTime);
+        tvPeak = (TextView) convertView.findViewById(R.id.tvPeakType);
+        tvWeek = (TextView) convertView.findViewById(R.id.tvWeekType);
+        btnDelete = (Button) convertView.findViewById(R.id.btnDeleteScheduleRow);
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,6 +90,21 @@ public class ScheduleArrayAdapter extends ArrayAdapter<HessSchedule> {
                         .show();
             }
         });
+        btnEditScheduleRow = (Button) convertView.findViewById(R.id.btnEditScheduleRow);
+        btnEditScheduleRow.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mContext, SetScheduleActivity.class);
+
+                        HessSchedule schedule = mScheduleList.get(position);
+
+                        intent.putExtra("IsNew", false);
+                        intent.putExtra("SCHEDULE", schedule);
+                        mActivity.startActivityForResult(intent, 2);
+                    }
+                }
+        );
 
         // Populate the data into the template view using the data object
         tvStartTime.setText(schedule.StartTime);

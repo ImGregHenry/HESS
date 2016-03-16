@@ -1,6 +1,6 @@
 <?php
 	include_once "HessGlobals.php";
-	include_once "CronJobScheduler.php";
+	include_once "HessPiCronJobScheduler.php";
 
 class PiStateTracker {
 
