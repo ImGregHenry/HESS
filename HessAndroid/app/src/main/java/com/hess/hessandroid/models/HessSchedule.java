@@ -7,9 +7,6 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
-/**
- * Created by Greg'sMonster on 11-Mar-16.
- */
 public class HessSchedule implements Serializable {
     private final static String LOG_STRING = "HESS_ScheduleModel";
     public int PeakScheduleID = -1;

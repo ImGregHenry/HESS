@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -15,6 +14,7 @@ import com.hess.hessandroid.models.BatteryStatus;
 import com.hess.hessandroid.models.HessSchedule;
 import com.hess.hessandroid.models.HessScheduleList;
 import com.hess.hessandroid.models.PowerUsage;
+import com.hess.hessandroid.models.PowerUsageList;
 import com.hess.hessandroid.volley.VolleyRequest;
 import org.json.JSONObject;
 
@@ -37,21 +37,25 @@ public class StatusActivity extends AppCompatActivity implements
     private TextView currentPowerUsageTime;
 
     private int powerPercent;
+
     private double totalPowerUsage = 1260.0;
     private double currentPowerUsage;
-    private boolean powerUsageOnPeak;
+
     private DateFormat dateFormat;
     private Date currentTime;
     private Date startTime;
     private Date endTime;
     private Date startChargingTime;
+
     private long timeToFullMS;
     private int timeToFullMin;
     private int timeToFullHour;
+
     private double powerPercentDec;
     private double remainingTime;
     private int remainingTimeHour;
     private int remainingTimeMinute;
+
     private long currentUsageTimeMS;
     private int currentUsageTimeMin;
     private int currentUsageTimeHour;
@@ -68,7 +72,7 @@ public class StatusActivity extends AppCompatActivity implements
         batteryTimeText = (TextView) findViewById(R.id.remainingTime);
         currentPowerUsageTime = (TextView) findViewById(R.id.uTime);
 
-        /*//Receive battery status every minute
+        //Receive battery status every minute
         Timer timerBatteryStatus = new Timer();
         timerBatteryStatus.schedule(new TimerTask() {
             public void run() {
@@ -82,10 +86,10 @@ public class StatusActivity extends AppCompatActivity implements
             public void run() {
                 requestPowerUsage();
             }
-        }, 0, 60*1000);*/
+        }, 0, 60*1000);
 
-        requestBatteryStatus();
-        requestPowerUsage();
+//        requestBatteryStatus();
+//        requestPowerUsage();
         requestHessScheduler();
 
     }
@@ -104,21 +108,14 @@ public class StatusActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onVolleyGetPowerUsageReady(PowerUsage powerUsage) {
-        initializePowerUsage(powerUsage);
+    public void onVolleyGetPowerUsageReady(PowerUsageList powerUsageList) {
+        initializePowerUsage(powerUsageList.PowerUsage);
     }
 
-    private void initializePowerUsage(PowerUsage powerUsages) {
-        currentPowerUsage = powerUsages.getPowerUsage();
+    private void initializePowerUsage(ArrayList<PowerUsage> powerUsages) {
+        currentPowerUsage = powerUsages.get(powerUsages.size() - 1).PowerUsageWatt;
         Log.d(LOG_STRING, currentPowerUsage + "W");
         powerUsageVal.setText(currentPowerUsage + "W");
-
-        if(powerUsages.getPowerUsagePeakID() == 2) {
-            powerUsageOnPeak = true;
-        }
-        else {
-            powerUsageOnPeak = false;
-        }
 
     }
 
@@ -150,8 +147,8 @@ public class StatusActivity extends AppCompatActivity implements
                     Log.e(LOG_STRING, e.getMessage());
                 }
             }
-            //Remaining time calculation
-            else if(schedules.get(i).PeakTypeID == 2) {
+            //Remaining time calculation when in onpeak or midpeak-enabled
+            else if(schedules.get(i).PeakTypeID == 2 || schedules.get(i).PeakTypeID == 3) {
                 try {
                     dateFormat = new SimpleDateFormat("HH:mm");
                     startTime = dateFormat.parse(schedules.get(i).StartTime);
@@ -167,14 +164,12 @@ public class StatusActivity extends AppCompatActivity implements
                         batteryTimeText.setText("Time Remaining at " + currentPowerUsage + "W: ");
                         remainingTimeVal.setText(remainingTimeHour + ":" + remainingTimeMinute);
 
-                        if(powerUsageOnPeak == true) {
-                            startChargingTime = dateFormat.parse(schedules.get(i).StartTime);
-                            currentUsageTimeMS = (currentTime.getTime() - startChargingTime.getTime());
-                            currentUsageTimeMin = (int) ((currentUsageTimeMS / 60000) % 60);
-                            currentUsageTimeHour = (int) (currentUsageTimeMS / 3600000);
-                            Log.d(LOG_STRING, "Current Usage Time: " + currentUsageTimeHour + ":" + currentUsageTimeMin);
-                            currentPowerUsageTime.setText(currentUsageTimeHour + ":" + currentUsageTimeMin);
-                        }
+                        startChargingTime = dateFormat.parse(schedules.get(i).StartTime);
+                        currentUsageTimeMS = (currentTime.getTime() - startChargingTime.getTime());
+                        currentUsageTimeMin = (int) ((currentUsageTimeMS / 60000) % 60);
+                        currentUsageTimeHour = (int) (currentUsageTimeMS / 3600000);
+                        Log.d(LOG_STRING, "Current Usage Time: " + currentUsageTimeHour + ":" + currentUsageTimeMin);
+                        currentPowerUsageTime.setText(currentUsageTimeHour + ":" + currentUsageTimeMin);
                     }
                 }
                 catch (Exception e){

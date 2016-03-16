@@ -7,7 +7,7 @@
 		
 		$query = "SELECT PowerUsageID, PeakTypeID, RecordTime, PowerUsageWatt "
             . " FROM PowerUsage "
-            . " WHERE PowerUsageID = (SELECT MAX(PowerUsageID) FROM PowerUsage);";
+            . " ORDER BY PeakTypeID ASC;";
         #. "ORDER BY RecordTime DESC "
         #. "LIMIT 100";
 		
@@ -18,7 +18,7 @@
 		
 		
 		# Results array
-        # $powerUsageData = array("PowerUsageData" => array());
+        $powerUsage = array("PowerUsage" => array());
 		
 		if ($stmt->rowCount() > 0) {
 			
@@ -32,7 +32,7 @@
 							'PowerUsageWatt' => $rows['PowerUsageWatt']);
 				
 				# Push the current row array into the results array
-                # array_push($powerUsageData['PowerUsageData'], $temparray);
+                array_push($powerUsage['PowerUsage'], $temparray);
 			}
 		}
 	}
@@ -45,7 +45,7 @@
 	//echo "\n\n";
 	//var_dump(json_encode($powerUsageData));
 
-	$payload = json_encode($temparray);
+	$payload = json_encode($powerUsage);
     echo $payload;
 		
 ?>
