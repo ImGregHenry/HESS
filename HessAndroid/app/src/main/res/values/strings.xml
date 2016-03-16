@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HessAndroid</string>
+    <string name="app_name">HESS</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -12,8 +12,8 @@
     <string name="status_battery_eta">Estimated Remaining Time:</string>
     <string name="status_battery_uptime">Uptime:</string>
     <string name="status_battery_current_usage">Current Usage:</string>
-    <string name="title_activity_my_home">MyHomeActivity</string>
-    <string name="title_activity_usage">UsageActivity</string>
+    <string name="title_activity_usage">Usage Activity</string>
+    <string name="title_activity_status">Status Activity</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -27,6 +27,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_schedule">HESS Schedules</string>
+    <string name="title_activity_main">HESS</string>
     <string name="title_activity_set_schedule_update">Update Schedule</string>
     <string name="title_activity_set_schedule_new">Create New Schedule</string>
 </resources>

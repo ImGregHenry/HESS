@@ -1,7 +1,13 @@
 package com.hess.hessandroid;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
 import com.jjoe64.graphview.GraphView;
@@ -54,8 +60,15 @@ public class UsageActivity extends AppCompatActivity implements VolleyRequest.Vo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usage);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#5c0f92")));
+        Spannable text = new SpannableString(actionBar.getTitle());
+        text.setSpan(new ForegroundColorSpan(Color.WHITE), 0, text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        actionBar.setTitle(text);
+
         dailySaving = (TextView) findViewById(R.id.dSaving);
         totalSaving = (TextView) findViewById(R.id.tSaving);
+
 
 /*        GraphView graph = (GraphView) findViewById(R.id.graph);
         LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[]{

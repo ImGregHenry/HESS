@@ -1,37 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     tools:context="com.example.ajanthi.hess.MainActivity">
 
-    <TabHost
+    <ImageView
+        android:id="@+id/imgHessTitle"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_alignParentTop="true"/>
+
+    <Button
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/tabHost"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true">
+        android:text="SCHEDULE"
+        android:id="@+id/btnSchedule"
+        android:layout_centerHorizontal="true"
+        android:background="#5c0f92"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_below="@id/imgHessTitle" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+    <Button
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:background="#5c0f92"
+        android:textColor="#FFFFFF"
+        android:text="STATUS"
+        android:textStyle="bold"
+        android:id="@+id/btnStatus"
+        android:layout_below="@id/btnSchedule" />
 
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:showDividers="middle"></TabWidget>
+    <Button
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:text="Power Usage"
+        android:background="#5c0f92"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/btnPowerUsage"
+        android:layout_below="@id/btnStatus" />
 
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-
-            </FrameLayout>
-
-
-        </LinearLayout>
-    </TabHost>
-</LinearLayout>
+</RelativeLayout>
