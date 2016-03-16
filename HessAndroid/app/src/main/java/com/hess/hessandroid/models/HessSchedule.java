@@ -1,15 +1,13 @@
 package com.hess.hessandroid.models;
 
 import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-/**
- * Created by Greg'sMonster on 11-Mar-16.
- */
 public class HessSchedule implements Serializable {
     private final static String LOG_STRING = "HESS_ScheduleModel";
     public int PeakScheduleID = -1;
@@ -18,6 +16,32 @@ public class HessSchedule implements Serializable {
     public String StartTime;
     public String EndTime;
     public boolean IsDeleted = false;
+    SimpleDateFormat outputDateFormat = new SimpleDateFormat("HH:mma");
+    SimpleDateFormat inputDateFormat = new SimpleDateFormat("hh:mm:ss");
+
+    public String getStartTimeAMPM() {
+        try {
+            Date date = inputDateFormat.parse(StartTime);
+            return outputDateFormat.format(date);
+        } catch(Exception e) {
+            Log.d(LOG_STRING, "UNABLE TO PARSE START TIME.");
+            return StartTime;
+        }
+    }
+
+    public String getEndTimeAMPM() {
+        try {
+            Date date = inputDateFormat.parse(EndTime);
+            return outputDateFormat.format(date);
+        } catch(Exception e) {
+            Log.d(LOG_STRING, "UNABLE TO PARSE END TIME.");
+            return StartTime;
+        }
+    }
+
+    public boolean isValidTimes(String startTime, String endTime) {
+        return true;
+    }
 
     public JSONObject toJSON() {
         try {

@@ -26,6 +26,7 @@
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <string name="title_activity_settings">Settings</string>
-    <string name="title_activity_schedule">ScheduleActivity</string>
-    <string name="title_activity_set_schedule">SetScheduleActivity</string>
+    <string name="title_activity_schedule">HESS Schedules</string>
+    <string name="title_activity_set_schedule_update">Update Schedule</string>
+    <string name="title_activity_set_schedule_new">Create New Schedule</string>
 </resources>

@@ -11,12 +11,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.hess.hessandroid.R;
 import com.hess.hessandroid.SetScheduleActivity;
 import com.hess.hessandroid.dialogs.TimePickerFragment;
+import com.hess.hessandroid.enums.PeakType;
+import com.hess.hessandroid.enums.WeekType;
 import com.hess.hessandroid.models.HessSchedule;
 import com.hess.hessandroid.models.HessScheduleList;
 import com.hess.hessandroid.volley.VolleyRequest;
@@ -38,9 +42,6 @@ public class ScheduleArrayAdapter extends ArrayAdapter<HessSchedule> {
     private TextView tvWeek;
     private Button btnDelete;
 
-    public interface UpdateScheduleRowCallback {
-        public void onUpdateScheduleRow(HessSchedule schedule);
-    }
 
     public ScheduleArrayAdapter(Context context, ArrayList<HessSchedule> schedules, Activity activity) {
         super(context, 0, schedules);
@@ -65,8 +66,9 @@ public class ScheduleArrayAdapter extends ArrayAdapter<HessSchedule> {
         tvEndTime = (TextView) convertView.findViewById(R.id.tvEndTime);
         tvPeak = (TextView) convertView.findViewById(R.id.tvPeakType);
         tvWeek = (TextView) convertView.findViewById(R.id.tvWeekType);
-        btnDelete = (Button) convertView.findViewById(R.id.btnDeleteScheduleRow);
-        btnDelete.setOnClickListener(new View.OnClickListener() {
+        ImageView imgClose = (ImageView) convertView.findViewById(R.id.imgBtnClose);
+        imgClose.setImageResource(R.drawable.icon_close);
+        imgClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new AlertDialog.Builder(mContext)
@@ -90,8 +92,9 @@ public class ScheduleArrayAdapter extends ArrayAdapter<HessSchedule> {
                         .show();
             }
         });
-        btnEditScheduleRow = (Button) convertView.findViewById(R.id.btnEditScheduleRow);
-        btnEditScheduleRow.setOnClickListener(
+        ImageView imgEdit = (ImageView) convertView.findViewById(R.id.imgBtnEdit);
+        imgEdit.setImageResource(R.drawable.icon_edit);
+        imgEdit.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -107,10 +110,13 @@ public class ScheduleArrayAdapter extends ArrayAdapter<HessSchedule> {
         );
 
         // Populate the data into the template view using the data object
-        tvStartTime.setText(schedule.StartTime);
-        tvEndTime.setText(schedule.EndTime);
-        tvPeak.setText(String.valueOf(schedule.PeakTypeID));
-        tvWeek.setText(String.valueOf(schedule.WeekTypeID));
+        // Trim the :00 off of the end
+        //tvStartTime.setText(schedule.StartTime.substring(0, schedule.StartTime.length()-3));
+        //tvEndTime.setText(schedule.EndTime.substring(0, schedule.StartTime.length()-3));
+        tvStartTime.setText(schedule.getStartTimeAMPM());
+        tvEndTime.setText(schedule.getEndTimeAMPM());
+        tvPeak.setText(PeakType.values()[schedule.PeakTypeID-1].toString());
+        tvWeek.setText(WeekType.values()[schedule.WeekTypeID-1].toString());
 
         // Return the completed view to render on screen
         return convertView;

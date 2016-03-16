@@ -21,6 +21,8 @@ import java.util.Calendar;
 public class TimePickerFragment extends DialogFragment {
     private TimePickerDialog.OnTimeSetListener mListener;
     private Activity mActivity;
+    private int mMin;
+    private int mHour;
 
     @Override
     public void onAttach(Activity activity) {
@@ -34,16 +36,14 @@ public class TimePickerFragment extends DialogFragment {
         }
     }
 
+    public void setTime(int hour, int min) {
+        mHour = hour;
+        mMin = min;
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // Use the current time as the default values for the picker
-        final Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
-
-
-        // Create a new instance of TimePickerDialog and return it
-        return new TimePickerDialog(mActivity, mListener, hour, minute,
+        return new TimePickerDialog(mActivity, mListener, mHour, mMin,
                 DateFormat.is24HourFormat(getActivity()));
     }
 }

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,6 +22,8 @@ import com.hess.hessandroid.dialogs.TimePickerFragment;
 import com.hess.hessandroid.enums.PeakType;
 import com.hess.hessandroid.enums.WeekType;
 import com.hess.hessandroid.models.HessSchedule;
+
+import java.util.Calendar;
 
 public class SetScheduleActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
     private final static String LOG_STRING = "HESS_SetSchedule";
@@ -45,23 +48,20 @@ public class SetScheduleActivity extends AppCompatActivity implements TimePicker
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_schedule);
+        Bundle b = getIntent().getExtras();
 
-        isNewSchedule = getIntent().getExtras().getBoolean("IsNew");
+        isNewSchedule = b.getBoolean("IsNew");
 
         spinWeekType = (Spinner)findViewById(R.id.spinnerWeekType);
         spinPeakType = (Spinner)findViewById(R.id.spinnerPeakType);
 
-        spinPeakType = (Spinner) findViewById(R.id.spinnerPeakType);
         spinPeakType.setAdapter(new ArrayAdapter<PeakType>(this, android.R.layout.simple_list_item_1, PeakType.values()));
-
-        spinWeekType = (Spinner) findViewById(R.id.spinnerWeekType);
         spinWeekType.setAdapter(new ArrayAdapter<WeekType>(this, android.R.layout.simple_list_item_1, WeekType.values()));
-
-        btnSetSchedule = (Button) findViewById(R.id.btnSetSchedule);
 
         tvStartTime = (TextView) findViewById(R.id.tvStartTime);
         tvEndTime = (TextView) findViewById(R.id.tvEndTime);
 
+        btnSetSchedule = (Button) findViewById(R.id.btnSetSchedule);
         btnSetSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,29 +69,47 @@ public class SetScheduleActivity extends AppCompatActivity implements TimePicker
             }
         });
 
+        ActionBar ab = getSupportActionBar();
+
+
         // Update
         if(!isNewSchedule) {
             mSchedule = (HessSchedule)getIntent().getExtras().get("SCHEDULE");
-            spinWeekType.setSelection(mSchedule.WeekTypeID);
-            spinPeakType.setSelection(mSchedule.PeakTypeID);
+            spinWeekType.setSelection(mSchedule.WeekTypeID-1);
+            spinPeakType.setSelection(mSchedule.PeakTypeID - 1);
+            pickerStartHour = Integer.parseInt(mSchedule.StartTime.split(":")[0]);
+            pickerStartMin = Integer.parseInt(mSchedule.StartTime.split(":")[1]);
+            pickerEndHour = Integer.parseInt(mSchedule.EndTime.split(":")[0]);
+            pickerEndMin = Integer.parseInt(mSchedule.EndTime.split(":")[1]);
 
-            tvStartTime.setText(convertToTimeToMySQLFormat(pickerStartHour, pickerStartMin));
-            tvEndTime.setText(convertToTimeToMySQLFormat(pickerEndHour, pickerEndMin));
+            tvStartTime.setText(mSchedule.getStartTimeAMPM());
+            tvEndTime.setText(mSchedule.getEndTimeAMPM());
+            ab.setTitle(R.string.title_activity_set_schedule_update);
+            btnSetSchedule.setText("UPDATE SCHEDULE");
+        } else {
+            final Calendar c = Calendar.getInstance();
+            pickerStartHour = c.get(Calendar.HOUR_OF_DAY);
+            pickerEndHour = c.get(Calendar.HOUR_OF_DAY);
+            pickerStartMin = c.get(Calendar.MINUTE);
+            pickerEndMin = c.get(Calendar.MINUTE);
+            btnSetSchedule.setText("CREATE SCHEDULE");
+            ab.setTitle(R.string.title_activity_set_schedule_new);
         }
     }
 
     public void showStartTimePickerDialog(View v) {
         mCurrentPickerType = PICKER_TYPE_START;
-        DialogFragment newFragment = new TimePickerFragment();
+        TimePickerFragment newFragment = new TimePickerFragment();
+        newFragment.setTime(pickerStartHour, pickerStartMin);
         newFragment.show(getFragmentManager(), "timePicker");
     }
 
     public void showEndTimePickerDialog(View v) {
         mCurrentPickerType = PICKER_TYPE_END;
-        DialogFragment newFragment = new TimePickerFragment();
+        TimePickerFragment  newFragment = new TimePickerFragment();
+        newFragment.setTime(pickerEndHour, pickerEndMin);
         newFragment.show(getFragmentManager(), "timePicker");
     }
-
 
     private String convertToTimeToMySQLFormat(int hour, int min) {
         String result = "";
@@ -107,17 +125,18 @@ public class SetScheduleActivity extends AppCompatActivity implements TimePicker
         return result;
     }
 
-
     @Override
     public void onTimeSet(TimePicker view, int hour, int minute) {
         if (mCurrentPickerType == PICKER_TYPE_START) {
             pickerStartHour = hour;
             pickerStartMin = minute;
-            tvStartTime.setText(convertToTimeToMySQLFormat(hour, minute));
+            mSchedule.StartTime = convertToTimeToMySQLFormat(hour, minute);
+            tvStartTime.setText(mSchedule.getStartTimeAMPM());
         } else if (mCurrentPickerType == PICKER_TYPE_END) {
             pickerEndHour = hour;
             pickerEndMin = minute;
-            tvEndTime.setText(convertToTimeToMySQLFormat(hour, minute));
+            mSchedule.EndTime = convertToTimeToMySQLFormat(hour, minute);
+            tvEndTime.setText(mSchedule.getEndTimeAMPM());
         } else {
             Log.e(LOG_STRING, "Error: Invalid listener type for time set.");
         }
@@ -125,6 +144,8 @@ public class SetScheduleActivity extends AppCompatActivity implements TimePicker
 
     public void closeActivityWithSuccess() {
         HessSchedule schedule = new HessSchedule();
+        if(!isNewSchedule)
+            schedule.PeakScheduleID = mSchedule.PeakScheduleID;
         schedule.EndTime = convertToTimeToMySQLFormat(pickerEndHour, pickerEndMin);
         schedule.StartTime = convertToTimeToMySQLFormat(pickerStartHour, pickerStartMin);
         PeakType peak = (PeakType)spinPeakType.getSelectedItem();

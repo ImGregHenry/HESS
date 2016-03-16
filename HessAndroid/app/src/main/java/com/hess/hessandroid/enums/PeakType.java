@@ -4,10 +4,10 @@ package com.hess.hessandroid.enums;
  * Created by Greg'sMonster on 11-Mar-16.
  */
 public enum PeakType {
-    OFFPEAK("OFF-PEAK", 1),
-    ONPEAK("ON-PEAK", 2),
-    MIDPEAKENABLE("MID-PEAK-ENABLE", 3),
-    MIDPEAKDISABLE("MID-PEAK-DISABLE", 4);
+    OFFPEAK("OFF", 1),
+    ONPEAK("ON", 2),
+    MIDPEAKENABLE("MID-ENABLE", 3),
+    MIDPEAKDISABLE("MID-DISABLE", 4);
 
     private String strValue;
     private int intValue;

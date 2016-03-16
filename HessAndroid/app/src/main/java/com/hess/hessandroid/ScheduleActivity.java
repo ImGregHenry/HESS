@@ -2,6 +2,7 @@ package com.hess.hessandroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,8 +19,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ScheduleActivity extends AppCompatActivity implements ScheduleArrayAdapter.UpdateScheduleRowCallback,
-        VolleyRequest.VolleyReqCallbackGetSchedule, VolleyRequest.VolleyReqCallbackPutSchedule {
+public class ScheduleActivity extends AppCompatActivity implements VolleyRequest.VolleyReqCallbackGetSchedule, VolleyRequest.VolleyReqCallbackPutSchedule {
 
     private final static String LOG_STRING = "HESS_Schedule";
     private final static int NEW_SCHEDULE_ACTIVITY_RESULT_ID = 1;
@@ -33,6 +33,9 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleArray
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabAdd);
+        fab.setImageResource(R.drawable.icon_add);
+
         requestHessScheduler();
     }
 
@@ -45,31 +48,11 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleArray
     private void initializeListView(ArrayList<HessSchedule> schedules) {
         lvSchedule = (ListView) findViewById(R.id.listViewSchedule);
 
-//        ArrayList<HessSchedule> schedules = new ArrayList<HessSchedule>();
-//        HessSchedule schedule = new HessSchedule();
-//        schedule.EndTime = "123";
-//        schedule.StartTime = "321";
-//        schedule.WeekTypeID = 12;
-//        schedule.PeakTypeID = 19;
-//        schedules.add(schedule);
-
         if(mArrayAdapter != null)
             mArrayAdapter.clear();
         mArrayAdapter = new ScheduleArrayAdapter(this, schedules, this);
 
         lvSchedule.setAdapter(mArrayAdapter);
-        lvSchedule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int itemPosition = position;
-
-                String itemValue = (String) lvSchedule.getItemAtPosition(position);
-
-                Toast.makeText(getApplicationContext(),
-                        "Position :" + itemPosition + "  ListItem : " + itemValue, Toast.LENGTH_LONG)
-                        .show();
-            }
-        });
     }
 
     @Override
@@ -104,8 +87,4 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleArray
         }
     }
 
-    @Override
-    public void onUpdateScheduleRow(HessSchedule schedule) {
-
-    }
 }
