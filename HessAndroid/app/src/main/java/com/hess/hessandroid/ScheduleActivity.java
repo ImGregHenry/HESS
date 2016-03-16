@@ -1,9 +1,7 @@
 package com.hess.hessandroid;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,11 +11,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.RelativeLayout;
 
 import com.hess.hessandroid.adapters.ScheduleArrayAdapter;
 import com.hess.hessandroid.models.HessSchedule;
@@ -37,7 +37,8 @@ public class ScheduleActivity extends AppCompatActivity implements VolleyRequest
 
     private ListView lvSchedule;
     private ScheduleArrayAdapter mArrayAdapter;
-
+    private RelativeLayout lv1;
+    private ImageView imgGraphOverlay;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +54,11 @@ public class ScheduleActivity extends AppCompatActivity implements VolleyRequest
         text.setSpan(new ForegroundColorSpan(Color.WHITE), 0, text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         actionBar.setTitle(text);
 
+        lv1 = (RelativeLayout) findViewById(R.id.linearGraphLayout);
+
         requestHessScheduler();
     }
+
 
     public void startNewScheduleActivity(View v) {
         Intent intent = new Intent(this, SetScheduleActivity.class);
@@ -72,8 +76,24 @@ public class ScheduleActivity extends AppCompatActivity implements VolleyRequest
         lvSchedule.setAdapter(mArrayAdapter);
     }
 
+    MyGraphView graphView;
+    private void initializeGraphView(HessScheduleList scheduleList) {
+        if(graphView != null) {
+            graphView.redrawGraph(scheduleList);
+        } else {
+            graphView = new MyGraphView(this, scheduleList);
+            lv1.addView(graphView);
+        }
+        imgGraphOverlay = (ImageView) findViewById(R.id.imgGraphOverlay);
+        imgGraphOverlay.setImageResource(R.drawable.img_clock_hours);
+        imgGraphOverlay.getLayoutParams().height = 1100; //graphView.getRectangleWidthDP();
+        imgGraphOverlay.getLayoutParams().width = 1100; //graphView.getRectangleHeightDP();
+        imgGraphOverlay.requestLayout();
+    }
+
     @Override
     public void onVolleyGetScheduleReady(HessScheduleList scheduleList) {
+        initializeGraphView(scheduleList);
         initializeListView(scheduleList.Schedule);
     }
 
