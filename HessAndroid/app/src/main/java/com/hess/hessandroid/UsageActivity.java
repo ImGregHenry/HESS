@@ -30,30 +30,36 @@ import java.util.Date;
 public class UsageActivity extends AppCompatActivity implements VolleyRequest.VolleyReqCallbackGetPowerUsage {
     private final static String LOG_STRING = "HESS_USAGE";
 
+    private TextView totalPower;
     private TextView dailySaving;
     private TextView totalSaving;
+
+    private GraphView graph;
 
     private double savingsOnPeak = 9.2; //cents/kWh
     private double savingsMidPeak = 4.5; //cents/kWh
     private double minuteInHour = 0.0167; //hour
-    private double dailyPowerUsageOn;
-    private double dailyPowerUsageMid;
     private double dailyEnergyOn;
     private double dailyEnergyMid;
-    private double dailySavingsOn = 0;
-    private double dailySavingsMid = 0;
+    private double dailySavingsOn = 0.0;
+    private double dailySavingsMid = 0.0;
     private double dailySavingsTotal;
     private double dailySavingsTotalDollar;
     private double totalEnergyOn;
     private double totalEnergyMid;
-    private double totalSavingsOn = 0;
-    private double totalSavingsMid = 0;
+    private double totalSavingsOn = 0.0;
+    private double totalSavingsMid = 0.0;
     private double totalSavingsTotal;
     private double totalSavingsTotalDollar;
+    private double totalPowerUsageOn = 0.0;
+    private double totalPowerUsageMid = 0.0;
+    private double totalPowerUsage;
 
     private DateFormat dateFormat;
     private Date recordDate;
     private Date currentDate;
+
+    private LineGraphSeries<DataPoint> series;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +72,10 @@ public class UsageActivity extends AppCompatActivity implements VolleyRequest.Vo
         text.setSpan(new ForegroundColorSpan(Color.WHITE), 0, text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         actionBar.setTitle(text);
 
+        totalPower = (TextView) findViewById(R.id.tPowUsage);
         dailySaving = (TextView) findViewById(R.id.dSaving);
         totalSaving = (TextView) findViewById(R.id.tSaving);
-
+        graph = (GraphView) findViewById(R.id.graph);
 
 /*        GraphView graph = (GraphView) findViewById(R.id.graph);
         LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[]{
@@ -79,28 +86,31 @@ public class UsageActivity extends AppCompatActivity implements VolleyRequest.Vo
                 new DataPoint(4, 6)
         });
         graph.addSeries(series);*/
+
+        requestPowerUsage();
+
     }
 
     @Override
     public void onVolleyGetPowerUsageReady(PowerUsageList powerUsageList) {
-        Log.d(LOG_STRING, "1");
-        dailySaving.setText("1");
         initializePowerUsage(powerUsageList.PowerUsage);
     }
 
     private void initializePowerUsage(ArrayList<PowerUsage> powerUsages) {
-        Log.d(LOG_STRING, "2");
-        totalSaving.setText("2");
         for (int i = 0; i < powerUsages.size(); i++) {
+            if(powerUsages.get(i).PeakTypeID == 2 || powerUsages.get(i).PeakTypeID == 3) {
+                series = new LineGraphSeries<DataPoint>(new DataPoint[]{
+                        new DataPoint(i, powerUsages.get(i).PowerUsageWatt),
+                });
+                graph.addSeries(series);
+            }
+
             try {
                 dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 recordDate = dateFormat.parse(powerUsages.get(i).RecordTime);
-                Log.d(LOG_STRING, "record date: " + recordDate);
                 currentDate = dateFormat.parse(dateFormat.format(new Date()));
-                Log.d(LOG_STRING, "current date: " + currentDate);
 
                 if (recordDate.equals(currentDate)) {
-                    Log.d(LOG_STRING, "reached here");
                     if (powerUsages.get(i).PeakTypeID == 2) {
                         dailyEnergyOn += ((powerUsages.get(i).PowerUsageWatt / 1000d) * minuteInHour); //kWh
                         dailySavingsOn = dailyEnergyOn * savingsOnPeak; //cents
@@ -109,28 +119,46 @@ public class UsageActivity extends AppCompatActivity implements VolleyRequest.Vo
                         dailyEnergyMid += ((powerUsages.get(i).PowerUsageWatt / 1000d) * minuteInHour); //kWh
                         dailySavingsMid = dailyEnergyMid * savingsMidPeak; //cents
                     }
-                    dailySavingsTotal = dailySavingsOn + dailySavingsMid; //cents
-                    dailySavingsTotalDollar = dailySavingsTotal / 100d; //dollar
-                    Log.d(LOG_STRING, "Daily Saving: $" + dailySavingsTotalDollar);
-                    dailySaving.setText("$" + dailySavingsTotalDollar);
+
                 }
 
                 if (powerUsages.get(i).PeakTypeID == 2) {
+                    totalPowerUsageOn += powerUsages.get(i).PowerUsageWatt / 1000d; //kW
+
                     totalEnergyOn += ((powerUsages.get(i).PowerUsageWatt / 1000d) * minuteInHour); //kWh
                     totalSavingsOn = totalEnergyOn * savingsOnPeak; //cents
                 }
                 if (powerUsages.get(i).PeakTypeID == 3) {
+                    totalPowerUsageMid += powerUsages.get(i).PowerUsageWatt / 1000d; //kW
+
                     totalEnergyMid += ((powerUsages.get(i).PowerUsageWatt / 1000d) * minuteInHour); //kWh
                     totalSavingsMid = totalEnergyMid * savingsMidPeak; //cents
                 }
-                totalSavingsTotal = totalSavingsOn + totalSavingsMid; //cents
-                totalSavingsTotalDollar = totalSavingsTotal / 100d; //dollar
-                Log.d(LOG_STRING, "Total Saving: $" + totalSavingsTotalDollar);
-                totalSaving.setText("$" + totalSavingsTotalDollar);
+
 
             } catch (Exception e) {
                 Log.e(LOG_STRING, e.getMessage());
             }
         }
+
+        dailySavingsTotal = dailySavingsOn + dailySavingsMid; //cents
+        dailySavingsTotalDollar = dailySavingsTotal / 100d; //dollar
+        Log.d(LOG_STRING, "Daily Saving: $" + dailySavingsTotalDollar);
+        dailySaving.setText("$" + dailySavingsTotalDollar);
+
+        totalPowerUsage = totalPowerUsageOn + totalPowerUsageMid; //kW
+        Log.d(LOG_STRING, "Total Power Usage: " + totalPowerUsage + "kW");
+        totalPower.setText(totalPowerUsage + "kW");
+
+        totalSavingsTotal = totalSavingsOn + totalSavingsMid; //cents
+        totalSavingsTotalDollar = totalSavingsTotal / 100d; //dollar
+        Log.d(LOG_STRING, "Total Saving: $" + totalSavingsTotalDollar);
+        totalSaving.setText("$" + totalSavingsTotalDollar);
+
+    }
+
+    private void requestPowerUsage() {
+        VolleyRequest req = new VolleyRequest();
+        req.getPowerUsageData(this);
     }
 }
