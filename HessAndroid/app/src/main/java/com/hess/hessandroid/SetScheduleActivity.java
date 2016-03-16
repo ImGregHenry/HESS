@@ -87,6 +87,7 @@ public class SetScheduleActivity extends AppCompatActivity implements TimePicker
             ab.setTitle(R.string.title_activity_set_schedule_update);
             btnSetSchedule.setText("UPDATE SCHEDULE");
         } else {
+            mSchedule = new HessSchedule();
             final Calendar c = Calendar.getInstance();
             pickerStartHour = c.get(Calendar.HOUR_OF_DAY);
             pickerEndHour = c.get(Calendar.HOUR_OF_DAY);

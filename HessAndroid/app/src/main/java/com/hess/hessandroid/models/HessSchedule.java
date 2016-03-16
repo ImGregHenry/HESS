@@ -16,8 +16,23 @@ public class HessSchedule implements Serializable {
     public String StartTime;
     public String EndTime;
     public boolean IsDeleted = false;
-    SimpleDateFormat outputDateFormat = new SimpleDateFormat("HH:mma");
-    SimpleDateFormat inputDateFormat = new SimpleDateFormat("hh:mm:ss");
+    public static SimpleDateFormat outputDateFormat = new SimpleDateFormat("h:mma");
+    public static SimpleDateFormat inputDateFormat = new SimpleDateFormat("kk:mm:ss");
+
+    public Date getStartTimeInDateFormat() {
+        try {
+            return inputDateFormat.parse(StartTime);
+        } catch (Exception e) {
+            return new Date();
+        }
+    }
+    public Date getEndTimeInDateFormat() {
+        try {
+            return inputDateFormat.parse(EndTime);
+        } catch (Exception e) {
+            return new Date();
+        }
+    }
 
     public String getStartTimeAMPM() {
         try {
