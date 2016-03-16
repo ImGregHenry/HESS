@@ -33,7 +33,7 @@ VALUES ("WEEKDAY"),
 # WEEKEND = 2
 
 CREATE TABLE IF NOT EXISTS PeakSchedule (
-	PeakScheduleID INTEGER,
+	PeakScheduleID INTEGER PRIMARY KEY AUTO_INCREMENT,
 	WeekTypeID INTEGER,
 	PeakTypeID INTEGER,
 	StartTime TIME,
@@ -42,9 +42,9 @@ CREATE TABLE IF NOT EXISTS PeakSchedule (
 	FOREIGN KEY (PeakTypeID) REFERENCES PeakType (PeakTypeID)
 );
 
-INSERT INTO PeakSchedule (WeekTypeID, PeakTypeID, StartTime, EndTime)
-VALUES (1, 2, "1:00:00", "8:00:00"),
-(1, 3, "8:00:01", "11:59:00");
+#INSERT INTO PeakSchedule (WeekTypeID, PeakTypeID, StartTime, EndTime)
+#VALUES (1, 2, "1:00:00", "8:00:00"),
+#(1, 3, "8:00:01", "11:59:00");
 
 
 
