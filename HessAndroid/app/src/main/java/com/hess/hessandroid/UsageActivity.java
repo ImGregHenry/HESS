@@ -77,15 +77,12 @@ public class UsageActivity extends AppCompatActivity implements VolleyRequest.Vo
         totalSaving = (TextView) findViewById(R.id.tSaving);
         graph = (GraphView) findViewById(R.id.graph);
 
-/*        GraphView graph = (GraphView) findViewById(R.id.graph);
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[]{
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6)
-        });
-        graph.addSeries(series);*/
+        series = new LineGraphSeries<DataPoint>();
+        graph.addSeries(series);
+
+        Viewport viewport = graph.getViewport();
+        //viewport.setMinY(0);
+        viewport.setScrollable(true);
 
         requestPowerUsage();
 
@@ -98,12 +95,7 @@ public class UsageActivity extends AppCompatActivity implements VolleyRequest.Vo
 
     private void initializePowerUsage(ArrayList<PowerUsage> powerUsages) {
         for (int i = 0; i < powerUsages.size(); i++) {
-            if(powerUsages.get(i).PeakTypeID == 2 || powerUsages.get(i).PeakTypeID == 3) {
-                series = new LineGraphSeries<DataPoint>(new DataPoint[]{
-                        new DataPoint(i, powerUsages.get(i).PowerUsageWatt),
-                });
-                graph.addSeries(series);
-            }
+            series.appendData(new DataPoint(i,powerUsages.get(i).PowerUsageWatt), false, powerUsages.size());
 
             try {
                 dateFormat = new SimpleDateFormat("yyyy-MM-dd");
