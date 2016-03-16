@@ -14,6 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import com.hess.hessandroid.models.HessScheduleList;
 import com.hess.hessandroid.models.BatteryStatus;
 import com.hess.hessandroid.models.PowerUsage;
+import com.hess.hessandroid.models.PowerUsageList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -38,7 +39,7 @@ public class VolleyRequest {
     }
 
     public interface VolleyReqCallbackGetPowerUsage {
-        public void onVolleyGetPowerUsageReady(PowerUsage string);
+        public void onVolleyGetPowerUsageReady(PowerUsageList list);
     }
 
     public void postData(final Context context, final JSONArray js) {
@@ -155,11 +156,11 @@ public class VolleyRequest {
                         try {
                             Gson gson = new Gson();
 
-                            Type listType = new TypeToken<PowerUsage>() { }.getType();
-                            PowerUsage arrayString = gson.fromJson(response.toString(), listType);
+                            Type listType = new TypeToken<PowerUsageList>() { }.getType();
+                            PowerUsageList arrayList = gson.fromJson(response.toString(), listType);
 
                             VolleyReqCallbackGetPowerUsage callback = (VolleyReqCallbackGetPowerUsage)context;
-                            callback.onVolleyGetPowerUsageReady(arrayString);
+                            callback.onVolleyGetPowerUsageReady(arrayList);
                         }
                         catch(Exception e) {
                             Log.e(LOG_STRING, e.getMessage());

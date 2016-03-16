@@ -47,7 +47,7 @@
                         android:layout_height="200dip"
                         android:id="@+id/graph" />
 
-                    <LinearLayout
+                    <!--<LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/price">
@@ -79,53 +79,7 @@
                             android:paddingLeft="70dp"
                             android:paddingTop="20dp"
                             android:paddingBottom="20dp" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/total_saving">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Total Savings: "
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:id="@+id/totalSaving"
-                            android:padding="20dp" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="&#36;15.39"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:id="@+id/tSaving"
-                            android:paddingLeft="150dp"
-                            android:paddingTop="20dp"
-                            android:paddingBottom="20dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/daily_saving">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Average Daily Savings: "
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:id="@+id/dailySaving"
-                            android:padding="20dp" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="&#36;1.04"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:id="@+id/dSaving"
-                            android:paddingLeft="95dp"
-                            android:paddingTop="20dp"
-                            android:paddingBottom="20dp" />
-                    </LinearLayout>
-
+                    </LinearLayout>-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -148,6 +102,48 @@
                             android:paddingTop="20dp"
                             android:paddingBottom="20dp" />
                     </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/total_saving">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Total Savings: "
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:id="@+id/totalSaving"
+                            android:padding="20dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:id="@+id/tSaving"
+                            android:paddingTop="20dp"
+                            android:paddingBottom="20dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/daily_saving">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Daily Savings: "
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:id="@+id/dailySaving"
+                            android:padding="20dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:id="@+id/dSaving"
+                            android:paddingTop="20dp"
+                            android:paddingBottom="20dp" />
+                    </LinearLayout>
+
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/status"
