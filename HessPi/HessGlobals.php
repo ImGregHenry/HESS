@@ -7,7 +7,7 @@
 # PI CONTROL SCRIPTS
 define('PISCRIPT_PATH', 'usr/pi/scripts/');
 define('PYTHON_EXEC_PATH', 'sudo python');
-define('PISCRIPT_PYTHON_PATH', 'pythonscripts/');
+define('PISCRIPT_PYTHON_PATH', '/home/pi/PREDEMO/pythonscripts/');
 define('PISCRIPT_BATTERY_PERCENT', 'GetBatteryPercentage.py');
 define('PISCRIPT_POWER_USAGE', 'GetWattage.py');
 define('PISCRIPT_INVERTER_TOGGLE', 'InverterToggle.py');

@@ -16,9 +16,8 @@ class PiStateTracker {
 
 	public static function isSystemOnline() {
 		//TODO: uncomment.
-		//$result = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_CHECK_SYSTEM_STATUS);
-		//return $result;
-		return 0;
+		$result = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_CHECK_SYSTEM_STATUS);
+		return $result;
 	}
 
 	public static function setCronJobForOfflineMode() {
@@ -50,8 +49,10 @@ class PiStateTracker {
 		
 		if ($stmt->rowCount() > 0) {
 			$row = $stmt->fetch();
+			echo "OFFLINE: " . $row['SetOffline'];
 		    return $row['SetOffline'];
 		}
+		// By default, system is not already set offline
 		return 0;
 	}
 
@@ -114,7 +115,7 @@ class PiStateTracker {
 			echo "Script($count): " . $script;
 			if ($script == PISCRIPT_INVERTER_ON) {
 			    PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_INVERTER_TOGGLE);
-			    sleep(10);
+			    sleep(1);
 			    $isInverterOn = true;
 			} else if ($script == PISCRIPT_INVERTER_OFF) {
 				PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . ' ' . PISCRIPT_PYTHON_PATH . PISCRIPT_INVERTER_TOGGLE);
@@ -348,7 +349,7 @@ class PiStateTracker {
 	        }
 	        
 
-	        $cronScheduler::createBatterySchedulingCronJob($item->StartTime, $item->EndTime, $item->PeakTypeID);
+	        CronJobScheduler::createBatterySchedulingCronJob($item->StartTime, $item->EndTime, $item->PeakTypeID);
 
 	        // } else {
 	        //     echo "OLD SCHEDULE \n\n";
