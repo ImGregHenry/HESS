@@ -49,13 +49,12 @@
                             android:padding="20dp" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:id="@+id/remainingPowerPercent"
-                            android:paddingLeft="60dp"
-                            android:paddingTop="20dp"
-                            android:paddingBottom="20dp" />
+                            android:gravity="right"
+                            android:padding="20dp" />
 
                     </LinearLayout>
 
@@ -80,13 +79,12 @@
                             android:id="@+id/remainingTime"
                             android:padding="20dp" />
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:id="@+id/rTime"
-                            android:paddingLeft="70dp"
-                            android:paddingTop="20dp"
-                            android:paddingBottom="20dp" />
+                            android:gravity="right"
+                            android:padding="20dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -102,13 +100,12 @@
                             android:id="@+id/currentUsage"
                             android:padding="20dp" />
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:id="@+id/cUsage"
-                            android:paddingLeft="100dp"
-                            android:paddingTop="20dp"
-                            android:paddingBottom="20dp" />
+                            android:gravity="right"
+                            android:padding="20dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -124,13 +121,12 @@
                             android:id="@+id/upTime"
                             android:padding="20dp" />
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:id="@+id/uTime"
-                            android:paddingLeft="80dp"
-                            android:paddingTop="20dp"
-                            android:paddingBottom="20dp" />
+                            android:gravity="right"
+                            android:padding="20dp" />
                     </LinearLayout>
                 </LinearLayout>
 

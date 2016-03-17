@@ -23,7 +23,7 @@ public class TimePickerFragment extends DialogFragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnTimeSetListener");
         }
-    }   
+    }
 
     public void setTime(int hour, int min) {
         mHour = hour;
