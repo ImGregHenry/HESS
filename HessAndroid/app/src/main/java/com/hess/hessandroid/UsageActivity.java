@@ -16,7 +16,7 @@ import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
-import android.content.Context;
+import com.jjoe64.graphview.GridLabelRenderer;
 
 import android.widget.TextView;
 
@@ -86,16 +86,21 @@ public class UsageActivity extends AppCompatActivity implements VolleyRequest.Vo
 
         series = new LineGraphSeries<DataPoint>();
 
+        GridLabelRenderer gridLabel = graph.getGridLabelRenderer();
+        gridLabel.setHorizontalAxisTitle("Time");
+
         viewport = graph.getViewport();
         viewport.setMinY(0);
         viewport.setScrollable(true);
 
-        Timer timer = new Timer();
+        requestPowerUsage();
+        
+/*        Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             public void run() {
                 requestPowerUsage();
             }
-        }, 0, 60 * 1000);
+        }, 0, 60 * 1000);*/
 
     }
 
