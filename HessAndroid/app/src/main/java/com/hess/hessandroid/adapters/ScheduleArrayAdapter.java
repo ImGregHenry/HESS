@@ -33,15 +33,12 @@ import android.support.v7.app.AppCompatActivity;
 public class ScheduleArrayAdapter extends ArrayAdapter<HessSchedule> {
     private ArrayList<HessSchedule> mScheduleList;
     private Context mContext;
-    private Button btnEditScheduleRow;
     private Activity mActivity;
 
     private TextView tvStartTime;
     private TextView tvEndTime;
     private TextView tvPeak;
     private TextView tvWeek;
-    private Button btnDelete;
-
 
     public ScheduleArrayAdapter(Context context, ArrayList<HessSchedule> schedules, Activity activity) {
         super(context, 0, schedules);
@@ -49,7 +46,6 @@ public class ScheduleArrayAdapter extends ArrayAdapter<HessSchedule> {
         mContext = context;
         mActivity = activity;
     }
-
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
