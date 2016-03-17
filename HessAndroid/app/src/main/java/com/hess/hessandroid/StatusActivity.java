@@ -101,10 +101,10 @@ public class StatusActivity extends Activity implements
 
     private void initializeBatteryStatus(BatteryStatus batteryStatuses) {
         powerPercent = batteryStatuses.getPowerLevelPercent();
-        Log.d(LOG_STRING, powerPercent + "%");
+        Log.d(LOG_STRING, (powerPercent*100) + "%");
 
-        powerPercentVal.setText(powerPercent + "%");
-        progressBar.setProgress(powerPercent);
+        powerPercentVal.setText((powerPercent*100) + "%");
+        progressBar.setProgress((powerPercent*100));
     }
 
     @Override
@@ -156,8 +156,8 @@ public class StatusActivity extends Activity implements
                     currentTime = dateFormat.parse(dateFormat.format(new Date()));
 
                     if (startTime.before(currentTime) && endTime.after(currentTime)) {
-                        powerPercentDec = powerPercent / (double) 100;
-                        remainingTime = (totalPowerUsage / currentPowerUsage) * powerPercentDec;
+                        //powerPercentDec = powerPercent / (double) 100;
+                        remainingTime = (totalPowerUsage / currentPowerUsage) * (double) powerPercent;
                         remainingTimeHour = (int) remainingTime;
                         remainingTimeMinute = (int) ((remainingTime - remainingTimeHour) * 60);
                         Log.d(LOG_STRING, "Time Remaining: " + remainingTimeHour + ":" + remainingTimeMinute);
