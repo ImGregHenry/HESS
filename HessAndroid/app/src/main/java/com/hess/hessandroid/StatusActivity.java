@@ -125,30 +125,8 @@ public class StatusActivity extends Activity implements
 
     private void initializeHessSchedule(ArrayList<HessSchedule> schedules) {
         for(int i = 0; i < schedules.size(); i++) {
-            //Time to full calculation
-            if(schedules.get(i).PeakTypeID == 1) {
-                try {
-                    dateFormat = new SimpleDateFormat("HH:mm");
-                    startTime = dateFormat.parse(schedules.get(i).StartTime);
-                    endTime = dateFormat.parse(schedules.get(i).EndTime);
-                    currentTime = dateFormat.parse(dateFormat.format(new Date()));
-
-                    if (startTime.before(currentTime) && endTime.after(currentTime)) {
-                        startChargingTime = dateFormat.parse(schedules.get(i).StartTime);
-                        timeToFullMS = 25500000 - (currentTime.getTime() - startChargingTime.getTime());
-                        timeToFullMin = (int) ((timeToFullMS / 60000) % 60);
-                        timeToFullHour = (int) (timeToFullMS / 3600000);
-                        Log.d(LOG_STRING, "Time Until Full: " + timeToFullHour + ":" + timeToFullMin);
-                        batteryTimeText.setText("Time Until Full: ");
-                        remainingTimeVal.setText(timeToFullHour + ":" + timeToFullMin);
-                    }
-                }
-                catch (Exception e){
-                    Log.e(LOG_STRING, e.getMessage());
-                }
-            }
             //Remaining time calculation when in onpeak or midpeak-enabled
-            else if(schedules.get(i).PeakTypeID == 2 || schedules.get(i).PeakTypeID == 3) {
+            if(schedules.get(i).PeakTypeID == 2 || schedules.get(i).PeakTypeID == 3) {
                 try {
                     dateFormat = new SimpleDateFormat("HH:mm");
                     startTime = dateFormat.parse(schedules.get(i).StartTime);
@@ -176,6 +154,28 @@ public class StatusActivity extends Activity implements
                     Log.e(LOG_STRING, e.getMessage());
                 }
 
+            }
+            //Time to full calculation
+            else {
+                try {
+                    dateFormat = new SimpleDateFormat("HH:mm");
+                    startTime = dateFormat.parse(schedules.get(i).StartTime);
+                    endTime = dateFormat.parse(schedules.get(i).EndTime);
+                    currentTime = dateFormat.parse(dateFormat.format(new Date()));
+
+                    if (startTime.before(currentTime) && endTime.after(currentTime)) {
+                        startChargingTime = dateFormat.parse(schedules.get(i).StartTime);
+                        timeToFullMS = 25500000 - (currentTime.getTime() - startChargingTime.getTime());
+                        timeToFullMin = (int) ((timeToFullMS / 60000) % 60);
+                        timeToFullHour = (int) (timeToFullMS / 3600000);
+                        Log.d(LOG_STRING, "Time Until Full: " + timeToFullHour + ":" + timeToFullMin);
+                        batteryTimeText.setText("Time Until Full: ");
+                        remainingTimeVal.setText(timeToFullHour + ":" + timeToFullMin);
+                    }
+                }
+                catch (Exception e){
+                    Log.e(LOG_STRING, e.getMessage());
+                }
             }
         }
     }
