@@ -10,8 +10,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -84,25 +82,20 @@ public class StatusActivity extends AppCompatActivity implements
         batteryTimeText = (TextView) findViewById(R.id.remainingTime);
         currentPowerUsageTime = (TextView) findViewById(R.id.uTime);
 
-        //Receive battery status every minute
-        Timer timerBatteryStatus = new Timer();
-        timerBatteryStatus.schedule(new TimerTask() {
+        //Receive battery status, power usage every minute
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
             public void run() {
                 requestBatteryStatus();
+                requestPowerUsage();
+                requestHessScheduler();
             }
         }, 0, 60*1000);
 
-        //Receive power usage every minute
-        Timer timerPowerUsage = new Timer();
-        timerPowerUsage.schedule(new TimerTask() {
-            public void run() {
-                requestPowerUsage();
-            }
-        }, 0, 60 * 1000);
 
 //        requestBatteryStatus();
 //        requestPowerUsage();
-        requestHessScheduler();
+//        requestHessScheduler();
 
     }
 
@@ -193,8 +186,6 @@ public class StatusActivity extends AppCompatActivity implements
     }
 
     private void requestBatteryStatus() {
-//        Log.d(LOG_STRING, "TESTING*************");
-
         VolleyRequest req = new VolleyRequest();
         req.getBatteryStatusData(this);
     }
@@ -209,25 +200,4 @@ public class StatusActivity extends AppCompatActivity implements
         req.getSchedulerData(this);
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_status, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 }

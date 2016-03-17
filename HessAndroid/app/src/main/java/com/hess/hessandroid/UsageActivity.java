@@ -16,6 +16,7 @@ import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
+import android.content.Context;
 
 import android.widget.TextView;
 
@@ -29,6 +30,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class UsageActivity extends AppCompatActivity implements VolleyRequest.VolleyReqCallbackGetPowerUsage {
     private final static String LOG_STRING = "HESS_USAGE";
@@ -82,13 +85,17 @@ public class UsageActivity extends AppCompatActivity implements VolleyRequest.Vo
         graph = (GraphView) findViewById(R.id.graph);
 
         series = new LineGraphSeries<DataPoint>();
-        graph.addSeries(series);
 
         viewport = graph.getViewport();
         viewport.setMinY(0);
         viewport.setScrollable(true);
 
-        requestPowerUsage();
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            public void run() {
+                requestPowerUsage();
+            }
+        }, 0, 60 * 1000);
 
     }
 
@@ -104,12 +111,42 @@ public class UsageActivity extends AppCompatActivity implements VolleyRequest.Vo
                 recordDate = dateFormat.parse(powerUsages.get(i).RecordTime);
                 currentDate = dateFormat.parse(dateFormat.format(new Date()));
 
-                series.appendData(new DataPoint(i, powerUsages.get(i).PowerUsageWatt), false, powerUsages.size());
+                DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                Date recordDate1 = dateFormat1.parse(powerUsages.get(i).RecordTime);
+                series.appendData(new DataPoint(recordDate1, powerUsages.get(i).PowerUsageWatt), false, powerUsages.size());
+
+                graph.addSeries(series);
+
+                // set date label formatter
+                graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this) {
+                    @Override
+                    public String formatLabel(double value, boolean isValueX) {
+                        if (isValueX) {
+                            // show normal x values
+
+                            Calendar c = Calendar.getInstance();
+                            //Set time in milliseconds
+                            c.setTimeInMillis(((long) value));
+                            int mHour = c.get(Calendar.HOUR);
+                            int mMinute = c.get(Calendar.MINUTE);
+                            int mDay = c.get(Calendar.DAY_OF_MONTH);
+                            int mMonth = c.get(Calendar.MONTH);
+
+
+                            // Return Hour:Minute
+                            return mHour + ":" + mMinute;
+                            //return super.formatLabel(newDate.toString(), isValueX);
+                        } else {
+                            return super.formatLabel(value, isValueX);
+                        }
+                    }
+                });
+                //graph.getGridLabelRenderer().setNumHorizontalLabels(3); // only 4 because of the space
 
                 // set manual x bounds to have nice steps
-//                viewport.setMinX(dateFormat.parse(powerUsages.get(0).RecordTime).getTime());
-//                viewport.setMaxX(dateFormat.parse(powerUsages.get(powerUsages.size() - 1).RecordTime).getTime());
-//                viewport.setXAxisBoundsManual(true);
+                viewport.setMinX(dateFormat1.parse(powerUsages.get(0).RecordTime).getTime());
+                viewport.setMaxX(dateFormat1.parse(powerUsages.get(powerUsages.size() - 1).RecordTime).getTime());
+                viewport.setXAxisBoundsManual(true);
 
                 if (recordDate.equals(currentDate)) {
                     if (powerUsages.get(i).PeakTypeID == 2) {
@@ -155,15 +192,11 @@ public class UsageActivity extends AppCompatActivity implements VolleyRequest.Vo
         totalSavingsTotalDollar = totalSavingsTotal / 100d; //dollar
         Log.d(LOG_STRING, "Total Saving: $" + totalSavingsTotalDollar);
         totalSaving.setText("$" + totalSavingsTotalDollar);
-
-        // set date label formatter
-       // graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(context));
-        //graph.getGridLabelRenderer().setNumHorizontalLabels(3); // only 4 because of the space
-
     }
 
     private void requestPowerUsage() {
         VolleyRequest req = new VolleyRequest();
         req.getPowerUsageData(this);
     }
+
 }
