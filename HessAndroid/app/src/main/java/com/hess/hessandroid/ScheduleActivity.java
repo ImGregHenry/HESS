@@ -1,13 +1,13 @@
 package com.hess.hessandroid;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -29,7 +29,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ScheduleActivity extends AppCompatActivity implements VolleyRequest.VolleyReqCallbackGetSchedule, VolleyRequest.VolleyReqCallbackPutSchedule {
+public class ScheduleActivity extends Activity implements VolleyRequest.VolleyReqCallbackGetSchedule, VolleyRequest.VolleyReqCallbackPutSchedule {
 
     private final static String LOG_STRING = "HESS_Schedule";
     private final static int NEW_SCHEDULE_ACTIVITY_RESULT_ID = 1;
@@ -44,21 +44,10 @@ public class ScheduleActivity extends AppCompatActivity implements VolleyRequest
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabAdd);
-        fab.setImageResource(R.drawable.icon_add);
-        fab.setBackgroundResource(R.color.hess_purple);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#5c0f92")));
-        Spannable text = new SpannableString(actionBar.getTitle());
-        text.setSpan(new ForegroundColorSpan(Color.WHITE), 0, text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        actionBar.setTitle(text);
-
         lv1 = (RelativeLayout) findViewById(R.id.linearGraphLayout);
 
         requestHessScheduler();
     }
-
 
     public void startNewScheduleActivity(View v) {
         Intent intent = new Intent(this, SetScheduleActivity.class);
@@ -82,12 +71,25 @@ public class ScheduleActivity extends AppCompatActivity implements VolleyRequest
             graphView.redrawGraph(scheduleList);
         } else {
             graphView = new MyGraphView(this, scheduleList);
+            graphView.getLayoutParams();
             lv1.addView(graphView);
+
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) graphView.getLayoutParams();
+            lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            lp.width = 450;
+            lp.height = 450;
+            lp.topMargin = 88;
+            graphView.setLayoutParams(lp);
+            graphView.requestLayout();
         }
         imgGraphOverlay = (ImageView) findViewById(R.id.imgGraphOverlay);
         imgGraphOverlay.setImageResource(R.drawable.img_clock_hours);
-        imgGraphOverlay.getLayoutParams().height = 1100; //graphView.getRectangleWidthDP();
-        imgGraphOverlay.getLayoutParams().width = 1100; //graphView.getRectangleHeightDP();
+
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) imgGraphOverlay.getLayoutParams();
+        lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        lp.width = 600;
+        lp.height = 600;
+        imgGraphOverlay.setLayoutParams(lp);
         imgGraphOverlay.requestLayout();
     }
 

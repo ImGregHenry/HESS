@@ -1,21 +1,16 @@
 package com.hess.hessandroid;
 
-import android.app.TabActivity;
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
-
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TabHost;
-import android.widget.ProgressBar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
-    private TabHost tabHost;
     private Context mContext;
 
     @Override
@@ -28,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         mContext = getApplicationContext();
 
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getActionBar();
         actionBar.hide();
 
         Button btnPowerUsage = (Button) findViewById(R.id.btnPowerUsage);

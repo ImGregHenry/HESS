@@ -1,5 +1,6 @@
 package com.hess.hessandroid;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
@@ -30,7 +31,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class StatusActivity extends AppCompatActivity implements
+public class StatusActivity extends Activity implements
         VolleyRequest.VolleyReqCallbackGetBatteryStatus, VolleyRequest.VolleyReqCallbackGetPowerUsage, VolleyRequest.VolleyReqCallbackGetSchedule {
     private final static String LOG_STRING = "HESS_STATUS";
     private TextView powerPercentVal;
@@ -68,12 +69,6 @@ public class StatusActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_status);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#5c0f92")));
-        Spannable text = new SpannableString(actionBar.getTitle());
-        text.setSpan(new ForegroundColorSpan(Color.WHITE), 0, text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        actionBar.setTitle(text);
 
         progressBar = (ProgressBar) findViewById(R.id.remainingPowerProgress);
         powerPercentVal = (TextView) findViewById(R.id.remainingPowerPercent);

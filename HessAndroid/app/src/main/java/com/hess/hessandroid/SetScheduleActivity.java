@@ -25,7 +25,7 @@ import com.hess.hessandroid.models.HessSchedule;
 
 import java.util.Calendar;
 
-public class SetScheduleActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
+public class SetScheduleActivity extends Activity implements TimePickerDialog.OnTimeSetListener {
     private final static String LOG_STRING = "HESS_SetSchedule";
     private static String PICKER_TYPE_START = "START";
     private static String PICKER_TYPE_END = "END";
@@ -69,8 +69,7 @@ public class SetScheduleActivity extends AppCompatActivity implements TimePicker
             }
         });
 
-        ActionBar ab = getSupportActionBar();
-
+        android.app.ActionBar ab = getActionBar();
 
         // Update
         if(!isNewSchedule) {
@@ -159,11 +158,4 @@ public class SetScheduleActivity extends AppCompatActivity implements TimePicker
         setResult(Activity.RESULT_OK,returnIntent);
         finish();
     }
-
-    public void cancelSchedule() {
-        Intent returnIntent = new Intent();
-        setResult(Activity.RESULT_OK,returnIntent);
-        finish();
-    }
-
 }

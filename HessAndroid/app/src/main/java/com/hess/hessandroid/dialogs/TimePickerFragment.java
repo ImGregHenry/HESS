@@ -6,18 +6,7 @@ import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TimePicker;
 
-import com.hess.hessandroid.R;
-
-import java.util.Calendar;
-
-/**
- * Created by Greg'sMonster on 11-Mar-16.
- */
 public class TimePickerFragment extends DialogFragment {
     private TimePickerDialog.OnTimeSetListener mListener;
     private Activity mActivity;
@@ -43,7 +32,8 @@ public class TimePickerFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return new TimePickerDialog(mActivity, mListener, mHour, mMin,
+        TimePickerDialog tp = new TimePickerDialog(mActivity, mListener, mHour, mMin,
                 DateFormat.is24HourFormat(getActivity()));
+        return tp;
     }
 }

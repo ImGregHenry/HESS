@@ -1,9 +1,8 @@
 package com.hess.hessandroid;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -33,7 +32,7 @@ import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class UsageActivity extends AppCompatActivity implements VolleyRequest.VolleyReqCallbackGetPowerUsage {
+public class UsageActivity extends Activity implements VolleyRequest.VolleyReqCallbackGetPowerUsage {
     private final static String LOG_STRING = "HESS_USAGE";
 
     private TextView totalPower;
@@ -72,12 +71,6 @@ public class UsageActivity extends AppCompatActivity implements VolleyRequest.Vo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usage);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#5c0f92")));
-        Spannable text = new SpannableString(actionBar.getTitle());
-        text.setSpan(new ForegroundColorSpan(Color.WHITE), 0, text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        actionBar.setTitle(text);
 
         totalPower = (TextView) findViewById(R.id.tPowUsage);
         dailySaving = (TextView) findViewById(R.id.dSaving);

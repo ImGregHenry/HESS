@@ -3,10 +3,10 @@
     <item name="primary_text" type="color">#FFFFFF</item>
     <item name="primary_bkgd" type="color">@color/hess_purple</item>
     <item name="hess_purple" type="color">#5c0f92</item>
-    <item name="white" type="color">#000000</item>
-    <item name="on_peak" type="color">#FF0000</item>
-    <item name="off_peak" type="color">#00FF00</item>
-    <item name="mid_peak_enable" type="color">#FFFF00</item>
-    <item name="mid_peak_disable" type="color">#FFFF00</item>
+    <item name="white" type="color">#FFFFFF</item>
+    <item name="on_peak" type="color">#c65b27</item>
+    <item name="off_peak" type="color">#98C03C</item>
+    <item name="mid_peak_enable" type="color">#fac90a</item>
+    <item name="mid_peak_disable" type="color">#fac90a</item>
 
 </resources>

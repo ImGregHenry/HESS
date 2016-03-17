@@ -13,8 +13,9 @@ import com.hess.hessandroid.models.HessSchedule;
 import com.hess.hessandroid.models.HessScheduleList;
 
 public class MyGraphView extends View {
+    private final double DEGREES_PER_MIN = 0.25;
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    RectF rectf = new RectF(225, 140, 913, 820);
+    private RectF rectf = new RectF(0, 0, 450, 450); //(205, 120, 803, 710)
     private HessScheduleList mScheduleList;
     private Context mContext;
 
@@ -24,7 +25,6 @@ public class MyGraphView extends View {
         mScheduleList = scheduleList;
     }
 
-    private final double DEGREES_PER_MIN = 0.25;
     private double convertTimeToStartDegrees(HessSchedule sch) {
         long currentMin = sch.getStartTimeInDateFormat().getMinutes();
         long currentHour = sch.getStartTimeInDateFormat().getHours();
@@ -50,8 +50,7 @@ public class MyGraphView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        //int color = Color.argb(100, r.nextInt(256), r.nextInt(256), r.nextInt(256));
-        int color = Color.parseColor("#299c25");
+        int color = getResources().getColor(R.color.off_peak);
         paint.setColor(color);
         canvas.drawArc(rectf, 0, 360, true, paint);
 
@@ -72,17 +71,5 @@ public class MyGraphView extends View {
 
             canvas.drawArc(rectf, ((float)startDegree-90), (float)durationDegree, true, paint);
         }
-    }
-
-    public int getRectangleWidthDP() {
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-        float dp = ((rectf.bottom - rectf.top) * dm.density)  + 0.5f;
-        return (int)dp;
-    }
-
-    public int getRectangleHeightDP() {
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-        float dp = ((rectf.right - rectf.left) * dm.density) + 0.5f;
-        return (int)dp;
     }
 }
