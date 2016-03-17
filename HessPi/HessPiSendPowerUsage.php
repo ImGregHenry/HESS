@@ -24,7 +24,7 @@ function post_to_url($url, $data) {
 }
 
 
-   $sysStatus = PiStateTracker::isSystemOnline();
+    $sysStatus = PiStateTracker::isSystemOnline();
     
     if($sysStatus == SYSTEM_ONLINE_VAL) {
   
@@ -42,7 +42,7 @@ function post_to_url($url, $data) {
     					   'PowerUsageWatt' => $watts,
                            'PeakTypeID' => PiStateTracker::getCurrentPeakType());
     			
-    	echo post_to_url($url, $data);
+    	echo post_to_url($url, $jsonme);
     } else {
         PiStateTracker::setSystemOffline();
     }

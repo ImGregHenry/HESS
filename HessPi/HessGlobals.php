@@ -7,12 +7,12 @@
 # PI CONTROL SCRIPTS
 define('PISCRIPT_PATH', 'usr/pi/scripts/');
 define('PYTHON_EXEC_PATH', 'sudo python');
-define('PISCRIPT_PYTHON_PATH', 'pythonscripts/');
+define('PISCRIPT_PYTHON_PATH', '/home/pi/PREDEMO/pythonscripts/');
 define('PISCRIPT_BATTERY_PERCENT', 'GetBatteryPercentage.py');
 define('PISCRIPT_POWER_USAGE', 'GetWattage.py');
 define('PISCRIPT_INVERTER_TOGGLE', 'InverterToggle.py');
-define('PISCRIPT_INVERTER_OFF', 'InverterToggle.py');
-define('PISCRIPT_INVERTER_ON', 'InverterToggle.py');
+define('PISCRIPT_INVERTER_OFF', 'InverterToggleOff.py');
+define('PISCRIPT_INVERTER_ON', 'InverterToggleOn.py');
 define('PISCRIPT_ACFROMWALL_ON', 'ACFromWallOn.py');
 define('PISCRIPT_ACFROMWALL_OFF', 'ACFromWallOff.py');
 define('PISCRIPT_BATTERYCHARGER_ON', 'BatteryChargerOn.py');

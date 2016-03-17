@@ -6,8 +6,8 @@
     
     if($sysStatus == SYSTEM_ONLINE_VAL) {
     
-        //$batteryStatusLevel = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
-        $batteryStatusLevel = 0.5;
+        $batteryStatusLevel = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
+        //$batteryStatusLevel = 0.5;
 
         $peakType = PiStateTracker::getCurrentPeakType();
         $isInverterOn = PiStateTracker::isInverterStateOn();
