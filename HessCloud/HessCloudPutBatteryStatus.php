@@ -27,7 +27,7 @@
 		$stmt->bindParam(':cloudRecordTime', $cloudRecordTime, PDO::PARAM_STR);
 		//$stmt->bindParam(':cloudRecordTimeMS', $cloudRecordTimeMS, PDO::PARAM_INT);
 		//$stmt->bindParam(':powerLevelValue', floatval($powerLevelValue), PDO::PARAM_STR);
-		$stmt->bindParam(':powerLevelPercent', $powerLevelPercent, PDO::PARAM_STR);
+		$stmt->bindParam(':powerLevelPercent', $powerLevelPercent, PDO::PARAM_INT);
 	
 		$stmt->execute();
 		
