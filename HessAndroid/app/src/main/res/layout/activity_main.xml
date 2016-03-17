@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:gravity="center"
-        android:text="Power Usage"
+        android:text="POWER USAGE"
         android:background="#5c0f92"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
