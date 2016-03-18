@@ -9,10 +9,10 @@ public class BatteryStatus {
     public String RecordTime;
     public int IsEnabled;
     @SerializedName("PowerLevelPercent")
-    public int PowerLevelPercent;
+    public double PowerLevelPercent;
 
 
-    public Integer getPowerLevelPercent() {
+    public Double getPowerLevelPercent() {
         return PowerLevelPercent;
     }
 }

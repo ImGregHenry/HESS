@@ -7,7 +7,7 @@
 		
 		$query = "SELECT PowerUsageID, PeakTypeID, RecordTime, PowerUsageWatt "
             . " FROM PowerUsage "
-            . " ORDER BY PeakTypeID ASC;";
+            . " ORDER BY PeakTypeID ASC, RecordTime ASC;";
         #. "ORDER BY RecordTime DESC "
         #. "LIMIT 100";
 		

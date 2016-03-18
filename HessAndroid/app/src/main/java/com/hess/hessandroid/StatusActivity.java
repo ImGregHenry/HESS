@@ -31,6 +31,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import java.lang.Math;
+
 public class StatusActivity extends Activity implements
         VolleyRequest.VolleyReqCallbackGetBatteryStatus, VolleyRequest.VolleyReqCallbackGetPowerUsage, VolleyRequest.VolleyReqCallbackGetSchedule {
     private final static String LOG_STRING = "HESS_STATUS";
@@ -41,7 +43,7 @@ public class StatusActivity extends Activity implements
     private TextView batteryTimeText;
     private TextView currentPowerUsageTime;
 
-    private int powerPercent;
+    private double powerPercent;
 
     private double totalPowerUsage = 1260.0;
     private double currentPowerUsage;
@@ -64,6 +66,10 @@ public class StatusActivity extends Activity implements
     private long currentUsageTimeMS;
     private int currentUsageTimeMin;
     private int currentUsageTimeHour;
+
+    private boolean hit;
+    private long closestEnd;
+    private long min = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,10 +107,10 @@ public class StatusActivity extends Activity implements
 
     private void initializeBatteryStatus(BatteryStatus batteryStatuses) {
         powerPercent = batteryStatuses.getPowerLevelPercent();
-        Log.d(LOG_STRING, (powerPercent*100) + "%");
+        Log.d(LOG_STRING, Math.round((powerPercent*100.0) * 100.0) / 100.0 + "%");
 
-        powerPercentVal.setText((powerPercent*100) + "%");
-        progressBar.setProgress((powerPercent*100));
+        powerPercentVal.setText( Math.round((powerPercent*100.0) * 100.0) / 100.0 + "%");
+        progressBar.setProgress((int) (powerPercent * 100));
     }
 
     @Override
@@ -114,8 +120,8 @@ public class StatusActivity extends Activity implements
 
     private void initializePowerUsage(ArrayList<PowerUsage> powerUsages) {
         currentPowerUsage = powerUsages.get(powerUsages.size() - 1).PowerUsageWatt;
-        Log.d(LOG_STRING, currentPowerUsage + "W");
-        powerUsageVal.setText(currentPowerUsage + "W");
+        Log.d(LOG_STRING, Math.round((currentPowerUsage) * 100.0) / 100.0 + "W");
+        powerUsageVal.setText(Math.round((currentPowerUsage) * 100.0) / 100.0 + "W");
 
     }
 
@@ -124,59 +130,68 @@ public class StatusActivity extends Activity implements
     }
 
     private void initializeHessSchedule(ArrayList<HessSchedule> schedules) {
-        for(int i = 0; i < schedules.size(); i++) {
-            //Remaining time calculation when in onpeak or midpeak-enabled
-            if(schedules.get(i).PeakTypeID == 2 || schedules.get(i).PeakTypeID == 3) {
-                try {
-                    dateFormat = new SimpleDateFormat("HH:mm");
-                    startTime = dateFormat.parse(schedules.get(i).StartTime);
-                    endTime = dateFormat.parse(schedules.get(i).EndTime);
-                    currentTime = dateFormat.parse(dateFormat.format(new Date()));
+        if(schedules.size() > 0) {
+            for (int i = 0; i < schedules.size(); i++) {
+                //Remaining time calculation when in onpeak or midpeak-enabled
+                if (schedules.get(i).PeakTypeID == 2 || schedules.get(i).PeakTypeID == 3) {
+                    try {
+                        dateFormat = new SimpleDateFormat("HH:mm");
+                        startTime = dateFormat.parse(schedules.get(i).StartTime);
+                        endTime = dateFormat.parse(schedules.get(i).EndTime);
+                        currentTime = dateFormat.parse(dateFormat.format(new Date()));
 
-                    if (startTime.before(currentTime) && endTime.after(currentTime)) {
-                        //powerPercentDec = powerPercent / (double) 100;
-                        remainingTime = (totalPowerUsage / currentPowerUsage) * (double) powerPercent;
-                        remainingTimeHour = (int) remainingTime;
-                        remainingTimeMinute = (int) ((remainingTime - remainingTimeHour) * 60);
-                        Log.d(LOG_STRING, "Time Remaining: " + remainingTimeHour + ":" + remainingTimeMinute);
-                        batteryTimeText.setText("Time Remaining at " + currentPowerUsage + "W: ");
-                        remainingTimeVal.setText(remainingTimeHour + ":" + remainingTimeMinute);
+                        if (currentTime.after(endTime)) {
+                            closestEnd = currentTime.getTime() - endTime.getTime();
+                            if (min > closestEnd || min == -1) {
+                                min = closestEnd;
+                            }
+                        }
 
-                        startChargingTime = dateFormat.parse(schedules.get(i).StartTime);
-                        currentUsageTimeMS = (currentTime.getTime() - startChargingTime.getTime());
-                        currentUsageTimeMin = (int) ((currentUsageTimeMS / 60000) % 60);
-                        currentUsageTimeHour = (int) (currentUsageTimeMS / 3600000);
-                        Log.d(LOG_STRING, "Current Usage Time: " + currentUsageTimeHour + ":" + currentUsageTimeMin);
-                        currentPowerUsageTime.setText(currentUsageTimeHour + ":" + currentUsageTimeMin);
+
+                        if (startTime.before(currentTime) && endTime.after(currentTime)) {
+                            hit = true;
+                            //powerPercentDec = powerPercent / (double) 100;
+                            remainingTime = (totalPowerUsage / currentPowerUsage) * (double) powerPercent;
+                            remainingTimeHour = (int) remainingTime;
+                            remainingTimeMinute = (int) ((remainingTime - remainingTimeHour) * 60);
+                            Log.d(LOG_STRING, "Time Remaining: " + remainingTimeHour + ":" + remainingTimeMinute);
+                            batteryTimeText.setText("Time Remaining at " + currentPowerUsage + "W: ");
+                            remainingTimeVal.setText(remainingTimeHour + ":" + remainingTimeMinute);
+
+                            startChargingTime = dateFormat.parse(schedules.get(i).StartTime);
+                            currentUsageTimeMS = (currentTime.getTime() - startChargingTime.getTime());
+                            currentUsageTimeMin = (int) ((currentUsageTimeMS / 60000) % 60);
+                            currentUsageTimeHour = (int) (currentUsageTimeMS / 3600000);
+                            Log.d(LOG_STRING, "Current Usage Time: " + currentUsageTimeHour + ":" + currentUsageTimeMin);
+                            currentPowerUsageTime.setText(currentUsageTimeHour + ":" + currentUsageTimeMin);
+                        }
+                    } catch (Exception e) {
+                        Log.e(LOG_STRING, e.getMessage());
                     }
                 }
-                catch (Exception e){
-                    Log.e(LOG_STRING, e.getMessage());
-                }
-
             }
             //Time to full calculation
-            else {
+            if (!hit && min != -1) {
                 try {
-                    dateFormat = new SimpleDateFormat("HH:mm");
-                    startTime = dateFormat.parse(schedules.get(i).StartTime);
-                    endTime = dateFormat.parse(schedules.get(i).EndTime);
-                    currentTime = dateFormat.parse(dateFormat.format(new Date()));
+               /* dateFormat = new SimpleDateFormat("HH:mm");
+                startTime = dateFormat.parse(schedules.get(i).StartTime);
+                endTime = dateFormat.parse(schedules.get(i).EndTime);
+                currentTime = dateFormat.parse(dateFormat.format(new Date()));
 
-                    if (startTime.before(currentTime) && endTime.after(currentTime)) {
-                        startChargingTime = dateFormat.parse(schedules.get(i).StartTime);
-                        timeToFullMS = 25500000 - (currentTime.getTime() - startChargingTime.getTime());
-                        timeToFullMin = (int) ((timeToFullMS / 60000) % 60);
-                        timeToFullHour = (int) (timeToFullMS / 3600000);
-                        Log.d(LOG_STRING, "Time Until Full: " + timeToFullHour + ":" + timeToFullMin);
-                        batteryTimeText.setText("Time Until Full: ");
-                        remainingTimeVal.setText(timeToFullHour + ":" + timeToFullMin);
-                    }
-                }
-                catch (Exception e){
+                startChargingTime = dateFormat.parse(schedules.get(i).StartTime);*/
+                    timeToFullMS = 25500000 - (min);
+                    timeToFullMin = (int) ((timeToFullMS / 60000) % 60);
+                    timeToFullHour = (int) (timeToFullMS / 3600000);
+                    Log.d(LOG_STRING, "Time Until Full: " + timeToFullHour + ":" + timeToFullMin);
+                    batteryTimeText.setText("Time Until Full: ");
+                    remainingTimeVal.setText(timeToFullHour + ":" + timeToFullMin);
+                } catch (Exception e) {
                     Log.e(LOG_STRING, e.getMessage());
                 }
             }
+        }
+        else {
+            batteryTimeText.setText("Time Unavailable ");
         }
     }
 
