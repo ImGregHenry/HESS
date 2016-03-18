@@ -27,16 +27,17 @@ function post_to_url($url, $data) {
     $sysStatus = PiStateTracker::isSystemOnline();
     
     if($sysStatus == SYSTEM_ONLINE_VAL) {
-        $batteryStatusLevel = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
         $peakType = PiStateTracker::getCurrentPeakType();
+        $batteryStatusLevel = PiStateTracker::getBatteryStatusPercent($peakType);
+        
         $isInverterOn = PiStateTracker::isInverterStateOn();
         $isInit = false;
-
-        if($batteryStatusLevel < BATTERY_MIN_LEVEL || $batteryStatusLevel > BATTERY_MAX_LEVEL) {
+$batteryStatusLevel2 = 0.5;
+        if($batteryStatusLevel2 < BATTERY_MIN_LEVEL || $batteryStatusLevel2 > BATTERY_MAX_LEVEL) {
             //echo "CONFIGURE BATTERY STATE:!  Battery: " . $batteryStatusLevel . ", PeakSchID: " . $peakScheduleID 
               //  . ", isInvertOn: " . $isInverterOn . ", isInit: " . $isInit;
             
-            PiStateTracker::setPiSystemState($peakScheduleID, $batteryStatusLevel, $isInit, $isInverterOn);
+            PiStateTracker::setPiSystemState($peakType, $batteryStatusLevel, $isInit, $isInverterOn);
         }
     
         $url = "http://hess.site88.net/HessCloudPutBatteryStatus.php";    

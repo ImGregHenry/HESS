@@ -95,11 +95,12 @@ while ( (millis - start_time) < 2000 ):
 
 	result1 = ((maxValue - minValue)) # * 5.0) / 1024
 
+
 #print result1
 
-correction_factor = (450+18+28+20+50+20+14)
+correction_factor = (40)
 
-current_sensed = ((1000.0 * (0.0252 * (result1 - 492.0))) - correction_factor)
+current_sensed = ((100.0 * (0.0252 * (result1)) - 492) - correction_factor) / 2.6
 
 #print current_sensed
 
