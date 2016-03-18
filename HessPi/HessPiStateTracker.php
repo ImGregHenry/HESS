@@ -208,37 +208,12 @@ class PiStateTracker {
 		return 0;
 	}
 
-	public static function getPeakSchedule() {
-		$date = DATE(DB_DATE_FORMAT, TIME());
-
-		try {
-		    $query = "SELECT PeakScheduleID, PeakTypeID, StartTime, EndTime FROM PeakSchedule";
-			
-			$conn = new PDO("mysql:host=" . MYSQL_PI_HOST . ";dbname=" . MYSQL_PI_DATABASE, MYSQL_PI_USER, MYSQL_PI_PASSWORD);
-			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-			$stmt = $conn->prepare($query);
-		
-			$stmt->execute();
-
-			
-			if ($stmt->rowCount() > 0) {
-				$row = $stmt->fetch();
-			
-				$startDate = STRTOTIME($row['StartTime']);
-				$endDate = STRTOTIME($row['EndTime']);
-				$currDate = STRTOTIME(DateTime::createFromFormat(DB_DATE_FORMAT, TIME()));
-				if ($startDate > $endDate && $currDate < $startDate)
-				{
-				   return $row['PeakType'];
-				}
-			}
+	public static function getBatteryStatusPercent($peakType) {
+		if($peakType == PEAKTYPE_OFF) {
+			return PiStatetracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT_CHARGER_ON)
+		} else {
+			return PiStatetracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT_CHARGER_OFF);
 		}
-		catch(PDOException $e) {
-			echo $e;
-		}
-
-		return PEAKTYPE_OFF;
 	}
 
 	//TODO: check for previous inverter status

@@ -8,9 +8,9 @@
    	echo "SYS: " . $sysStatus;
    	if($sysStatus == SYSTEM_ONLINE_VAL) {
 		PiStateTracker::getCloudScheduleForPi();
-	    $batteryStatusLevel = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
-	    $batteryStatusLevel = 0.5;
-		$peakType = PiStateTracker::getCurrentPeakType();
+	    $peakType = PiStateTracker::getCurrentPeakType();
+	    $batteryStatusLevel = PiStateTracker::getBatteryStatusPercent($peakType);
+	    
 		$isInverterOn = PiStateTracker::isInverterStateOn();
 		$isInit = true;
 
