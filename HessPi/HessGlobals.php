@@ -64,5 +64,4 @@ define('SYSTEM_OFFLINE_VAL', 0);
 define('SYSTEM_ONLINE_VAL', 1);
 
 define('DEBUG_FLAG', false);
-
 ?>

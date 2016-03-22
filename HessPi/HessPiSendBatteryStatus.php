@@ -50,10 +50,6 @@ $batteryStatusLevel2 = 0.5;
         echo post_to_url($url, $data);
     } else {
         PiStateTracker::setSystemOffline();
-    }
-
-    
-
-    
+    }   
 
 ?>

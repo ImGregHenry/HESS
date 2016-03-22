@@ -140,14 +140,6 @@ public class StatusActivity extends Activity implements
                         endTime = dateFormat.parse(schedules.get(i).EndTime);
                         currentTime = dateFormat.parse(dateFormat.format(new Date()));
 
-                        if (currentTime.after(endTime)) {
-                            closestEnd = currentTime.getTime() - endTime.getTime();
-                            if (min > closestEnd || min == -1) {
-                                min = closestEnd;
-                            }
-                        }
-
-
                         if (startTime.before(currentTime) && endTime.after(currentTime)) {
                             hit = true;
                             //powerPercentDec = powerPercent / (double) 100;
@@ -164,6 +156,15 @@ public class StatusActivity extends Activity implements
                             currentUsageTimeHour = (int) (currentUsageTimeMS / 3600000);
                             Log.d(LOG_STRING, "Current Usage Time: " + currentUsageTimeHour + ":" + currentUsageTimeMin);
                             currentPowerUsageTime.setText(currentUsageTimeHour + ":" + currentUsageTimeMin);
+                        }
+                        if (currentTime.after(endTime)) {
+                            closestEnd = currentTime.getTime() - endTime.getTime();
+                            if (min > closestEnd || min == -1) {
+                                min = closestEnd;
+                            }
+                        }
+                        else if (currentTime.before(endTime)) {
+                            batteryTimeText.setText("Time Unavailable ");
                         }
                     } catch (Exception e) {
                         Log.e(LOG_STRING, e.getMessage());
