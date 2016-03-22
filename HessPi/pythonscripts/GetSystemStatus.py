@@ -77,7 +77,7 @@ while ( (millis - start_time) < 2000 ):
 	#print millis
 	
 
-	readValue = readadc(2, SPICLK, SPIMOSI, SPIMISO, SPICS)
+	readValue = readadc(6, SPICLK, SPIMOSI, SPIMISO, SPICS)
 
 	#print "readValue: ", readValue
 
@@ -95,11 +95,11 @@ while ( (millis - start_time) < 2000 ):
 
 	result1 = ((maxValue - minValue)) # * 5.0) / 1024
 
-#print readValue
+#print result1
 
 if (result1 < 120):
 	system_status = 0
 if (result1 >= 120):
 	system_status = 1
 
-print 1 #system_status
+print system_status

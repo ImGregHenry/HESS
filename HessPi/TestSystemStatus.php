@@ -16,8 +16,8 @@
 	echo "IS ALREADY OFFLINE: " . $isAlreadyOffline;
 
 
-	$val = PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . " " . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERY_PERCENT);
-	$val = 0.5;
+	$val = PiStateTracker::getBatteryStatusPercent($peakType);
+	//$val = 0.5;
     if($val > BATTERY_MIN_LEVEL && $val < BATTERY_MAX_LEVEL) 
     	echo "battery status level OK. ($val). ";
     else if ($val <= BATTERY_MIN_LEVEL)

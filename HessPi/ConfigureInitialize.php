@@ -9,7 +9,7 @@
    	if($sysStatus == SYSTEM_ONLINE_VAL) {
 		PiStateTracker::getCloudScheduleForPi();
 	    $peakType = PiStateTracker::getCurrentPeakType();
-	    $batteryStatusLevel = PiStateTracker::getBatteryStatusPercent($peakType);
+	    $batteryStatusLevel = PiStateTracker::getBatteryStatusPercent(2);
 	    
 		$isInverterOn = PiStateTracker::isInverterStateOn();
 		$isInit = true;

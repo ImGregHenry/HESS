@@ -82,37 +82,37 @@ maxValue = 0
 percentageValue = 0
 
 batteryLevel0 = 100
-batteryVoltage0 = 12.90
+batteryVoltage0 = 13.3
 
 batteryLevel1 = 90.00
-batteryVoltage1 = 12.77
+batteryVoltage1 = 12.87
 
 batteryLevel2 = 85.00
-batteryVoltage2 = 12.73
+batteryVoltage2 = 12.85
 
 batteryLevel3 = 80.00
-batteryVoltage3 = 12.65
+batteryVoltage3 = 12.83
 
 batteryLevel4 = 75.00
-batteryVoltage4 = 12.63
+batteryVoltage4 = 12.81
 
 batteryLevel5 = 70.00
-batteryVoltage5 = 12.60
+batteryVoltage5 = 12.78
 
 batteryLevel6 = 65.00
-batteryVoltage6 = 12.57
+batteryVoltage6 = 12.68
 
 batteryLevel7 = 60.00
-batteryVoltage7 = 12.52
+batteryVoltage7 = 12.63
 
 batteryLevel8 = 55.00
-batteryVoltage8 = 12.48
+batteryVoltage8 = 12.60
 
 batteryLevel9 = 50.00
-batteryVoltage9 = 12.44
+batteryVoltage9 = 12.57
 
 batteryLevel10 = 40.00
-batteryVoltage10 = 12.35
+batteryVoltage10 = 12.50
 
 batteryLevel11 = 35.00
 batteryVoltage11 = 12.29
@@ -144,7 +144,7 @@ while ( (millis - start_time) < 2000 ):
 
 batteryVoltage = .96 * result1 * (3.3/1023.0) / (33.0/(33.0+100.0))
 
-#print batteryVoltage
+#print "percentage", batteryVoltage
 
 if (batteryVoltage >= batteryVoltage0):
 	percentageValue = 100

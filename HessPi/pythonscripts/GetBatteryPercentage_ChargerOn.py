@@ -128,6 +128,9 @@ batteryVoltage14 = 12.00
 
 while ( (millis - start_time) < 2000 ):
 	  
+
+	
+
 	readValue = readadc(selected_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
 
 	if (readValue > maxValue):
@@ -142,9 +145,9 @@ while ( (millis - start_time) < 2000 ):
 
 #print result1
 
-batteryVoltage = .96 * result1 * (3.3/1023.0) / (33.0/(33.0+100.0))
+batteryVoltage = 1.02* result1 * (3.3/1023.0)/(33.0/(33.0+100.0))
 
-#print batteryVoltage
+#print "voltage", batteryVoltage
 
 if (batteryVoltage >= batteryVoltage0):
 	percentageValue = 100

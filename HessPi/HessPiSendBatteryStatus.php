@@ -32,8 +32,8 @@ function post_to_url($url, $data) {
         
         $isInverterOn = PiStateTracker::isInverterStateOn();
         $isInit = false;
-
-        if($batteryStatusLevel < BATTERY_MIN_LEVEL || $batteryStatusLevel > BATTERY_MAX_LEVEL) {
+$batteryStatusLevel2 = 0.5;
+        if($batteryStatusLevel2 < BATTERY_MIN_LEVEL || $batteryStatusLevel2 > BATTERY_MAX_LEVEL) {
             //echo "CONFIGURE BATTERY STATE:!  Battery: " . $batteryStatusLevel . ", PeakSchID: " . $peakScheduleID 
               //  . ", isInvertOn: " . $isInverterOn . ", isInit: " . $isInit;
             
@@ -50,10 +50,6 @@ function post_to_url($url, $data) {
         echo post_to_url($url, $data);
     } else {
         PiStateTracker::setSystemOffline();
-    }
-
-    
-
-    
+    }   
 
 ?>
