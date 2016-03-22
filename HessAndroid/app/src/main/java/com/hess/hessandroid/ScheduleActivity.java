@@ -1,17 +1,9 @@
 package com.hess.hessandroid;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,15 +28,19 @@ public class ScheduleActivity extends Activity implements VolleyRequest.VolleyRe
     private final static int UPDATE_SCHEDULE_ACTIVITY_RESULT_ID = 2;
 
     private ListView lvSchedule;
+    private MyGraphView graphView;
     private ScheduleArrayAdapter mArrayAdapter;
     private RelativeLayout lv1;
     private ImageView imgGraphOverlay;
+    private ImageView imgGraphLegend;
+    private HessScheduleList mScheduleList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
 
-        lv1 = (RelativeLayout) findViewById(R.id.linearGraphLayout);
+        lv1 = (RelativeLayout) findViewById(R.id.relativeGraphLayout);
 
         requestHessScheduler();
     }
@@ -52,6 +48,7 @@ public class ScheduleActivity extends Activity implements VolleyRequest.VolleyRe
     public void startNewScheduleActivity(View v) {
         Intent intent = new Intent(this, SetScheduleActivity.class);
         intent.putExtra("IsNew", true);
+        intent.putExtra("SCHEDULELIST", mScheduleList.Schedule);
         startActivityForResult(intent, NEW_SCHEDULE_ACTIVITY_RESULT_ID);
     }
 
@@ -65,7 +62,6 @@ public class ScheduleActivity extends Activity implements VolleyRequest.VolleyRe
         lvSchedule.setAdapter(mArrayAdapter);
     }
 
-    MyGraphView graphView;
     private void initializeGraphView(HessScheduleList scheduleList) {
         if(graphView != null) {
             graphView.redrawGraph(scheduleList);
@@ -78,17 +74,27 @@ public class ScheduleActivity extends Activity implements VolleyRequest.VolleyRe
             lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
             lp.width = 450;
             lp.height = 450;
-            lp.topMargin = 88;
+            lp.topMargin = 75;
             graphView.setLayoutParams(lp);
             graphView.requestLayout();
         }
         imgGraphOverlay = (ImageView) findViewById(R.id.imgGraphOverlay);
         imgGraphOverlay.setImageResource(R.drawable.img_clock_hours);
+        imgGraphLegend = (ImageView) findViewById(R.id.imgGraphLegend);
+        imgGraphLegend.setImageResource(R.drawable.clock_legend);
+        LinearLayout.LayoutParams llp = (LinearLayout.LayoutParams) imgGraphLegend.getLayoutParams();
+
+        llp.width = 350;
+        llp.height = 450;
+        imgGraphLegend.setLayoutParams(llp);
+        imgGraphLegend.requestLayout();
 
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) imgGraphOverlay.getLayoutParams();
         lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        lp.width = 600;
-        lp.height = 600;
+        lp.addRule(RelativeLayout.CENTER_VERTICAL);
+        lp.width = 560;
+        lp.height = 560;
+
         imgGraphOverlay.setLayoutParams(lp);
         imgGraphOverlay.requestLayout();
     }
@@ -97,6 +103,7 @@ public class ScheduleActivity extends Activity implements VolleyRequest.VolleyRe
     public void onVolleyGetScheduleReady(HessScheduleList scheduleList) {
         initializeGraphView(scheduleList);
         initializeListView(scheduleList.Schedule);
+        mScheduleList = scheduleList;
     }
 
     @Override

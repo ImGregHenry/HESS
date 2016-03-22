@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,11 +58,23 @@ public class ScheduleArrayAdapter extends ArrayAdapter<HessSchedule> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_layout_schedule, parent, false);
         }
 
+
         // Lookup view for data population
         tvStartTime = (TextView) convertView.findViewById(R.id.tvStartTime);
         tvEndTime = (TextView) convertView.findViewById(R.id.tvEndTime);
         tvPeak = (TextView) convertView.findViewById(R.id.tvPeakType);
         tvWeek = (TextView) convertView.findViewById(R.id.tvWeekType);
+
+        if (position % 2 == 0) {
+            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.hess_purple));
+            tvStartTime.setTextColor(mContext.getResources().getColor(R.color.white));
+            tvEndTime.setTextColor(mContext.getResources().getColor(R.color.white));
+            tvPeak.setTextColor(mContext.getResources().getColor(R.color.white));
+            tvWeek.setTextColor(mContext.getResources().getColor(R.color.white));
+        } else {
+            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+        }
+
         ImageView imgClose = (ImageView) convertView.findViewById(R.id.imgBtnClose);
         imgClose.setImageResource(R.drawable.icon_close);
         imgClose.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +113,8 @@ public class ScheduleArrayAdapter extends ArrayAdapter<HessSchedule> {
 
                         intent.putExtra("IsNew", false);
                         intent.putExtra("SCHEDULE", schedule);
+                        intent.putExtra("SCHEDULELIST", mScheduleList);
+                        intent.putExtra("SKIPINDEX", position);
                         mActivity.startActivityForResult(intent, 2);
                     }
                 }

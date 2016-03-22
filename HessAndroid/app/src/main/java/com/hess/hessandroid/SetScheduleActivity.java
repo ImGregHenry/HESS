@@ -22,13 +22,17 @@ import com.hess.hessandroid.dialogs.TimePickerFragment;
 import com.hess.hessandroid.enums.PeakType;
 import com.hess.hessandroid.enums.WeekType;
 import com.hess.hessandroid.models.HessSchedule;
+import com.hess.hessandroid.models.HessScheduleList;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class SetScheduleActivity extends Activity implements TimePickerDialog.OnTimeSetListener {
     private final static String LOG_STRING = "HESS_SetSchedule";
     private static String PICKER_TYPE_START = "START";
     private static String PICKER_TYPE_END = "END";
+
 
     private String mCurrentPickerType;
     private boolean isNewSchedule = true;
@@ -37,7 +41,10 @@ public class SetScheduleActivity extends Activity implements TimePickerDialog.On
     private Spinner spinPeakType;
     private TextView tvStartTime;
     private TextView tvEndTime;
+    private TextView tvErrorMsg;
     private Button btnSetSchedule;
+    private ArrayList<HessSchedule> mList;
+    private int skipIndexForSchedule = -1;
 
     private int pickerStartHour = 1;
     private int pickerStartMin = 50;
@@ -51,15 +58,18 @@ public class SetScheduleActivity extends Activity implements TimePickerDialog.On
         Bundle b = getIntent().getExtras();
 
         isNewSchedule = b.getBoolean("IsNew");
+        mList = (ArrayList<HessSchedule>)getIntent().getExtras().get("SCHEDULELIST");
 
         spinWeekType = (Spinner)findViewById(R.id.spinnerWeekType);
         spinPeakType = (Spinner)findViewById(R.id.spinnerPeakType);
 
-        spinPeakType.setAdapter(new ArrayAdapter<PeakType>(this, android.R.layout.simple_list_item_1, PeakType.values()));
-        spinWeekType.setAdapter(new ArrayAdapter<WeekType>(this, android.R.layout.simple_list_item_1, WeekType.values()));
+        spinPeakType.setAdapter(new ArrayAdapter<PeakType>(this, R.layout.spinner_item, PeakType.values()));
+        spinWeekType.setAdapter(new ArrayAdapter<WeekType>(this, R.layout.spinner_item, WeekType.values()));
 
         tvStartTime = (TextView) findViewById(R.id.tvStartTime);
         tvEndTime = (TextView) findViewById(R.id.tvEndTime);
+        tvErrorMsg = (TextView) findViewById(R.id.tvErrorMsg);
+        tvErrorMsg.setVisibility(View.INVISIBLE);
 
         btnSetSchedule = (Button) findViewById(R.id.btnSetSchedule);
         btnSetSchedule.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +101,7 @@ public class SetScheduleActivity extends Activity implements TimePickerDialog.On
             pickerStartHour = c.get(Calendar.HOUR_OF_DAY);
             pickerEndHour = c.get(Calendar.HOUR_OF_DAY);
             pickerStartMin = c.get(Calendar.MINUTE);
-            pickerEndMin = c.get(Calendar.MINUTE);
+            pickerEndMin = c.get(Calendar.MINUTE) + 1;
             btnSetSchedule.setText("CREATE SCHEDULE");
             ab.setTitle(R.string.title_activity_set_schedule_new);
         }
@@ -127,6 +137,8 @@ public class SetScheduleActivity extends Activity implements TimePickerDialog.On
 
     @Override
     public void onTimeSet(TimePicker view, int hour, int minute) {
+        // Clear error message
+        setErrorMessage(null);
         if (mCurrentPickerType == PICKER_TYPE_START) {
             pickerStartHour = hour;
             pickerStartMin = minute;
@@ -142,20 +154,78 @@ public class SetScheduleActivity extends Activity implements TimePickerDialog.On
         }
     }
 
-    public void closeActivityWithSuccess() {
-        HessSchedule schedule = new HessSchedule();
-        if(!isNewSchedule)
-            schedule.PeakScheduleID = mSchedule.PeakScheduleID;
-        schedule.EndTime = convertToTimeToMySQLFormat(pickerEndHour, pickerEndMin);
-        schedule.StartTime = convertToTimeToMySQLFormat(pickerStartHour, pickerStartMin);
-        PeakType peak = (PeakType)spinPeakType.getSelectedItem();
-        WeekType week = (WeekType)spinWeekType.getSelectedItem();
-        schedule.PeakTypeID = peak.getID();
-        schedule.WeekTypeID = week.getID();
+    private boolean isValidSchedule() {
+        if(pickerStartHour >= pickerEndHour
+            && pickerStartMin >= pickerEndMin) {
+            setErrorMessage("ERROR: the start time must be before the end time.");
+            return false;
+        } else {
+            setErrorMessage(null);
+            return true;
+        }
+    }
 
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("SCHEDULE", schedule);
-        setResult(Activity.RESULT_OK,returnIntent);
-        finish();
+    private boolean isScheduleConflicting() {
+        Date newStart;
+        Date newEnd;
+
+        try {
+            newStart = HessSchedule.inputDateFormat.parse(convertToTimeToMySQLFormat(pickerStartHour, pickerStartMin));
+            newEnd = HessSchedule.inputDateFormat.parse(convertToTimeToMySQLFormat(pickerEndHour, pickerEndMin));
+        } catch (Exception e) {
+            return false;
+        }
+
+        int index = 0;
+        for(HessSchedule sch : mList) {
+            if(index == skipIndexForSchedule)
+                continue;
+
+            Date currStart = sch.getStartTimeInDateFormat();
+            Date currEnd = sch.getEndTimeInDateFormat();
+
+            if((newStart.before(currEnd) && newStart.after(currStart))
+                    || (newEnd.before(currEnd) && newEnd.after(currStart))){
+                setScheduleConflict(index);
+                return true;
+            }
+
+            index++;
+        }
+        return false;
+    }
+
+    private void setScheduleConflict(int index) {
+        String s = "SCHEDULE CONFLIT: the current schedule conflicts with the schedule (" + mList.get(index).getStartTimeAMPM() + " - " + mList.get(index).getEndTimeAMPM() + ").";
+        setErrorMessage(s);
+    }
+
+    private void setErrorMessage(String err) {
+        if(err != null) {
+            tvErrorMsg.setVisibility(View.VISIBLE);
+            tvErrorMsg.setText(err);
+        } else {
+            tvErrorMsg.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void closeActivityWithSuccess() {
+        if(isValidSchedule() && !isScheduleConflicting()) {
+
+            HessSchedule schedule = new HessSchedule();
+            if(!isNewSchedule)
+                schedule.PeakScheduleID = mSchedule.PeakScheduleID;
+            schedule.EndTime = convertToTimeToMySQLFormat(pickerEndHour, pickerEndMin);
+            schedule.StartTime = convertToTimeToMySQLFormat(pickerStartHour, pickerStartMin);
+            PeakType peak = (PeakType)spinPeakType.getSelectedItem();
+            WeekType week = (WeekType)spinWeekType.getSelectedItem();
+            schedule.PeakTypeID = peak.getID();
+            schedule.WeekTypeID = week.getID();
+
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("SCHEDULE", schedule);
+            setResult(Activity.RESULT_OK,returnIntent);
+            finish();
+        }
     }
 }

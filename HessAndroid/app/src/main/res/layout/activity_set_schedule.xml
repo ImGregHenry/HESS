@@ -6,6 +6,9 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_margin="8dp"
     tools:context="com.hess.hessandroid.SetScheduleActivity">
 
 
@@ -18,15 +21,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="showStartTimePickerDialog"
+            android:background="@color/primary_bkgd"
+            android:textColor="@color/white"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:text="PICK START TIME" />
 
         <TextView
             android:id="@+id/tvStartTime"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="START: "
+            android:text=""
+            android:paddingLeft="10dp"
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -37,6 +49,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="showEndTimePickerDialog"
+            android:background="@color/primary_bkgd"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textColor="@color/white"
             android:text="PICK END TIME" />
 
 
@@ -44,19 +60,22 @@
             android:id="@+id/tvEndTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="END: "
+            android:paddingLeft="10dp"
+            android:text=""
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
 
     <Spinner android:id="@+id/spinnerWeekType"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         android:drawSelectorOnTop="true"
-        android:layout_marginTop="10dp"
         android:padding="8dp"
-        android:background="#cccccc"
+        android:background="@color/primary_bkgd"
         />
 
     <Spinner android:id="@+id/spinnerPeakType"
@@ -65,14 +84,29 @@
         android:drawSelectorOnTop="true"
         android:layout_marginTop="10dp"
         android:padding="8dp"
-        android:background="#cccccc"
+        android:background="@color/primary_bkgd"
         />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btnSetSchedule"
+        android:background="@color/primary_bkgd"
+        android:textColor="@color/white"
+        android:padding="10dp"
         android:text="UPDATE SCHEDULE" />
 
+    <TextView android:id="@+id/tvErrorMsg"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:padding="10dp"
+        android:textSize="20sp"
+        android:textColor="@color/error_color"
+        android:visibility="invisible"
+        android:text="Error: the start time must be before the end time."
+        />
 </LinearLayout>
