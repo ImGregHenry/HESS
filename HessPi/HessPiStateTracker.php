@@ -265,7 +265,7 @@
         public static function getCloudScheduleForPi() {
             
             
-            $url = "http://hess.site88.net/HessCloudGetScheduler.php";
+            $url = "http://hess.site88.net/HessCloudGetSchedulerUpdater.php";
             
             $ch = curl_init();
             
@@ -282,16 +282,15 @@
             $schedule = json_decode($result);
             // $deviceID = PI_DEVICE_ID;
             
-            $isRunOnce = false;
+            $isRunOnce = 0;
             foreach($schedule->Schedule as $item) { 
                 
-                if(!$isRunOnce && $item->IsUpdated == 1) {
-                    $isNewSchedule = IsNewPiSchedule($item->PeakScheduleID);
+                if($isRunOnce == 0 && $item->IsUpdated == 1) {
                     
                     // Erase previous entries from database.
                     PiStateTracker::deleteAllSchedulesFromDB();
                     CronJobScheduler::deleteAllCronJobs();
-                    $isRunOnce = true;
+                    $isRunOnce = 1;
                 }
                 
                 // if($isNewSchedule || true) {
@@ -336,7 +335,7 @@
                 //TODO: set current peak type   
             }
 
-            if($isRunOnce) {
+            if($isRunOnce == 1) {
                 CronJobScheduler::createDefaultHessCronJobs();
                 CronJobScheduler::createAllCronJobs();
             }

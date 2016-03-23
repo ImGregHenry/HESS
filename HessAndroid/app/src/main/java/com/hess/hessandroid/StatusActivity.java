@@ -115,18 +115,10 @@ public class StatusActivity extends Activity implements
     }
 
     private void initializeBatteryStatus(BatteryStatus batteryStatuses) {
-/*        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) graphView.getLayoutParams();
-        lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        lp.width = 450;
-        lp.height = 450;
-        lp.topMargin = 75;
-        graphView.setLayoutParams(lp);
-        graphView.requestLayout();*/
 
         batteryOverlay = (ImageView) findViewById(R.id.imgBattOverlay);
         batteryOverlay.setImageResource(R.drawable.battery_outline);
         progressBar = (ProgressBar) findViewById(R.id.remainingPowerProgress);
-        //progressBar.getIndeterminateDrawable().setColorFilter(Color.parseColor("#5c0f92"), PorterDuff.Mode.SRC_IN);
 
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) batteryOverlay.getLayoutParams();
         lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
