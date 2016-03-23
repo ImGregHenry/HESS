@@ -23,6 +23,7 @@
         public static function setCronJobForOfflineMode() {
             CronJobScheduler::deleteAllCronJobs();
             CronJobScheduler::createOfflineHessCronJob();
+            CronJobScheduler::createAllCronJobs();
         }
         
         public static function setSystemOffline() {
@@ -219,6 +220,7 @@
         //TODO: check for previous inverter status
         public static function setPiSystemState($peakType, $batteryStatusLevel, $isInit, $isInverterOn) {
             $scriptSequence = array();
+            $batteryStatusLevel = 0.6;
             
             if($peakType == PEAKTYPE_ON ||
                $peakType == PEAKTYPE_MID_ENABLE) {
@@ -230,9 +232,8 @@
                     array_push($scriptSequence, PISCRIPT_BATTERYCHARGER_OFF);
                 } else {
                     array_push($scriptSequence, PISCRIPT_BATTERYCHARGER_OFF);
-                    if($isInverterOn == 0){
+                    if($isInverterOn == 0)
                         array_push($scriptSequence, PISCRIPT_INVERTER_ON);
-                    }
                     array_push($scriptSequence, PISCRIPT_ACFROMWALL_OFF);
                 }
             } else if ($peakType == PEAKTYPE_OFF) {
@@ -279,10 +280,7 @@
             
             // Erase previous entries from database.
             PiStateTracker::deleteAllSchedulesFromDB();
-            
             CronJobScheduler::deleteAllCronJobs();
-            CronJobScheduler::createDefaultHessCronJobs();
-            
             $isRunOnce = false;
             foreach($schedule->Schedule as $item) { 
                 
@@ -332,6 +330,10 @@
                 
                 //TODO: set current peak type   
             }
+
+            
+            CronJobScheduler::createDefaultHessCronJobs();
+            CronJobScheduler::createAllCronJobs();
         }
     }
     

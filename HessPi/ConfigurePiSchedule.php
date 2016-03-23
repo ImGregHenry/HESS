@@ -7,7 +7,7 @@
     if($sysStatus == SYSTEM_ONLINE_VAL) {
         $peakType = PiStateTracker::getCurrentPeakType();
         $batteryStatusLevel = PiStateTracker::getBatteryStatusPercent($peakType);
-        //$batteryStatusLevel = 0.5;
+        $batteryStatusLevel = 0.6;
 
         $isInverterOn = PiStateTracker::isInverterStateOn();
         $isInit = false;

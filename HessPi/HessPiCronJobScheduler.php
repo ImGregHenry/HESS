@@ -15,6 +15,8 @@ include_once 'HessGlobals.php';
 
 
 class CronJobScheduler {
+	
+	private static $cronArray = array();
 
 	public static function createCronJobStringFromTimes($time) {
 		$MIN =  INTVAL(DATE('i', strtotime($time)));
@@ -27,41 +29,56 @@ class CronJobScheduler {
 	}
 
 	public static function createSingleCronJob($cronTimingText, $scriptName) {
-		$output = shell_exec('crontab -l');
-		file_put_contents('/tmp/crontab.txt', $output . ' ' . $cronTimingText . ' ' . PI_PHP_EXEC_PATH . ' ' . PI_HESS_SCRIPTS_PATH . $scriptName . PHP_EOL);
-		echo exec('crontab /tmp/crontab.txt');
+		if(empty(CronJobScheduler::$cronArray)) {
+			CronJobScheduler::$cronArray = array();
+		}
+		$ret = $cronTimingText . ' ' . PI_PHP_EXEC_PATH . ' ' . PI_HESS_SCRIPTS_PATH . $scriptName . PHP_EOL;
+		array_push(CronJobScheduler::$cronArray, $ret);
 		//echo 'CREATING JOB :' . $output . ' ' . $cronTimingText . ' ' . PI_PHP_EXEC_PATH . ' ' . PI_HESS_SCRIPTS_PATH . $scriptName . PHP_EOL;
 	}
 
+	public static function createAllCronJobs() {
+		$output = shell_exec('crontab -l');
+		$output = "";
+		foreach (CronJobScheduler::$cronArray as $val) {
+			if($val != null) 
+				$output .= $val;
+		}
+		//$output .= "\r\n";
+		//var_dump(CronJobScheduler::$cronArray);
+		//echo "OUTPUT: " . $output;
+		//$output = "0 21 * * * php /home/pi/PREDEMO/ConfigurePiSchedule.php" . PHP_EOL;
+		file_put_contents('/tmp/crontab.txt',  $output);
+		echo exec('crontab /tmp/crontab.txt');
+	}
+
 	public static function createDefaultHessCronJobs() {
-		CronJobScheduler::createSingleCronJob('*/1 * * * *', 'HessPiSendBatteryStatus.php');
-		CronJobScheduler::createSingleCronJob('*/1 * * * *', 'HessPiGetScheduler.php');
-		//CronJobScheduler::createSingleCronJob('*/1 * * * *', 'HessPiSendPowerUsage.php');
+		
+		array_push(CronJobScheduler::$cronArray, CronJobScheduler::createSingleCronJob('*/1 * * * *', 'HessPiSendBatteryStatus.php'));
+		array_push(CronJobScheduler::$cronArray, CronJobScheduler::createSingleCronJob('*/1 * * * *', 'HessPiGetScheduler.php'));
+		array_push(CronJobScheduler::$cronArray, CronJobScheduler::createSingleCronJob('*/1 * * * *', 'HessPiSendPowerUsage.php'));
 		//CronJobScheduler::createSingleCronJob('*/1 * * * * sleep 30;', 'HessPiSendPowerUsage.php');
 	}
 
 	public static function createOfflineHessCronJob() {
-		CronJobScheduler::createSingleCronJob('*/1 * * * *', 'ConfigureInitialize.php');
+		array_push(CronJobScheduler::$cronArray, CronJobScheduler::createSingleCronJob('*/1 * * * *', 'ConfigureInitialize.php'));
 	}
 
 	public static function createBatterySchedulingCronJob($startTime, $endTime, $peakType) {
 		$cronStartTimingString = CronJobScheduler::createCronJobStringFromTimes($startTime);
 		$cronEndTimingString = CronJobScheduler::createCronJobStringFromTimes($endTime);
+
+		echo "\nCRON START: " . $cronStartTimingString;
+		echo "\nCRON: END:  " . $cronEndTimingString . "\n";
 		
-		echo "\nCRON START: " . $cronStartTimingString. "\n";
-		echo "\nCRON: END:  " . $cronEndTimingString . "\n\n";
-		
-		CronJobScheduler::createSingleCronJob($cronStartTimingString, PISCRIPT_CONFIG_PI_STATE);
-		CronJobScheduler::createSingleCronJob($cronEndTimingString, PISCRIPT_CONFIG_PI_STATE);
+		array_push(CronJobScheduler::$cronArray, CronJobScheduler::createSingleCronJob($cronStartTimingString, PISCRIPT_CONFIG_PI_STATE));
+		array_push(CronJobScheduler::$cronArray, CronJobScheduler::createSingleCronJob($cronEndTimingString, PISCRIPT_CONFIG_PI_STATE));
 	}
 
 	public static function deleteAllCronJobs() {
+		$cronArray = array();
 		echo exec('crontab -r');
 	}
 }
-
-//$scheduler = new CronJobScheduler();
-//$scheduler->deleteAllCronJobs();
-//$scheduler->createSingleCronJob('*/2 * * * * php /home/pi/HessPiTestCron.php');
 
 ?>
