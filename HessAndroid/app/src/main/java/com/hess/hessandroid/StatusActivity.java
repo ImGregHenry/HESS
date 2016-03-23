@@ -2,6 +2,8 @@ package com.hess.hessandroid;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -12,8 +14,11 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
+import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 
 import com.hess.hessandroid.models.BatteryStatus;
 import com.hess.hessandroid.models.HessSchedule;
@@ -21,7 +26,6 @@ import com.hess.hessandroid.models.HessScheduleList;
 import com.hess.hessandroid.models.PowerUsage;
 import com.hess.hessandroid.models.PowerUsageList;
 import com.hess.hessandroid.volley.VolleyRequest;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -37,11 +41,15 @@ public class StatusActivity extends Activity implements
         VolleyRequest.VolleyReqCallbackGetBatteryStatus, VolleyRequest.VolleyReqCallbackGetPowerUsage, VolleyRequest.VolleyReqCallbackGetSchedule {
     private final static String LOG_STRING = "HESS_STATUS";
     private TextView powerPercentVal;
+    private ImageView batteryOverlay;
     private ProgressBar progressBar;
     private TextView powerUsageVal;
     private TextView remainingTimeVal;
     private TextView batteryTimeText;
     private TextView currentPowerUsageTime;
+
+    private MyGraphView graphView;
+    private RelativeLayout lv1;
 
     private double powerPercent;
 
@@ -76,7 +84,8 @@ public class StatusActivity extends Activity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_status);
 
-        progressBar = (ProgressBar) findViewById(R.id.remainingPowerProgress);
+        lv1 = (RelativeLayout) findViewById(R.id.relativeGraphLayout);
+
         powerPercentVal = (TextView) findViewById(R.id.remainingPowerPercent);
         powerUsageVal = (TextView) findViewById(R.id.cUsage);
         remainingTimeVal = (TextView) findViewById(R.id.rTime);
@@ -106,6 +115,26 @@ public class StatusActivity extends Activity implements
     }
 
     private void initializeBatteryStatus(BatteryStatus batteryStatuses) {
+/*        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) graphView.getLayoutParams();
+        lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        lp.width = 450;
+        lp.height = 450;
+        lp.topMargin = 75;
+        graphView.setLayoutParams(lp);
+        graphView.requestLayout();*/
+
+        batteryOverlay = (ImageView) findViewById(R.id.imgBattOverlay);
+        batteryOverlay.setImageResource(R.drawable.battery_outline);
+        progressBar = (ProgressBar) findViewById(R.id.remainingPowerProgress);
+        //progressBar.getIndeterminateDrawable().setColorFilter(Color.parseColor("#5c0f92"), PorterDuff.Mode.SRC_IN);
+
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) batteryOverlay.getLayoutParams();
+        lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        lp.addRule(RelativeLayout.CENTER_VERTICAL);
+
+        batteryOverlay.setLayoutParams(lp);
+        batteryOverlay.requestLayout();
+
         powerPercent = batteryStatuses.getPowerLevelPercent();
         Log.d(LOG_STRING, Math.round((powerPercent*100.0) * 100.0) / 100.0 + "%");
 
@@ -165,6 +194,7 @@ public class StatusActivity extends Activity implements
                         }
                         else if (currentTime.before(endTime)) {
                             batteryTimeText.setText("Time Unavailable ");
+                            remainingTimeVal.setText("");
                         }
                     } catch (Exception e) {
                         Log.e(LOG_STRING, e.getMessage());
@@ -183,9 +213,15 @@ public class StatusActivity extends Activity implements
                     timeToFullMS = 25500000 - (min);
                     timeToFullMin = (int) ((timeToFullMS / 60000) % 60);
                     timeToFullHour = (int) (timeToFullMS / 3600000);
-                    Log.d(LOG_STRING, "Time Until Full: " + timeToFullHour + ":" + timeToFullMin);
                     batteryTimeText.setText("Time Until Full: ");
-                    remainingTimeVal.setText(timeToFullHour + ":" + timeToFullMin);
+
+                    if (timeToFullMS <= 0) {
+                        remainingTimeVal.setText("Charged");
+                    }
+                    else {
+                        Log.d(LOG_STRING, "Time Until Full: " + timeToFullHour + ":" + timeToFullMin);
+                        remainingTimeVal.setText(timeToFullHour + ":" + timeToFullMin);
+                    }
                 } catch (Exception e) {
                     Log.e(LOG_STRING, e.getMessage());
                 }
@@ -193,6 +229,7 @@ public class StatusActivity extends Activity implements
         }
         else {
             batteryTimeText.setText("Time Unavailable ");
+            remainingTimeVal.setText("");
         }
     }
 

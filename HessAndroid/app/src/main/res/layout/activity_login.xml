@@ -20,7 +20,7 @@
             <ImageView
                 android:layout_width="350px"
                 android:layout_height="350px"
-                android:src="@drawable/icon_hess"
+                android:src="@drawable/icon_hess_org"
                 android:layout_gravity="center_horizontal" />
 
             <EditText

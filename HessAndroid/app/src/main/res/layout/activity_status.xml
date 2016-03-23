@@ -58,14 +58,35 @@
 
                     </LinearLayout>
 
-                    <ProgressBar
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="320dp"
+                    <!--android:layout_alignParentLeft="true"-->
+                    <RelativeLayout
                         android:layout_height="wrap_content"
-                        android:id="@+id/remainingPowerProgress"
-                        android:layout_gravity="center_horizontal"
-                        android:clickable="false"
-                        android:indeterminate="false" />
+                        android:layout_width="match_parent">
+
+                        <ImageView
+                            android:id="@+id/imgBattOverlay"
+                            android:layout_width="300dp"
+                            android:layout_height="100dp"
+                            android:gravity="center"
+                            android:layout_centerHorizontal="true">
+                        </ImageView>
+                        <ProgressBar
+                            style="@android:style/Widget.ProgressBar.Horizontal"
+                            android:id="@+id/remainingPowerProgress"
+                            android:layout_width="290dp"
+                            android:layout_height="45dp"
+                            android:minHeight="45dp"
+                            android:maxHeight="45dp"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
+                            android:clickable="false"
+                            android:indeterminate="false"
+                            android:layout_marginLeft="32dp"
+                            android:layout_marginTop="27dp"
+                            android:progressDrawable="@drawable/custom_progress_bar"/>
+
+                    </RelativeLayout>
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
