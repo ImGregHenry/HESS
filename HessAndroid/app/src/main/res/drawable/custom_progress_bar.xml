@@ -1,8 +1,12 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/background">
         <shape>
-            <solid
-                android:color="#999999" />
+            <gradient
+                android:startColor="#9C9E9C"
+                android:centerColor="#7B797B"
+                android:endColor="#5A5D5A"
+                android:angle="270"
+                />
         </shape>
     </item>
     <item android:id="@android:id/progress">

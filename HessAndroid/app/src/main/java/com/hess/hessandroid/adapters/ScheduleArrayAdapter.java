@@ -66,7 +66,7 @@ public class ScheduleArrayAdapter extends ArrayAdapter<HessSchedule> {
         tvWeek = (TextView) convertView.findViewById(R.id.tvWeekType);
 
         if (position % 2 == 0) {
-            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.hess_purple));
+            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.hess_purple_light));
             tvStartTime.setTextColor(mContext.getResources().getColor(R.color.white));
             tvEndTime.setTextColor(mContext.getResources().getColor(R.color.white));
             tvPeak.setTextColor(mContext.getResources().getColor(R.color.white));

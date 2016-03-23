@@ -3,7 +3,7 @@
     <item name="primary_text" type="color">#FFFFFF</item>
     <item name="primary_bkgd" type="color">@color/hess_purple</item>
     <item name="hess_purple" type="color">#5c0f92</item>
-    <item name="hess_purple_transparent" type="color">#9c7dae</item>
+    <item name="hess_purple_light" type="color">#bd75f0</item>
     <item name="white" type="color">#FFFFFF</item>
     <item name="on_peak" type="color">#c65b27</item>
     <item name="off_peak" type="color">#98C03C</item>
