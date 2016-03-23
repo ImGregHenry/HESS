@@ -39,6 +39,25 @@ catch (Exception $e) {
 	var_dump($e);
 }
 
+try {   
+    $isUpdated = 0;
+    $query = "UPDATE PeakSchedule"
+    . " SET IsUpdated = :isUpdated;";
+    
+    $conn = new PDO("mysql:host=" . MYSQL_CLOUD_HOST . ";dbname=" . MYSQL_CLOUD_DATABASE, MYSQL_CLOUD_USER, MYSQL_CLOUD_PASSWORD);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':isUpdated', $isUpdated, PDO::PARAM_INT);
+    
+    $stmt->execute();   
+}
+catch(PDOException $e)
+{
+    echo "ERROR: $e";
+    return;
+}
+
+
 //echo " THIS: " . $peakType;
 
 $payload = json_encode($Schedule);

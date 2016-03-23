@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS PeakSchedule (
 	PeakTypeID INTEGER,
 	StartTime TIME,
 	EndTime TIME,
+	IsUpdated INTEGER,
 	FOREIGN KEY (WeekTypeID) REFERENCES WeekType (WeekTypeID),
 	FOREIGN KEY (PeakTypeID) REFERENCES PeakType (PeakTypeID)
 );

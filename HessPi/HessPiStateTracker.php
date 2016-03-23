@@ -282,16 +282,17 @@
             $schedule = json_decode($result);
             // $deviceID = PI_DEVICE_ID;
             
-            // Erase previous entries from database.
-            PiStateTracker::deleteAllSchedulesFromDB();
-            CronJobScheduler::deleteAllCronJobs();
             $isRunOnce = false;
             foreach($schedule->Schedule as $item) { 
                 
-                // if(!$isRunOnce) {
-                //     $isNewSchedule = IsNewPiSchedule($item->PeakScheduleID);
-                //     $isRunOnce = true;            
-                // }
+                if(!$isRunOnce && $item->IsUpdated == 1) {
+                    $isNewSchedule = IsNewPiSchedule($item->PeakScheduleID);
+                    
+                    // Erase previous entries from database.
+                    PiStateTracker::deleteAllSchedulesFromDB();
+                    CronJobScheduler::deleteAllCronJobs();
+                    $isRunOnce = true;
+                }
                 
                 // if($isNewSchedule || true) {
                 
@@ -335,9 +336,10 @@
                 //TODO: set current peak type   
             }
 
-            
-            CronJobScheduler::createDefaultHessCronJobs();
-            CronJobScheduler::createAllCronJobs();
+            if($isRunOnce) {
+                CronJobScheduler::createDefaultHessCronJobs();
+                CronJobScheduler::createAllCronJobs();
+            }
         }
     }
     
