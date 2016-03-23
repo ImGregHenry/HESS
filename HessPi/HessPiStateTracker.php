@@ -237,7 +237,7 @@
                     if($isInverterOn == 0)
                         array_push($scriptSequence, PISCRIPT_INVERTER_ON);
                     else
-                        array_push($scriptSequence, PISCRIPT_INVERTER_ALREADY_ON)
+                        array_push($scriptSequence, PISCRIPT_INVERTER_ALREADY_ON);
                     array_push($scriptSequence, PISCRIPT_ACFROMWALL_OFF);
                 }
             } else if ($peakType == PEAKTYPE_OFF) {
