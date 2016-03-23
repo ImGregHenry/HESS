@@ -49,6 +49,7 @@ public class ScheduleActivity extends Activity implements VolleyRequest.VolleyRe
         Intent intent = new Intent(this, SetScheduleActivity.class);
         intent.putExtra("IsNew", true);
         intent.putExtra("SCHEDULELIST", mScheduleList.Schedule);
+        intent.putExtra("SKIPINDEX", -1);
         startActivityForResult(intent, NEW_SCHEDULE_ACTIVITY_RESULT_ID);
     }
 

@@ -122,6 +122,8 @@
                     PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . ' ' . PISCRIPT_PYTHON_PATH . PISCRIPT_INVERTER_TOGGLE);
                     sleep(1);
                     $isInverterOff = true;
+                } else if($script == PISCRIPT_INVERTER_ALREADY_ON) {
+                    $isInverterOn = true;
                 } else if ($script == PISCRIPT_BATTERYCHARGER_ON) {
                     PiStateTracker::runPythonScript(PYTHON_EXEC_PATH . ' ' . PISCRIPT_PYTHON_PATH . PISCRIPT_BATTERYCHARGER_ON);
                     sleep(1);
@@ -234,6 +236,8 @@
                     array_push($scriptSequence, PISCRIPT_BATTERYCHARGER_OFF);
                     if($isInverterOn == 0)
                         array_push($scriptSequence, PISCRIPT_INVERTER_ON);
+                    else
+                        array_push($scriptSequence, PISCRIPT_INVERTER_ALREADY_ON)
                     array_push($scriptSequence, PISCRIPT_ACFROMWALL_OFF);
                 }
             } else if ($peakType == PEAKTYPE_OFF) {

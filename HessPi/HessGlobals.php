@@ -23,6 +23,7 @@ define('PISCRIPT_SCHEDULER_OFF_PEAK', 'ConfigureOffPeak.php');
 define('PISCRIPT_SCHEDULER_ON_PEAK', 'ConfigureOnPeak.php');
 define('PISCRIPT_SCHEDULER_MID_PEAK', 'ConfigureMidPeak.php');
 define('PISCRIPT_CONFIG_PI_STATE', 'ConfigurePiSchedule.php');
+define('PISCRIPT_INVERTER_ALREADY_ON', 'NOTHING');
 
 
 # PEAK TYPES

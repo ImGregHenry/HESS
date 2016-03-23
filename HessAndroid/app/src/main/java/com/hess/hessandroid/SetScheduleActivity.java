@@ -59,6 +59,7 @@ public class SetScheduleActivity extends Activity implements TimePickerDialog.On
 
         isNewSchedule = b.getBoolean("IsNew");
         mList = (ArrayList<HessSchedule>)getIntent().getExtras().get("SCHEDULELIST");
+        skipIndexForSchedule = getIntent().getExtras().getInt("SKIPINDEX");
 
         spinWeekType = (Spinner)findViewById(R.id.spinnerWeekType);
         spinPeakType = (Spinner)findViewById(R.id.spinnerPeakType);
@@ -178,14 +179,17 @@ public class SetScheduleActivity extends Activity implements TimePickerDialog.On
 
         int index = 0;
         for(HessSchedule sch : mList) {
-            if(index == skipIndexForSchedule)
+            if(index == skipIndexForSchedule) {
+                index++;
                 continue;
+            }
 
             Date currStart = sch.getStartTimeInDateFormat();
             Date currEnd = sch.getEndTimeInDateFormat();
 
             if((newStart.before(currEnd) && newStart.after(currStart))
-                    || (newEnd.before(currEnd) && newEnd.after(currStart))){
+                    || (newEnd.before(currEnd) && newEnd.after(currStart))
+                    || (currStart.equals(newStart) && currEnd.equals(newEnd))) {
                 setScheduleConflict(index);
                 return true;
             }
