@@ -184,7 +184,7 @@ public class StatusActivity extends Activity implements
                                 min = closestEnd;
                             }
                         }
-                        else if (currentTime.before(endTime)) {
+                        else if (currentTime.before(endTime) && !hit) {
                             batteryTimeText.setText("Time Unavailable ");
                             remainingTimeVal.setText("");
                         }
@@ -196,12 +196,6 @@ public class StatusActivity extends Activity implements
             //Time to full calculation
             if (!hit && min != -1) {
                 try {
-               /* dateFormat = new SimpleDateFormat("HH:mm");
-                startTime = dateFormat.parse(schedules.get(i).StartTime);
-                endTime = dateFormat.parse(schedules.get(i).EndTime);
-                currentTime = dateFormat.parse(dateFormat.format(new Date()));
-
-                startChargingTime = dateFormat.parse(schedules.get(i).StartTime);*/
                     timeToFullMS = 25500000 - (min);
                     timeToFullMin = (int) ((timeToFullMS / 60000) % 60);
                     timeToFullHour = (int) (timeToFullMS / 3600000);

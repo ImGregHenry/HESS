@@ -1,6 +1,8 @@
 package com.hess.hessandroid;
 
 import android.app.Activity;
+import android.view.View;
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -67,6 +69,8 @@ public class UsageActivity extends Activity implements VolleyRequest.VolleyReqCa
     private LineGraphSeries<DataPoint> series;
     private Viewport viewport;
 
+    private ProgressDialog progress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +90,14 @@ public class UsageActivity extends Activity implements VolleyRequest.VolleyReqCa
         viewport.setMinY(0);
         viewport.setScrollable(true);
 
+        findViewById(R.id.usage).setVisibility(View.GONE);
+        progress = new ProgressDialog(this);
+        progress.setTitle("Loading Data");
+        progress.setMessage("Wait while loading...");
+        progress.show();
+        Log.d(LOG_STRING, "Loading started");
         requestPowerUsage();
+
         
 /*        Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -100,6 +111,9 @@ public class UsageActivity extends Activity implements VolleyRequest.VolleyReqCa
     @Override
     public void onVolleyGetPowerUsageReady(PowerUsageList powerUsageList) {
         initializePowerUsage(powerUsageList.PowerUsage);
+        progress.dismiss();
+        findViewById(R.id.usage).setVisibility(View.VISIBLE);
+        Log.d(LOG_STRING, "Loading stopped");
     }
 
     private void initializePowerUsage(ArrayList<PowerUsage> powerUsages) {
@@ -125,7 +139,7 @@ public class UsageActivity extends Activity implements VolleyRequest.VolleyReqCa
                             Calendar c = Calendar.getInstance();
                             //Set time in milliseconds
                             c.setTimeInMillis(((long) value));
-                            int mHour = c.get(Calendar.HOUR);
+                            int mHour = c.get(Calendar.HOUR_OF_DAY);
                             int mMinute = c.get(Calendar.MINUTE);
                             int mDay = c.get(Calendar.DAY_OF_MONTH);
                             int mMonth = c.get(Calendar.MONTH);
